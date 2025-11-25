@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ur">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Products — Ehsan Collection</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body dir="rtl">
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-link">
+        <!-- Use uploaded logo path or images/logo.png -->
+        <img src="/mnt/data/A_logo_for_&quot;Ehsan_Collection&quot;_features_a_stylized_.png" alt="Ehsan Collection logo" class="site-logo" />
+      </a>
+      <div class="right-controls">
+        <a href="index.html">Home</a>
+        <a href="admin/index.html">Admin</a>
+        <button id="cartBtn">🛒 Cart (<span id="cartCount">0</span>)</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="products-controls">
+      <input id="searchInput" placeholder="Search products..." />
+      <select id="categoryFilter">
+        <option value="">All Categories</option>
+      </select>
+    </section>
+
+    <section class="products">
+      <div class="grid" id="productsGrid"></div>
+    </section>
+  </main>
+
+  <!-- Product Detail Modal -->
+  <div id="productModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-content">
+      <button class="close" id="productModalClose">×</button>
+      <div id="productDetail"></div>
+    </div>
+  </div>
+
+  <!-- Cart Modal (reuse) -->
+  <div id="cartModal" class="modal hidden">
+    <div class="modal-content">
+      <button class="close" id="cartClose">×</button>
+      <h3>آپ کی Cart</h3>
+      <div id="cartItems"></div>
+      <div class="cart-total">کل: <span id="cartTotal">0</span> PKR</div>
+
+      <div class="checkout-actions">
+        <button id="stripeCheckout" class="btn">Pay with Card (Stripe)</button>
+        <button id="bankCheckout" class="btn">Bank Transfer</button>
+        <a id="waCheckout" class="btn whatsapp" target="_blank">Pay via WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/products.js"></script>
+</body>
+</html>
