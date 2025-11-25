@@ -6,7 +6,7 @@ const PRODUCTS = [
     title: 'Classic Cotton Shirt',
     price: 2499,
     currency: 'PKR',
-    image: '/assets/product1.jpg',
+    image: 'assets/product1.jpg',
     desc: 'Comfortable cotton shirt — perfect for daily wear.'
   },
   {
@@ -14,7 +14,7 @@ const PRODUCTS = [
     title: 'Formal Men Watch',
     price: 4999,
     currency: 'PKR',
-    image: '/assets/product2.jpg',
+    image: 'assets/product2.jpg',
     desc: 'Elegant design with leather strap.'
   },
   {
@@ -22,7 +22,7 @@ const PRODUCTS = [
     title: 'Wireless Earbuds',
     price: 3999,
     currency: 'PKR',
-    image: '/assets/product3.jpg',
+    image: 'assets/product3.jpg',
     desc: 'Long battery life and great sound.'
   },
   {
@@ -30,7 +30,7 @@ const PRODUCTS = [
     title: 'Running Sneakers',
     price: 3599,
     currency: 'PKR',
-    image: '/assets/product4.jpg',
+    image: 'assets/product4.jpg',
     desc: 'Breathable material, comfortable sole.'
   },
   {
@@ -38,7 +38,7 @@ const PRODUCTS = [
     title: 'Stylish Backpack',
     price: 2799,
     currency: 'PKR',
-    image: '/assets/product5.jpg',
+    image: 'assets/product5.jpg',
     desc: 'Water-resistant and roomy.'
   },
   {
@@ -46,7 +46,7 @@ const PRODUCTS = [
     title: 'Sunglasses',
     price: 1299,
     currency: 'PKR',
-    image: '/assets/product6.jpg',
+    image: 'assets/product6.jpg',
     desc: 'UV protected lens with modern frame.'
   }
 ];
@@ -92,7 +92,7 @@ function renderProducts(){
   container.innerHTML = '';
   PRODUCTS.forEach(p => {
     const card = document.createElement('div');
-    card.className = 'product-card p-4 rounded-xl shadow';
+    card.className = 'product-card rounded-xl shadow';
     card.innerHTML = `
       <img src="${p.image}" alt="${p.title}" class="rounded-lg mb-3" />
       <h3 class="text-lg font-semibold mb-1">${p.title}</h3>
@@ -179,7 +179,7 @@ function renderCartItems(){
   }
   keys.forEach(id =>{
     const qty = cart[id];
-    const product = PRODUCTS.find(p=>p.id===id) || {title: 'Unknown', price:0, image: '/assets/product-placeholder.png'};
+    const product = PRODUCTS.find(p=>p.id===id) || {title: 'Unknown', price:0, image: 'assets/product-placeholder.png'};
     total += product.price * qty;
     const row = document.createElement('div');
     row.className = 'flex items-center gap-3';
