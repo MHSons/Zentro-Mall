@@ -47,37 +47,44 @@
       </div>
     </section>
 
-    <!-- Checkout & info area -->
+    <!-- Checkout & info -->
     <section id="contact" class="mt-8 text-center text-gray-600">
-      <p>Questions? WhatsApp: <a href="https://wa.me/923018067880" target="_blank" rel="noopener" class="text-green-600 font-semibold">+92 301 8067880</a></p>
+      <p>Questions? WhatsApp:
+        <a href="https://wa.me/923018067880" target="_blank" rel="noopener" class="text-green-600 font-semibold">
+          +92 301 8067880
+        </a>
+      </p>
     </section>
   </main>
 
-  <!-- Floating WhatsApp quick button -->
+  <!-- WhatsApp floating -->
   <a href="https://wa.me/923018067880" target="_blank" rel="noopener" class="whatsapp-btn">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M..."/></svg>
     <span>WhatsApp</span>
   </a>
 
-  <!-- Cart slideover (built by main.js) -->
+  <!-- Cart JS -->
   <script src="main.js"></script>
+
   <script>
-    // Load bank accounts from localStorage
+    // Load bank accounts from localStorage (correct key)
     function loadBanks() {
       const bankList = document.getElementById('bank-list');
-      const banks = JSON.parse(localStorage.getItem('bank_accounts')) || [];
+      const banks = JSON.parse(localStorage.getItem('ehsan_banks_v1')) || [];
 
       bankList.innerHTML = banks.length === 0
         ? '<p class="text-gray-500">No bank accounts added yet.</p>'
         : banks.map(b => `
           <div class='p-4 border rounded-lg shadow-sm'>
-            <p><strong>Bank:</strong> ${b.bank}</p>
-            <p><strong>Account No:</strong> ${b.account}</p>
+            <p><strong>Bank:</strong> ${b.name}</p>
+            <p><strong>Account No:</strong> ${b.acc}</p>
             <p><strong>IBAN:</strong> ${b.iban}</p>
           </div>
         `).join('');
     }
+
     loadBanks();
   </script>
+
 </body>
 </html>
