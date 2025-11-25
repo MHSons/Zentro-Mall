@@ -1,0 +1,68 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Ehsan Collection - Store</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="bg-gray-100">
+
+  <!-- Header -->
+  <header class="bg-white shadow p-4 flex justify-between items-center">
+    <div class="flex items-center space-x-3">
+      <!-- Put logo file in project root as ./logo.png.png -->
+      <img src="./logo.png.png" alt="Ehsan Collection Logo" class="h-12 w-auto" />
+      <h1 class="text-2xl font-bold">Ehsan Collection</h1>
+    </div>
+
+    <nav class="space-x-4">
+      <a href="#" class="text-gray-700 hover:text-black">Home</a>
+      <a href="#products" class="text-gray-700 hover:text-black">Products</a>
+      <a href="#contact" class="text-gray-700 hover:text-black">Contact</a>
+
+      <!-- Admin / Super Admin login button (top-right) -->
+      <a href="admin.html" class="ml-4 bg-gray-800 text-white px-3 py-2 rounded text-sm">Admin Login</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="text-center py-16 bg-white">
+    <h2 class="hero-title mb-4">Welcome to Ehsan Collection</h2>
+    <p class="hero-subtext">International standard responsive e-commerce website — built with Tailwind.</p>
+  </section>
+
+  <!-- Products (rendered by main.js) -->
+  <section id="products" class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- JS will inject product cards here -->
+  </section>
+
+  <!-- Checkout form modal (in DOM) -->
+  <div id="checkout-modal" class="fixed inset-0 flex items-center justify-center bg-black/40 hidden z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md">
+      <h3 class="text-xl font-bold mb-3">Complete Checkout</h3>
+      <div class="space-y-2">
+        <input id="cust-name" placeholder="Full name" class="w-full border p-2 rounded" />
+        <input id="cust-phone" placeholder="Phone (e.g. 0301xxxxxxx)" class="w-full border p-2 rounded" />
+        <input id="cust-address" placeholder="Address" class="w-full border p-2 rounded" />
+        <input id="cust-transaction" placeholder="Transaction ID (optional)" class="w-full border p-2 rounded" />
+      </div>
+      <div class="flex justify-end mt-4 gap-2">
+        <button id="checkout-cancel" class="px-4 py-2 rounded border">Cancel</button>
+        <button id="checkout-send" class="px-4 py-2 rounded bg-green-600 text-white">Send via WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WhatsApp Floating (general contact) -->
+  <a id="whatsapp-floating" href="https://wa.me/923358067880" target="_blank" rel="noopener" class="whatsapp-btn" >
+    <!-- Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M20.52 3.48A11.93 11.93 0 0012 .5C6.21.5 1.5 5.22 1.5 11c0 1.93.51 3.82 1.48 5.48L.5 23.5l6.2-2.02A11.44 11.44 0 0012 22.5c5.79 0 10.5-4.72 10.5-10.5 0-3-1.17-5.82-3.98-7.52zM12 20.5c-1.02 0-2.02-.26-2.92-.75l-.21-.13-3.69 1.2 1.27-3.59-.13-.22A8.73 8.73 0 013.5 11C3.5 6.81 7.31 3 12 3s8.5 3.81 8.5 8.5S16.69 20.5 12 20.5z"/><path d="M17.25 14.14c-.28-.14-1.64-.8-1.9-.89-.25-.09-.44-.14-.63.14-.19.28-.73.89-.9 1.07-.17.19-.34.21-.63.07-.29-.14-1.22-.45-2.32-1.43-.86-.77-1.44-1.72-1.61-2.01-.17-.28-.02-.43.12-.57.12-.12.28-.31.42-.47.14-.16.19-.28.29-.47.09-.19.04-.36-.02-.5-.07-.13-.63-1.52-.86-2.08-.23-.55-.46-.48-.63-.49-.16-.01-.35-.01-.54-.01-.19 0-.5.07-.76.35-.26.28-1 1-1 2.43 0 1.43 1.02 2.81 1.16 3.01.14.19 2.01 3.06 4.87 4.29 2.86 1.23 2.86.82 3.37.77.5-.05 1.64-.67 1.87-1.31.23-.64.23-1.19.16-1.31-.07-.12-.26-.18-.54-.32z"/></svg>
+    <span>WhatsApp</span>
+  </a>
+
+  <script src="main.js"></script>
+</body>
+</html>
