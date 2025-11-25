@@ -1,36 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin Dashboard - Orders</title>
-  <link rel="stylesheet" href="dashboard.css" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
-  <div class="sidebar">
-    <h2>Admin Panel</h2>
-    <a href="index.html">Storefront</a>
-    <a id="export-csv" href="#">Export Orders CSV</a>
-    <a id="logout-btn" href="#">Logout</a>
-  </div>
 
-  <div class="dashboard-content">
-    <h1>Orders</h1>
-    <div class="card">
-      <table class="table" id="orders-table">
-        <thead>
-          <tr><th>Order ID</th><th>Date</th><th>Customer</th><th>Total (PKR)</th><th>Status</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+<div class="sidebar">
+    <button onclick="showTab('products')">Products</button>
+    <button onclick="showTab('bank')">Bank Info</button>
+</div>
 
-    <div class="card">
-      <h2>Order Details</h2>
-      <pre id="order-detail" class="p-3 bg-gray-50 rounded"></pre>
-    </div>
-  </div>
+<div class="content">
 
-  <script src="dashboard.js"></script>
+<div id="products" class="section">
+    <h2>Add Product</h2>
+    <input id="pname" placeholder="Product Name">
+    <input id="pprice" placeholder="Price">
+    <input id="pimg" placeholder="Image URL">
+
+    <button onclick="addProduct()">Add</button>
+
+    <h3>Product List</h3>
+    <div id="plist"></div>
+</div>
+
+<div id="bank" class="section hidden">
+    <h2>Add Bank Details</h2>
+
+    <input id="bankname" placeholder="Bank Name">
+    <input id="accno" placeholder="Account Number">
+    <input id="iban" placeholder="IBAN Number">
+
+    <button onclick="addBank()">Add</button>
+
+    <h3>Saved Banks</h3>
+    <div id="banklist"></div>
+</div>
+
+</div>
+
+<script src="dashboard.js"></script>
 </body>
 </html>
