@@ -1,70 +1,179 @@
-/* Inside existing cart_checkout.js (The submitOrder function) */
+/* cart_checkout.js
+  - cart UI
+  - coupon support (example coupons)
+  - cross-tab sync & storage versioning
+  - export/import cart json
+*/
 
-function generateWhatsAppLink(orderData) {
-    // 1. Prepare Customer Name and Address
-    const name = orderData.shippingAddress.name;
-    const itemsList = orderData.items.map(item => `* ${item.name} (${item.quantity} PCs) @ ${item.price.toLocaleString()} PKR`).join('\n');
-    const total = orderData.totalAmount.toLocaleString();
-    const phone = '923001234567'; // Your Business WhatsApp Number
+(() => {
+  const STORE = window.App.StorageService;
+  const CART_KEY = 'cart';
+  const CART_VER = 'v1';
+  // example coupons: code -> { type: 'percent'|'flat', value }
+  const COUPONS = { 'WELCOME10': { type:'percent', value:10 }, 'FLAT200': { type:'flat', value:200 } };
 
-    // 2. The WhatsApp Message Text
-    const messageTemplate = 
-        `🎉 New Order Confirmed! - MAH Store 🎉
-        
-        Customer: ${name}
-        
-        --- Items Ordered ---
-        ${itemsList}
-        
-        Total Amount: *${total} PKR*
-        
-        Shipping Address:
-        ${orderData.shippingAddress.address}, City: ${orderData.shippingAddress.city}, Phone: ${orderData.shippingAddress.phone}
-        
-        We will process your order shortly. Thank you!`;
+  function readCart() { return STORE.get(CART_KEY, CART_VER) || []; }
+  function writeCart(c) { STORE.set(CART_KEY, c, CART_VER); }
 
-    // 3. Encode the message and return the URL
-    const encodedMessage = encodeURIComponent(messageTemplate);
-    return `https://wa.me/${phone}?text=${encodedMessage}`;
-}
+  const elCartArea = document.getElementById('cart-area');
+  const elSummary = document.getElementById('summary-area');
+  const btnClear = document.getElementById('btn-clear');
+  const btnExport = document.getElementById('btn-export');
+  const btnImport = document.getElementById('btn-import');
 
-// ... your existing submitOrder() function ...
-async function submitOrder() {
-    // ... (All existing logic for validation and API call) ...
-    
-    // --- NEW: WhatsApp Integration After Successful API Call ---
-    // Assuming 'submitSuccess' is true and 'orderResponse' is the API result
-    
-    const API_SUCCESS = true; // Replace with your actual API check result
-    const ORDER_DETAILS = { /* Get details from your API response or local cart */
-        email: document.getElementById('checkout-email').value,
-        totalAmount: getTotalAmount(),
-        items: JSON.parse(localStorage.getItem('cart')),
-        shippingAddress: {
-            name: document.getElementById('checkout-name').value,
-            phone: document.getElementById('checkout-phone').value,
-            address: document.getElementById('checkout-address').value,
-            city: document.getElementById('checkout-city').value,
-        }
-    };
-    
-    if (API_SUCCESS) {
-        // Clear the cart
-        localStorage.removeItem('cart');
-        updateCartDisplay();
-        
-        // Generate WhatsApp link
-        const whatsappLink = generateWhatsAppLink(ORDER_DETAILS);
-        
-        // Show confirmation and prompt user to open WhatsApp
-        alert('Order placed successfully! You will now be redirected to WhatsApp for confirmation.');
-        
-        // Open WhatsApp chat in a new tab
-        window.open(whatsappLink, '_blank');
-        
-        // Redirect to a Thank You page (or back to home)
-        window.location.href = 'index.html'; 
-    } else {
-        // ... (Error handling) ...
+  function render() {
+    const cart = readCart();
+    if (!cart.length) {
+      elCartArea.innerHTML = '<div class="empty">Your cart is empty. <a href="products.html">Shop now</a></div>';
+      elSummary.innerHTML = '';
+      return;
     }
-}
+    elCartArea.innerHTML = cart.map((item, idx) => {
+      const img = item.image || 'data:image/svg+xml;base64,' + btoa(`<svg xmlns='http://www.w3.org/2000/svg' width='200' height='120'><rect width='100%' height='100%' fill='#f3f3f3'/><text x='50%' y='50%' alignment-baseline='middle' text-anchor='middle' fill='#aaa'>No Image</text></svg>`);
+      return `<div class="cart-row" data-idx="${idx}">
+        <img src="${img}" alt="${item.title}" />
+        <div class="info">
+          <div style="font-weight:600">${item.title}</div>
+          <div class="small">${item.qty} × ${window.App.currency(item.price)}</div>
+        </div>
+        <div>
+          <input class="qty-input" type="number" min="1" value="${item.qty}" data-idx="${idx}" />
+          <div style="margin-top:8px;text-align:right">
+            <div style="font-weight:700">${window.App.currency(item.price * item.qty)}</div>
+            <button class="btn secondary remove" data-idx="${idx}" style="margin-top:8px">Remove</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+    // summary
+    const subtotal = cart.reduce((s,i)=> s + i.price * i.qty, 0);
+    const shipping = subtotal > 3000 ? 0 : 150; // example
+    const couponCode = sessionStorage.getItem('ecom_coupon') || '';
+    const coupon = couponCode && COUPONS[couponCode] ? COUPONS[couponCode] : null;
+    let discount = 0;
+    if (coupon) {
+      if (coupon.type === 'percent') discount = subtotal * (coupon.value / 100);
+      else discount = coupon.value;
+    }
+    const tax = Math.round((subtotal - discount) * 0.13);
+    const total = Math.max(0, Math.round(subtotal - discount + shipping + tax));
+
+    elSummary.innerHTML = `
+      <div class="summary-inner">
+        <div class="small">Items: ${cart.length}</div>
+        <div>Subtotal: <strong>${window.App.currency(subtotal)}</strong></div>
+        <div>Shipping: <strong>${window.App.currency(shipping)}</strong></div>
+        <div>Tax (13%): <strong>${window.App.currency(tax)}</strong></div>
+        <div>Discount: <strong>-${window.App.currency(discount)}</strong></div>
+        <div style="margin-top:8px;font-size:18px">Total: <strong>${window.App.currency(total)}</strong></div>
+
+        <div class="coupon">
+          <input id="coupon-input" placeholder="Coupon code" value="${couponCode}" />
+          <button id="apply-coupon" class="btn">Apply</button>
+        </div>
+
+        <div style="margin-top:10px">
+          <button id="btn-place-order" class="btn">Place order</button>
+        </div>
+      </div>
+    `;
+
+    // wire summary events
+    document.getElementById('apply-coupon').addEventListener('click', ()=> {
+      const val = document.getElementById('coupon-input').value.trim().toUpperCase();
+      if (!val) { sessionStorage.removeItem('ecom_coupon'); render(); return; }
+      if (!COUPONS[val]) { alert('Invalid coupon'); return; }
+      sessionStorage.setItem('ecom_coupon', val);
+      alert('Coupon applied: ' + val);
+      render();
+    });
+
+    document.getElementById('btn-place-order').addEventListener('click', () => {
+      // save order into StorageService orders
+      placeOrder(cart, total).then(orderId => {
+        writeCart([]); // clear cart
+        sessionStorage.removeItem('ecom_coupon');
+        alert('Order placed: ' + orderId);
+        // redirect to invoice page or show
+        window.location.href = `checkout.html?order=${orderId}`;
+      }).catch(err => {
+        console.error(err);
+        alert('Order failed: ' + err.message);
+      });
+    });
+
+    // qty & remove events
+    elCartArea.querySelectorAll('.qty-input').forEach(inp => {
+      inp.addEventListener('change', (e) => {
+        const idx = Number(e.target.dataset.idx);
+        const q = Math.max(1, Number(e.target.value));
+        const c = readCart();
+        c[idx].qty = q;
+        writeCart(c);
+        render();
+      });
+    });
+    elCartArea.querySelectorAll('.remove').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = Number(e.target.dataset.idx);
+        const c = readCart(); c.splice(idx,1);
+        writeCart(c); render();
+      });
+    });
+  }
+
+  async function placeOrder(cart, total) {
+    // simulate order creation and save to localStorage orders
+    const orders = STORE.get('orders', 'v1') || [];
+    const id = 'o_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+    const order = {
+      id, items: cart, total, status: 'pending',
+      createdAt: new Date().toISOString(),
+      shippingAddress: JSON.parse(sessionStorage.getItem('ecom_shipping') || 'null') || null
+    };
+    orders.unshift(order);
+    STORE.set('orders', orders, 'v1');
+    return id;
+  }
+
+  // controls
+  btnClear.addEventListener('click', ()=> {
+    if (!confirm('Clear cart?')) return;
+    writeCart([]);
+    render();
+  });
+
+  btnExport.addEventListener('click', ()=> {
+    const data = readCart();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'cart.json';
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  });
+
+  btnImport.addEventListener('click', ()=> {
+    const input = document.createElement('input'); input.type='file'; input.accept='application/json';
+    input.onchange = async (ev) => {
+      const file = ev.target.files[0];
+      if (!file) return;
+      const txt = await file.text();
+      try {
+        const arr = JSON.parse(txt);
+        if (!Array.isArray(arr)) throw new Error('Invalid file');
+        writeCart(arr);
+        render();
+        alert('Cart imported');
+      } catch (err) { alert('Import failed: '+ err.message); }
+    };
+    input.click();
+  });
+
+  // initial render
+  render();
+
+  // cross-tab updates
+  window.addEventListener('storage', (e) => {
+    if (e.key && e.key.indexOf('ecom_cart_v1_changed') !== -1) render();
+  });
+})();
