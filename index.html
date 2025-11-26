@@ -3,64 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAH Store Handcrafted E-commerce</title>
-    <!-- Linking the main styles -->
+    <title>MAH Store - Your Global Shopping Destination</title>
+    <!-- Your main CSS file for styling -->
     <link rel="stylesheet" href="style.css">
-    <!-- Font Awesome/Icons for a professional, modern look -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    
-    <!-- 1. HEADER SECTION - As discussed (Responsive Navigation) -->
-    <header class="main-header">
-        <div class="container">
-            <a href="index.html" class="logo">MAH <span>Store</span></a>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="#products">Shop</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
-            <div class="header-actions">
-                <a href="#"><i class="fas fa-shopping-cart"></i> Cart (<span id="cart-count">0</span>)</a>
-                <a href="dashboard.html"><i class="fas fa-user-circle"></i> Account</a>
-                <button class="menu-toggle"><i class="fas fa-bars"></i></button>
-            </div>
+    <!-- 1. Header and Navigation -->
+    <header>
+        <div id="logo">
+            <!-- Logo will go here (e.g., <img src="logo.png" alt="MAH Store Logo">) -->
+            <h1>MAH Store</h1>
         </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="products.html">Shop</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="cart-icon"><a href="cart.html">🛒 Cart (0)</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <!-- 2. HERO SECTION / BANNER -->
-    <section class="hero-section">
-        <div class="container">
-            <h1>Elevate Your Style. Find Your Next Favorite.</h1>
-            <p>International quality products, delivered to your door. Shop the latest collections now.</p>
-            <a href="#products" class="btn-primary">Shop Now</a>
-        </div>
-    </section>
+    <!-- 2. Main Content Area (Example: A hero section) -->
+    <main>
+        <section class="hero">
+            <h2>Welcome to MAH Store</h2>
+            <p>Experience international quality and seamless online shopping.</p>
+            <a href="products.html" class="cta-button">Shop Now</a>
+        </section>
 
-    <!-- 3. FEATURED PRODUCTS SECTION -->
-    <section id="products" class="products-section container">
-        <h2>Featured Products</h2>
-        <div class="product-grid" id="product-list">
-            <!-- Products will be dynamically inserted here via main.js -->
-        </div>
-    </section>
-
-    <!-- 4. FOOTER -->
-    <footer class="main-footer">
-        <div class="container">
-            <p>&copy; 2025 MAH Store. All rights reserved. | International E-commerce Standard</p>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><a href="https://wa.me/923018067880" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <!-- 3. Featured Products Section -->
+        <section class="featured-products">
+            <h3>Featured Items</h3>
+            <!-- Products will be loaded here using JavaScript -->
+            <div id="product-list">
+                <!-- Example Product Card (Add more as needed) -->
+                <div class="product-card">
+                    <img src="placeholder.jpg" alt="Product Name">
+                    <h4>Product Title</h4>
+                    <p class="price">$99.99</p>
+                    <button class="add-to-cart" data-product-id="1">Add to Cart</button>
+                </div>
             </div>
+        </section>
+    </main>
+
+    <!-- 4. Footer -->
+    <footer>
+        <p>&copy; 2025 MAH Store. All Rights Reserved.</p>
+        <div class="social-links">
+            <!-- Add social media links here -->
         </div>
     </footer>
 
-    <!-- Linking the main functionality script -->
+    <!-- Your main JavaScript file for interactivity -->
     <script src="main.js"></script>
 </body>
 </html>
