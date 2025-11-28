@@ -38,10 +38,10 @@
       const price = parseInt(document.getElementById("pprice").value);
       const image = document.getElementById("pimage").value || "https://via.placeholder.com/400";
       const desc = document.getElementById("pdesc").value;
-      if (!name || !price) return alert("Fill name & price");
+      if (!name || !price) return alert(lang === "ur" ? "نام اور قیمت درکار ہے" : "Fill name & price");
       const newId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
       products.push({ id: newId, name, price, image, desc, category: "electronics" });
-      saveData(); alert("Product added!"); location.reload();
+      saveData(); alert(lang === "ur" ? "پروڈکٹ شامل ہو گیا!" : "Product added!"); location.reload();
     }
 
     document.getElementById("admin-products").innerHTML = products.map(p => `
@@ -49,7 +49,7 @@
         <img src="${p.image}" alt="${p.name}" class="w-full h-48 object-cover rounded" />
         <h3 class="text-xl font-bold mt-4">${p.name}</h3>
         <p>₹${p.price.toLocaleString()}</p>
-        <button onclick="if(confirm('Delete?')){products=products.filter(x=>x.id!==${p.id});saveData();location.reload();}" class="bg-red-600 w-full mt-4 py-3 rounded" aria-label="Delete product">Delete</button>
+        <button onclick="if(confirm(lang==='ur'?'حذف کریں؟':'Delete?')){products=products.filter(x=>x.id!==${p.id});saveData();location.reload();}" class="bg-red-600 w-full mt-4 py-3 rounded" aria-label="Delete product">Delete</button>
       </div>`).join("");
 
     document.getElementById("admin-orders").innerHTML = orders.slice(-10).reverse().map(o => `
