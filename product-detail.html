@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="View details of products at ZentroMall." />
+  <title>Product Detail – ZentroMall</title>
+  <link rel="icon" href="logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
+  <header role="banner" class="bg-indigo-800 dark:bg-indigo-950 shadow-xl sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-4">
+        <img src="logo.png" alt="ZentroMall Logo" class="h-14 rounded-lg" />
+        <h1 class="text-2xl font-bold">ZentroMall</h1>
+      </a>
+      <nav role="navigation" class="flex gap-6">
+        <a href="cart.html" class="hover:text-yellow-400">Cart (<span id="cart-count">0</span>)</a>
+        <a href="admin.html" class="bg-yellow-500 text-black px-6 py-2 rounded-full font-bold">Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="max-w-7xl mx-auto px-4 py-10">
+    <div id="product-detail" class="grid grid-cols-1 lg:grid-cols-2 gap-8"></div>
+  </div>
+
+  <script src="main.js"></script>
+  <script>
+    const id = new URLSearchParams(window.location.search).get("id");
+    const product = products.find(p => p.id == id);
+    document.getElementById("product-detail").innerHTML = `
+      <img src="${product.image}" alt="${product.name}" class="w-full h-96 object-cover rounded-2xl shadow-xl">
+      <div>
+        <h2 class="text-4xl font-bold mb-4">${product.name}</h2>
+        <p class="text-xl text-gray-600 dark:text-gray-300 mb-4">${product.desc}</p>
+        <p class="text-3xl font-bold text-indigo-600 mb-6">₹${product.price.toLocaleString()}</p>
+        <button onclick="addToCart(${product.id})" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-lg mb-4">Add to Cart</button>
+        <div class="mt-6">
+          <h3 class="text-2xl font-bold mb-2">Reviews</h3>
+          <p class="text-gray-600 dark:text-gray-300">No reviews yet. Be the first!</p>
+          <textarea placeholder="Write a review..." class="w-full p-4 mt-2 rounded bg-gray-100 dark:bg-gray-800" rows="4"></textarea>
+          <button class="mt-2 bg-green-600 text-white px-6 py-2 rounded">Submit Review</button>
+        </div>
+      </div>`;
+    updateCartCount();
+  </script>
+</body>
+</html>
