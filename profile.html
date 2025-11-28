@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,44 +9,56 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+
+  <!-- Header -->
   <header role="banner" class="bg-indigo-800 dark:bg-indigo-950 shadow-xl sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
       <a href="index.html" class="flex items-center gap-4">
         <img src="logo.png" alt="ZentroMall Logo" class="h-14 rounded-lg" />
         <h1 class="text-2xl font-bold">ZentroMall</h1>
       </a>
-      <a href="#" onclick="logout()" class="hover:text-yellow-400">Logout</a>
+      <a href="#" onclick="logout()" class="hover:text-yellow-400 font-semibold">Logout</a>
     </div>
   </header>
 
+  <!-- Profile Section -->
   <div class="max-w-2xl mx-auto px-4 py-16">
     <h1 class="text-5xl font-bold text-center mb-12">Your Profile</h1>
-    <div id="profile-details" class="bg-white dark:bg-gray-800 p-10 rounded-2xl shadow-xl"></div>
+    <div id="profile-details" class="bg-white dark:bg-gray-800 p-10 rounded-2xl shadow-xl space-y-4"></div>
   </div>
 
   <script src="main.js"></script>
   <script>
+    // Redirect if not logged in
     if (!currentUser) window.location.href = "login.html";
-    document.getElementById("profile-details").innerHTML = `
+
+    const profileDiv = document.getElementById("profile-details");
+    profileDiv.innerHTML = `
       <p class="text-2xl font-bold">Name: ${currentUser.name}</p>
-      <p class="text-xl mt-4">Email: ${currentUser.email}</p>
+      <p class="text-xl mt-2">Email: ${currentUser.email}</p>
       <p class="text-xl mt-2">Phone: ${currentUser.phone || "Not set"}</p>
-      <button onclick="updateProfile()" class="mt-6 bg-indigo-600 text-white px-6 py-3 rounded" aria-label="Update profile">Update Profile</button>`;
+      <button onclick="updateProfile()" 
+              class="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+        Update Phone Number
+      </button>
+    `;
+
     function updateProfile() {
-      const phone = prompt(lang === "ur" ? "نیا فون نمبر درج کریں" : "Enter new phone number");
+      const phone = prompt("Enter your new phone number:");
       if (phone) {
         currentUser.phone = phone;
         const users = JSON.parse(localStorage.getItem("zm_users") || "[]");
         const index = users.findIndex(u => u.email === currentUser.email);
-        users[index] = currentUser;
+        if (index !== -1) users[index] = currentUser;
         localStorage.setItem("zm_users", JSON.stringify(users));
         localStorage.setItem("zm_user", JSON.stringify(currentUser));
-        alert(lang === "ur" ? "پروفائل اپ ڈیٹ ہو گیا!" : "Profile updated!");
+        alert("Profile updated successfully!");
         location.reload();
       }
     }
+
     function logout() {
-      if (confirm(lang === "ur" ? "لاگ آؤٹ کریں؟" : "Logout?")) {
+      if (confirm("Are you sure you want to logout?")) {
         currentUser = null;
         localStorage.removeItem("zm_user");
         window.location.href = "index.html";
