@@ -20,6 +20,7 @@
       <button type="submit" class="w-full bg-green-600 text-white py-6 rounded-xl text-2xl font-bold hover:bg-green-700" aria-label="Place Order">Place Order via WhatsApp</button>
     </form>
     <p class="mt-4 text-center text-sm">Or pay with <button onclick="showPayment()" class="text-indigo-600 underline">Stripe</button> (Demo)</p>
+    <button onclick="buyNowFromCheckout()" class="w-full mt-4 bg-yellow-500 text-black py-4 rounded-xl text-xl font-bold hover:bg-yellow-600" aria-label="Buy Now">⚡ Buy Now (COD)</button>
   </div>
 
   <script src="main.js"></script>
@@ -43,6 +44,15 @@
     }
     function showPayment() {
       alert("Stripe integration requires API key. Contact support for setup.");
+    }
+    function buyNowFromCheckout() {
+      if (confirm("Confirm COD Order?\nWe will call you in 5 minutes for confirmation")) {
+        const total = cart.reduce((s, i) => s + products.find(p => p.id === i.id).price * i.qty, 0);
+        const msg = `*Instant COD Order*\nTotal: ₹${total.toLocaleString()}\nVia ZentroMall`;
+        window.open("https://wa.me/919876543210?text=" + encodeURIComponent(msg));
+        localStorage.setItem("zm_cart", "[]");
+        alert("Order placed! Check WhatsApp.");
+      }
     }
   </script>
 </body>
