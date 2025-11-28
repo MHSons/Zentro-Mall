@@ -2,20 +2,21 @@
 <html lang="en" class="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Browse all products at ZentroMall with advanced filters." />
   <title>All Products – ZentroMall</title>
-  <link rel="icon" href="logo.png"/>
+  <link rel="icon" href="logo.png" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
-  <header class="bg-indigo-800 dark:bg-indigo-950 shadow-xl sticky top-0 z-50">
+  <header role="banner" class="bg-indigo-800 dark:bg-indigo-950 shadow-xl sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
       <a href="index.html" class="flex items-center gap-4">
-        <img src="logo.png" class="h-14 rounded-lg">
+        <img src="logo.png" alt="ZentroMall Logo" class="h-14 rounded-lg" />
         <h1 class="text-2xl font-bold">ZentroMall</h1>
       </a>
-      <nav class="flex gap-6">
+      <nav role="navigation" class="flex gap-6">
         <a href="index.html" class="hover:text-yellow-400">Home</a>
         <a href="cart.html" class="hover:text-yellow-400">Cart (<span id="cart-count">0</span>)</a>
         <a href="admin.html" class="bg-yellow-500 text-black px-6 py-2 rounded-full font-bold">Admin</a>
@@ -24,35 +25,47 @@
   </header>
 
   <div class="max-w-7xl mx-auto px-4 py-10">
-    <input type="text" id="search" placeholder="Search products..." class="w-full p-4 rounded-lg shadow text-lg mb-8">
-    <div class="flex gap-4 mb-8">
-      <select id="category" class="p-3 rounded border"><option value="">All Categories</option></select>
-      <input type="number" id="minprice" placeholder="Min Price" class="p-3 rounded border">
-      <input type="number" id="maxprice" placeholder="Max Price" class="p-3 rounded border">
-      <button onclick="applyFilters()" class="bg-indigo-600 text-white px-6 rounded">Filter</button>
+    <input type="text" id="search" placeholder="Search products..." class="w-full p-4 rounded-lg shadow mb-6" aria-label="Search products" />
+    <div class="flex flex-wrap gap-4 mb-8">
+      <select id="category" class="p-3 rounded border" aria-label="Filter by category">
+        <option value="">All Categories</option>
+        <option value="electronics">Electronics</option>
+        <option value="fashion">Fashion</option>
+      </select>
+      <input type="number" id="minprice" placeholder="Min Price" class="p-3 rounded border" aria-label="Minimum price" />
+      <input type="number" id="maxprice" placeholder="Max Price" class="p-3 rounded border" aria-label="Maximum price" />
+      <button onclick="applyFilters()" class="bg-indigo-600 text-white px-6 py-3 rounded" aria-label="Apply filters">Filter</button>
     </div>
-    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
   </div>
 
   <script src="main.js"></script>
   <script>
     function renderProducts(list) {
       document.getElementById("product-grid").innerHTML = list.map(p => `
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden hover-grow">
-          <img src="${p.image}" class="w-full h-64 object-cover">
+        <a href="product-detail.html?id=${p.id}" class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden hover-grow focus:outline-none focus:ring-2 focus:ring-yellow-400">
+          <img src="${p.image}" alt="${p.name}" class="w-full h-64 object-cover" />
           <div class="p-6">
             <h3 class="text-xl font-bold">${p.name}</h3>
             <p class="text-gray-600 dark:text-gray-300">${p.desc}</p>
-            <p class="text-3xl font-bold text-indigo-600 my-4">₹${p.price.toLocaleString()}</p>
-            <button onclick="addToCart(${p.id})" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg">Add to Cart</button>
+            <p class="text-2xl font-bold text-indigo-600 mt-2">₹${p.price.toLocaleString()}</p>
           </div>
-        </div>`).join("");
+        </a>`).join("");
     }
     renderProducts(products);
     document.getElementById("search").addEventListener("input", e => {
       const term = e.target.value.toLowerCase();
-      renderProducts(products.filter(p => p.name.toLowerCase().includes(term)));
+      renderProducts(products.filter(p => p.name.toLowerCase().includes(term) || p.desc.toLowerCase().includes(term)));
     });
+    function applyFilters() {
+      let filtered = [...products];
+      const cat = document.getElementById("category").value;
+      const min = parseInt(document.getElementById("minprice").value) || 0;
+      const max = parseInt(document.getElementById("maxprice").value) || Infinity;
+      if (cat) filtered = filtered.filter(p => p.category === cat);
+      filtered = filtered.filter(p => p.price >= min && p.price <= max);
+      renderProducts(filtered);
+    }
     updateCartCount();
   </script>
 </body>
