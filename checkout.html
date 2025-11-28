@@ -22,7 +22,7 @@
 
     <!-- Form -->
     <div class="p-10">
-      <form onsubmit="placeOrder(event)" class="space-y-8">
+      <form id="checkoutForm" class="space-y-8">
         <div>
           <label class="block text-xl font-bold mb-2 text-gray-700">Full Name</label>
           <input type="text" id="name" placeholder="Ahmed Khan" required
@@ -41,12 +41,26 @@
                     class="w-full p-5 rounded-xl border-2 border-gray-300 focus:border-green-600 text-xl transition resize-none"></textarea>
         </div>
 
+        <!-- Coupon -->
+        <div class="bg-gray-100 rounded-2xl p-6">
+          <div class="flex gap-4 mb-4">
+            <input type="text" id="coupon" placeholder="Enter Coupon Code (e.g. ZENTRO50)" 
+                   class="flex-1 p-4 rounded-xl bg-gray-300 text-black placeholder-gray-600">
+            <button type="button" onclick="applyCoupon()" class="bg-green-600 hover:bg-green-700 px-8 py-3 rounded-xl text-white font-bold">Apply</button>
+          </div>
+          <p id="coupon-msg" class="text-green-600 font-bold text-lg"></p>
+        </div>
+
         <!-- Order Summary -->
         <div class="bg-gray-100 rounded-2xl p-6">
           <h3 class="text-2xl font-bold mb-4 text-gray-800">Order Summary</h3>
           <div id="order-items" class="space-y-3 text-lg"></div>
           <div class="border-t-2 border-gray-300 mt-6 pt-4">
             <p class="text-3xl font-extrabold text-right text-green-600">
+              Subtotal: <span id="subtotal">₨0</span>
+            </p>
+            <p class="text-3xl font-extrabold text-right text-pink-500" id="discount-msg"></p>
+            <p class="text-3xl font-extrabold text-right text-green-600 mt-2">
               Total: <span id="final-total">₨0</span>
             </p>
           </div>
@@ -55,7 +69,7 @@
         <!-- Submit Button -->
         <button type="submit" id="submitBtn"
                 class="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-8 rounded-2xl text-3xl font-extrabold glow-btn transform hover:scale-105 transition duration-300">
-          SEND ORDER ON WHATSApp
+          SEND ORDER ON WHATSAPP
         </button>
       </form>
 
@@ -68,37 +82,63 @@
 
   <script src="main.js"></script>
   <script>
-    // WhatsApp Number (اپنا نمبر ڈال دو)
-    const whatsappNumber = "923001234567"; // ← یہاں اپنا نمبر ڈالنا ضروری ہے!
+    let discount = 0;
 
-    function loadOrderSummary() {
+    const whatsappNumber = "923018067880"; // ← اپنا نمبر یہاں ڈالیں
+    const form = document.getElementById("checkoutForm");
+
+    function renderOrderSummary() {
       const container = document.getElementById("order-items");
-      let total = 0;
-      let itemsHTML = "";
+      let subtotal = 0;
+      let html = "";
 
-      if (cart.length === 0) {
+      if (!cart.length) {
         container.innerHTML = "<p class='text-center text-gray-500'>Cart is empty</p>";
+        document.getElementById("subtotal").textContent = "₨0";
+        document.getElementById("final-total").textContent = "₨0";
+        document.getElementById("discount-msg").textContent = "";
         return;
       }
 
       cart.forEach(item => {
-        const product = products.find(p => p.id === item.id);
-        if (product) {
-          const itemTotal = product.price * item.qty;
-          total += itemTotal;
-          itemsHTML += `
-            <div class="flex justify-between">
-              <span>${product.name} × ${item.qty}</span>
-              <strong>₨${itemTotal.toLocaleString()}</strong>
-            </div>`;
+        const p = products.find(x => x.id === item.id);
+        if (p) {
+          const totalItem = p.price * item.qty;
+          subtotal += totalItem;
+          html += `<div class="flex justify-between">
+                    <span>${p.name} × ${item.qty}</span>
+                    <strong>₨${totalItem.toLocaleString()}</strong>
+                  </div>`;
         }
       });
 
-      container.innerHTML = itemsHTML;
-      document.getElementById("final-total").textContent = formatPrice(total);
+      container.innerHTML = html;
+      document.getElementById("subtotal").textContent = formatPrice(subtotal);
+      const finalTotal = subtotal - discount;
+      document.getElementById("final-total").textContent = formatPrice(finalTotal);
+      document.getElementById("discount-msg").textContent = discount ? `Discount: -₨${discount.toLocaleString()}` : "";
     }
 
-    function placeOrder(e) {
+    function applyCoupon() {
+      const code = document.getElementById("coupon").value.trim().toUpperCase();
+      const msg = document.getElementById("coupon-msg");
+      const subtotalValue = Number(document.getElementById("subtotal").textContent.replace(/[^0-9]/g,''));
+      discount = 0;
+
+      if (code === "ZENTRO50") {
+        discount = Math.round(subtotalValue * 0.5);
+        msg.textContent = "🎉 ZENTRO50 Applied! 50% OFF!";
+      } else if (code === "EID100") {
+        discount = 100000;
+        msg.textContent = "🎉 EID100 Applied! ₨100,000 OFF!";
+      } else {
+        msg.textContent = "❌ Invalid Coupon";
+      }
+
+      renderOrderSummary();
+    }
+
+    form.addEventListener("submit", function(e) {
       e.preventDefault();
 
       const name = document.getElementById("name").value.trim();
@@ -111,29 +151,25 @@
       }
 
       let total = 0;
-      let message = `*New Order from ZentroMall*\n\n`;
-      message += `Name: ${name}\n`;
-      message += `Phone: ${phone}\n`;
-      message += `Address: ${address}\n\n`;
-      message += `*Order Details:*\n`;
+      let msgText = `*New Order from ZentroMall*\n\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\n\n*Order Details:*\n`;
 
       cart.forEach(item => {
         const p = products.find(x => x.id === item.id);
         if (p) {
-          total += p.price * item.qty;
-          message += `• ${p.name} × ${item.qty} = ₨${(p.price * item.qty).toLocaleString()}\n`;
+          const itemTotal = p.price * item.qty;
+          total += itemTotal;
+          msgText += `• ${p.name} × ${item.qty} = ₨${itemTotal.toLocaleString()}\n`;
         }
       });
 
-      message += `\n*Total Amount: ₨${total.toLocaleString()}*\n`;
-      message += `Cash on Delivery | Fast Shipping\n`;
-      message += `Thank you for shopping with ZentroMall!`;
+      total -= discount;
+      msgText += `\n*Total Amount: ₨${total.toLocaleString()}*\nCash on Delivery | Fast Shipping\nThank you!`;
 
-      // Save order in localStorage
+      // Save order
       orders.push({
         date: new Date().toLocaleString("en-PK"),
-        customer: { name, phone, address },
-        items: cart.map(c => ({ ...c, name: products.find(p => p.id === c.id)?.name })),
+        customer: {name, phone, address},
+        items: cart.map(c => ({...c, name: products.find(p=>p.id===c.id)?.name})),
         total,
         status: "pending",
         tracking_id: ""
@@ -145,24 +181,24 @@
       localStorage.setItem("zm_cart", "[]");
       updateCartCount();
 
-      // Success Animation
+      // Success animation
       const btn = document.getElementById("submitBtn");
       btn.innerHTML = "Order Sent! Redirecting...";
-      btn.classList.remove("from-green-600", "to-emerald-600");
-      btn.classList.add("bg-yellow-500", "text-black");
+      btn.classList.remove("from-green-600","to-emerald-600");
+      btn.classList.add("bg-yellow-500","text-black");
 
-      // Open WhatsApp
-      const encoded = encodeURIComponent(message);
+      // Send WhatsApp
+      const encoded = encodeURIComponent(msgText);
       window.open(`https://wa.me/${whatsappNumber}?text=${encoded}`, "_blank");
 
       setTimeout(() => {
         alert("Your order has been sent successfully!\nWe'll contact you soon on WhatsApp");
         location.href = "index.html";
       }, 1500);
-    }
+    });
 
-    // Load summary when page opens
-    loadOrderSummary();
+    // Initial load
+    renderOrderSummary();
   </script>
 </body>
 </html>
