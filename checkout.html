@@ -1,58 +1,58 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Complete your purchase at ZentroMall." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Checkout – ZentroMall</title>
-  <link rel="icon" href="logo.png" />
+  <link rel="icon" href="logo.png"/>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="style.css" />
 </head>
 <body class="bg-gradient-to-br from-purple-900 to-indigo-900 text-white min-h-screen flex items-center justify-center">
-  <div class="bg-white text-black p-10 rounded-3xl shadow-2xl max-w-2xl w-full" role="main">
-    <img src="logo.png" alt="ZentroMall Logo" class="h-24 mx-auto mb-8" />
+  <div class="bg-white text-black p-10 rounded-3xl shadow-2xl max-w-2xl w-full">
+    <img src="logo.png" alt="ZentroMall" class="h-24 mx-auto mb-8">
     <h1 class="text-4xl font-bold text-center mb-8">Complete Your Order</h1>
     <form onsubmit="placeOrder(event)">
-      <input type="text" id="name" placeholder="Full Name" class="w-full p-4 rounded mb-4" required aria-required="true" />
-      <input type="tel" id="phone" placeholder="Phone (WhatsApp)" class="w-full p-4 rounded mb-4" required aria-required="true" />
-      <textarea id="address" placeholder="Delivery Address" class="w-full p-4 rounded mb-6 h-32" required aria-required="true"></textarea>
-      <button type="submit" class="w-full bg-green-600 text-white py-6 rounded-xl text-2xl font-bold hover:bg-green-700" aria-label="Place Order">Place Order via WhatsApp</button>
+      <input type="text" id="name" placeholder="پورا نام" class="w-full p-4 rounded mb-4" required>
+      <input type="tel" id="phone" placeholder="فون نمبر (WhatsApp)" class="w-full p-4 rounded mb-4" required>
+      <textarea id="address" placeholder="مکمل ایڈریس" class="w-full p-4 rounded mb-6 h-32" required></textarea>
+      <button type="submit" class="w-full bg-green-600 text-white py-6 rounded-xl text-2xl font-bold">
+        WhatsApp پر آرڈر کریں
+      </button>
     </form>
-    <p class="mt-4 text-center text-sm">Or pay with <button onclick="showPayment()" class="text-indigo-600 underline">Stripe</button> (Demo)</p>
-    <button onclick="buyNowFromCheckout()" class="w-full mt-4 bg-yellow-500 text-black py-4 rounded-xl text-xl font-bold hover:bg-yellow-600" aria-label="Buy Now">⚡ Buy Now (COD)</button>
   </div>
 
   <script src="main.js"></script>
   <script>
     function placeOrder(e) {
       e.preventDefault();
-      const name = document.getElementById("name").value;
-      const phone = document.getElementById("phone").value;
-      const address = document.getElementById("address").value;
-      if (!name || !phone || !address) return alert("Fill all fields");
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const address = document.getElementById("address").value.trim();
 
-      const total = cart.reduce((s, i) => s + products.find(p => p.id === i.id).price * i.qty, 0);
-      const msg = `*New Order from ZentroMall*%0A%0A*Customer:* ${name}%0A*Phone:* ${phone}%0A*Address:* ${address}%0A%0A*Items:*%0A${cart.map(item => {
+      if (!name || !phone || !address) return alert("سب فیلڈز بھریں!");
+
+      let total = 0;
+      let msg = `*نیا آرڈر - ZentroMall*\n\n`;
+      msg += `نام: ${name}\nفون: ${phone}\nایڈریس: ${address}\n\n*آرڈر کی تفصیل:* \n`;
+
+      cart.forEach(item => {
         const p = products.find(x => x.id === item.id);
-        return `${p.name} × ${item.qty} = ₹${(p.price * item.qty).toLocaleString()}`;
-      }).join("%0A")}%0A*Total:* ₹${total.toLocaleString()}`;
-      orders.push({ date: new Date().toLocaleString(), items: [...cart], total, customer: { name, phone, address } });
+        const itemTotal = p.price * item.qty;
+        total += itemTotal;
+        msg += `• ${p.name} × ${item.qty} = ₨${itemTotal.toLocaleString()}\n`;
+      });
+
+      msg += `\n*کل بل:* ₨${total.toLocaleString()}\n\nشکریہ!`;
+
+      // Save order
+      orders.push({date:new Date().toLocaleString(), items:[...cart], total, customer:{name,phone,address}});
       saveData();
+      cart = [];
       localStorage.setItem("zm_cart", "[]");
-      window.location.href = "https://wa.me/919876543210?text=" + encodeURIComponent(msg);
-    }
-    function showPayment() {
-      alert("Stripe integration requires API key. Contact support for setup.");
-    }
-    function buyNowFromCheckout() {
-      if (confirm("Confirm COD Order?\nWe will call you in 5 minutes for confirmation")) {
-        const total = cart.reduce((s, i) => s + products.find(p => p.id === i.id).price * i.qty, 0);
-        const msg = `*Instant COD Order*\nTotal: ₹${total.toLocaleString()}\nVia ZentroMall`;
-        window.open("https://wa.me/919876543210?text=" + encodeURIComponent(msg));
-        localStorage.setItem("zm_cart", "[]");
-        alert("Order placed! Check WhatsApp.");
-      }
+      updateCartCount();
+
+      // 100% working WhatsApp
+      openWhatsAppWithMessage(msg);
     }
   </script>
 </body>
