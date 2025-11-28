@@ -12,12 +12,10 @@
   </style>
 </head>
 <body class="bg-gradient-to-br from-purple-900 to-indigo-900 text-white min-h-screen">
-  <!-- Flash Banner (Admin Controlled) -->
   <div id="topBanner" class="bg-gradient-to-r from-red-600 to-orange-600 py-3 overflow-hidden text-lg font-bold">
     <div id="bannerText" class="inline-block animate-marquee px-10"></div>
   </div>
 
-  <!-- Navbar -->
   <nav class="bg-gray-900 p-6 shadow-2xl sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
       <div class="flex items-center gap-4">
@@ -34,7 +32,6 @@
     </div>
   </nav>
 
-  <!-- Hero -->
   <div class="text-center py-32">
     <h1 class="text-7xl font-bold mb-6">Welcome to ZentroMall</h1>
     <p class="text-3xl mb-10">Best Prices • Fast Delivery • 100% Original</p>
@@ -54,7 +51,6 @@
     } else {
       document.getElementById("topBanner").style.display = "none";
     }
-
     document.getElementById("featured").innerHTML = products.slice(0,8).map(p => `
       <div class="bg-white text-black rounded-2xl overflow-hidden shadow-2xl hover:scale-105 transition">
         <img src="${p.image}" class="w-full h-64 object-cover">
