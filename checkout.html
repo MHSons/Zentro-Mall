@@ -1,38 +1,29 @@
-function placeOrder(e) {
-  e.preventDefault();
-  const name = document.getElementById("name").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const address = document.getElementById("address").value.trim();
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>چیکنگ آؤٹ – ZentroMall</title>
+  <link rel="icon" href="logo.png"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-purple-900 to-indigo-900 text-white min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white text-black p-10 rounded-3xl shadow-2xl max-w-2xl w-full">
+    <img src="logo.png" alt="ZentroMall" class="h-20 mx-auto mb-6">
+    <h1 class="text-4xl font-bold text-center mb-8 text-indigo-800">آرڈر مکمل کریں</h1>
+    
+    <form onsubmit="placeOrder(event)">
+      <input type="text" id="name" placeholder="پورا نام" class="w-full p-4 rounded mb-4 text-right" required>
+      <input type="tel" id="phone" placeholder="فون نمبر (WhatsApp)" class="w-full p-4 rounded mb-4 text-right" required>
+      <textarea id="address" placeholder="مکمل ایڈریس (گلی، محلہ، شہر)" class="w-full p-4 rounded mb-6 h-32 text-right" required></textarea>
+      
+      <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-6 rounded-xl text-2xl font-bold">
+        WhatsApp پر آرڈر کریں
+      </button>
+    </form>
+  </div>
 
-  if (!name || !phone || !address) return alert("سب فیلڈز بھریں!");
-
-  let total = 0;
-  let msg = `*نیا آرڈر - ZentroMall*\n\n`;
-  msg += `نام: ${name}\nفون: ${phone}\nایڈریس: ${address}\n\n*آرڈر کی تفصیل:*\n`;
-
-  cart.forEach(item => {
-    const p = products.find(x => x.id === item.id);
-    const itemTotal = p.price * item.qty;
-    total += itemTotal;
-    msg += `• ${p.name} × ${item.qty} = ${formatPrice(itemTotal)}\n`;
-  });
-
-  msg += `\n*کل بل:* ${formatPrice(total)}\n\nشکریہ! ہم جلد کال کریں گے!`;
-
-  // Save order
-  orders.push({
-    date: new Date().toLocaleString("en-PK"),
-    items: [...cart],
-    total,
-    customer: {name, phone, address}
-  });
-  saveData();
-
-  // Clear cart
-  cart = [];
-  localStorage.setItem("zm_cart", "[]");
-  updateCartCount();
-
-  // WhatsApp pe bhejo
-  openWhatsAppWithMessage(msg);
-}
+  <!-- بس یہ ایک لائن رکھو -->
+  <script src="main.js"></script>
+</body>
+</html>
