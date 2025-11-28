@@ -2,53 +2,67 @@
 <html lang="en" class="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ZentroMall - Shop premium products with fast delivery. Everything you need, one Zentro." />
+  <meta name="keywords" content="ecommerce, shopping, ZentroMall, online store" />
+  <meta name="robots" content="index, follow" />
   <title>ZentroMall – Everything You Need. One Zentro.</title>
-  <link rel="icon" href="logo.png" type="image/png"/>
+  <link rel="icon" href="logo.png" type="image/png" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
-  <!-- Header -->
-  <header class="bg-indigo-800 dark:bg-indigo-950 shadow-xl sticky top-0 z-50">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen" tabindex="0">
+  <header role="banner" class="bg-indigo-800 dark:bg-indigo-950 shadow-xl sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center">
       <div class="flex items-center gap-4">
-        <img src="logo.png" alt="ZentroMall" class="h-14 rounded-lg">
+        <img src="logo.png" alt="ZentroMall Logo" class="h-14 rounded-lg" />
         <div>
           <h1 class="text-2xl md:text-3xl font-bold">ZentroMall</h1>
           <p class="text-xs md:text-sm opacity-90">Everything You Need. One Zentro.</p>
         </div>
       </div>
-      <nav class="flex flex-wrap gap-4 mt-4 md:mt-0 text-lg">
+      <nav role="navigation" class="flex flex-wrap gap-4 mt-4 md:mt-0 text-lg">
         <a href="index.html" class="hover:text-yellow-400">Home</a>
         <a href="products.html" class="hover:text-yellow-400">Products</a>
         <a href="cart.html" class="hover:text-yellow-400">Cart (<span id="cart-count">0</span>)</a>
         <a href="orders.html" class="hover:text-yellow-400">Orders</a>
         <a href="login.html" class="hover:text-yellow-400">Login</a>
-        <button onclick="toggleTheme()" class="px-4 py-2 bg-gray-700 rounded">Dark/Light</button>
+        <button onclick="toggleTheme()" class="px-4 py-2 bg-gray-700 rounded" aria-label="Toggle Dark/Light Mode">🌙</button>
+        <button onclick="toggleLang()" class="px-4 py-2 bg-gray-700 rounded" aria-label="Toggle Language">EN/UR</button>
       </nav>
     </div>
   </header>
 
   <!-- Hero -->
-  <div class="bg-gradient-to-r from-purple-800 to-indigo-900 text-white py-20 text-center">
+  <div class="bg-gradient-to-r from-purple-800 to-indigo-900 text-white py-20 text-center" role="banner">
     <h2 class="text-4xl md:text-6xl font-bold mb-6">Welcome to ZentroMall</h2>
     <p class="text-xl mb-8">Best Prices • Fast Delivery • 100% Original</p>
-    <a href="products.html" class="bg-yellow-500 text-black px-10 py-4 rounded-full text-2xl font-bold hover:bg-yellow-400">SHOP NOW</a>
+    <a href="products.html" class="bg-yellow-500 text-black px-10 py-4 rounded-full text-2xl font-bold hover:bg-yellow-400" aria-label="Shop Now">SHOP NOW</a>
   </div>
 
-  <!-- Featured -->
+  <!-- Featured Products -->
   <div class="max-w-7xl mx-auto px-4 py-16">
     <h2 class="text-4xl font-bold text-center mb-12">Featured Products</h2>
     <div id="featured" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
   </div>
 
-  <!-- WhatsApp Float -->
-  <a href="https://wa.me/919876543210?text=Namaste%20ZentroMall%20Team!" class="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-5 rounded-full shadow-2xl z-50">
+  <!-- GDPR Notice -->
+  <div id="consent" class="fixed bottom-4 left-4 bg-gray-800 text-white p-4 rounded-lg shadow-xl hidden" role="alert">
+    <p>We use cookies for a better experience. <button onclick="acceptConsent()" class="text-yellow-400 underline">Accept</button></p>
+  </div>
+
+  <!-- WhatsApp + Call -->
+  <a href="https://wa.me/919876543210?text=Namaste%20ZentroMall%20Team!" class="fixed bottom-20 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-2xl z-50" aria-label="Contact via WhatsApp">
+    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">...</svg>
+  </a>
+  <a href="tel:+919876543210" class="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-2xl z-50" aria-label="Call Us">
     <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">...</svg>
   </a>
 
   <script src="main.js"></script>
-  <script>loadFeatured(); updateCartCount(); loadTheme();</script>
+  <script>
+    loadFeatured(); updateCartCount(); loadTheme(); loadLang();
+    if (!localStorage.getItem("zm_consent")) document.getElementById("consent").classList.remove("hidden");
+  </script>
 </body>
 </html>
