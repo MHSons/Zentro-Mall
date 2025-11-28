@@ -1,5 +1,7 @@
-.hover-grow { transition: all 0.3s; }
-.hover-grow:hover { transform: translateY(-10px); }
+body { font-family: 'Arial', sans-serif; }
+.hover-grow { transition: all 0.3s ease; }
+.hover-grow:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
 .dark img { filter: brightness(0.9); }
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 10px; }
+@media (max-width: 640px) { .grid-cols-4 { grid-template-columns: 1fr 1fr; } }
