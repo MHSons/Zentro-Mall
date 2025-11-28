@@ -29,10 +29,10 @@
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
       const users = JSON.parse(localStorage.getItem("zm_users") || "[]");
-      if (users.find(u => u.email === email)) return alert("Email already registered");
+      if (users.find(u => u.email === email)) return alert(lang === "ur" ? "ای میل پہلے سے رجسٹرڈ ہے" : "Email already registered");
       users.push({ name, email, password, phone: "" });
       localStorage.setItem("zm_users", JSON.stringify(users));
-      alert("Registration successful! Please login.");
+      alert(lang === "ur" ? "رجسٹریشن کامیاب!" : "Registration successful!");
       window.location.href = "login.html";
     }
   </script>
