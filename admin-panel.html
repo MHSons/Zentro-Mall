@@ -6,170 +6,180 @@
   <title>Admin Panel - ZentroMall</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-white min-h-screen p-6" onload="checkLogin(); loadOrders()">
+<body class="bg-gray-900 text-white min-h-screen p-6" onload="checkLogin(); loadOrders(); loadProducts(); loadBanners()">
 
   <div class="max-w-7xl mx-auto">
-    <div class="flex justify-between items-center mb-8 bg-gray-800 rounded-2xl p-6">
-      <h1 class="text-5xl font-bold text-yellow-400">ADMIN PANEL</h1>
-      <div class="flex gap-4">
-        <button onclick="changePassword()" class="bg-orange-600 hover:bg-orange-700 px-6 py-3 rounded-lg">Change Password</button>
-        <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-8 py-3 rounded-lg text-xl">Logout</button>
-      </div>
-    </div>
+    <h1 class="text-5xl font-bold text-center mb-8 text-yellow-400">ADMIN PANEL</h1>
 
-    <!-- Orders Table -->
-    <div class="bg-gray-800 rounded-2xl p-8">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-4xl font-bold text-cyan-400">All Orders (${orders.length})</h2>
-        <div class="flex gap-4">
-          <input type="text" id="searchBox" placeholder="Search by name/phone..." class="p-4 rounded-lg bg-gray-700 text-white" onkeyup="searchOrders()">
-          <button onclick="exportToExcel()" class="bg-green-600 hover:bg-green-700 px-8 py-4 rounded-lg font-bold">Export Excel</button>
-        </div>
-      </div>
-
+    <!-- Orders History -->
+    <div class="bg-gray-800 rounded-2xl p-8 mb-8">
+      <h2 class="text-3xl font-bold mb-6">Order History</h2>
+      <input type="text" id="searchOrder" placeholder="Search orders..." class="w-full p-4 rounded bg-gray-700 mb-4" onkeyup="searchOrders()">
+      <button onclick="exportToExcel()" class="bg-blue-600 px-6 py-3 rounded mb-4">Export to Excel</button>
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead class="bg-gray-700">
             <tr>
-              <th class="py-4">#</th>
-              <th>Date & Time</th>
-              <th>Name</th>
-              <th>Phone</th>
-              <th>Address</th>
-              <th>Items</th>
-              <th>Total</th>
-              <th>Status</th>
-              <th>Tracking ID</th>
-              <th>Action</th>
+              <th>#</th><th>Date</th><th>Name</th><th>Phone</th><th>Items</th><th>Total</th><th>Status</th><th>Tracking ID</th><th>Action</th>
             </tr>
           </thead>
-          <tbody id="ordersBody" class="text-center"></tbody>
+          <tbody id="orderBody"></tbody>
         </table>
       </div>
+    </div>
+
+    <!-- Products Management -->
+    <div class="bg-gray-800 rounded-2xl p-8 mb-8">
+      <h2 class="text-3xl font-bold mb-6">Add/Edit Product</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input id="prodName" placeholder="Product Name" class="p-4 rounded bg-gray-700">
+        <input id="prodPrice" type="number" placeholder="Price (PKR)" class="p-4 rounded bg-gray-700">
+        <input id="prodDesc" placeholder="Description" class="p-4 rounded bg-gray-700 col-span-2">
+        <input type="file" id="prodMedia" accept="image/*,video/*" class="p-4 bg-gray-700 col-span-2">
+      </div>
+      <button onclick="addOrEditProduct()" class="mt-4 w-full bg-green-600 py-4 rounded font-bold">Save Product</button>
+      <div id="productList" class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8"></div>
+    </div>
+
+    <!-- Banner Management -->
+    <div class="bg-gray-800 rounded-2xl p-8">
+      <h2 class="text-3xl font-bold mb-6">Add/Edit Banner</h2>
+      <input id="bannerText" placeholder="Banner Text" class="p-4 rounded bg-gray-700 w-full mb-4">
+      <input type="file" id="bannerMedia" accept="image/*,video/*" class="p-4 bg-gray-700 w-full mb-4">
+      <button onclick="addOrEditBanner()" class="w-full bg-orange-600 py-4 rounded font-bold">Save Banner</button>
+      <div id="bannerList" class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8"></div>
     </div>
   </div>
 
   <script src="main.js"></script>
   <script>
-    function checkLogin() {
-      if (localStorage.getItem("zm_admin_logged") !== "true") {
-        alert("Please login first!");
-        location.href = "admin.html";
-      }
-    }
-
-    function logout() {
-      if (confirm("Logout?")) {
-        localStorage.removeItem("zm_admin_logged");
-        location.href = "admin.html";
-      }
-    }
-
-    function changePassword() {
-      const np = prompt("Enter new password (min 4 chars):");
-      if (np && np.length >= 4) {
-        localStorage.setItem("zm_admin_pass", np);
-        alert("Password changed successfully!");
-      }
-    }
+    function checkLogin() { if(localStorage.getItem("zm_admin_logged") !== "true") location.href = "admin.html"; }
+    function logout() { localStorage.removeItem("zm_admin_logged"); location.href = "admin.html"; }
 
     function loadOrders() {
-      const tbody = document.getElementById("ordersBody");
-      tbody.innerHTML = "";
-
-      if (orders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" class="py-20 text-3xl text-gray-500">No orders yet</td></tr>`;
-        return;
-      }
-
-      orders.slice().reverse().forEach((order, i) => {
-        const realIndex = orders.length - 1 - i;
-        const items = order.items.map(it => `${it.name} × ${it.qty}`).join("<br>");
-
-        tbody.innerHTML += `
-          <tr class="border-b border-gray-700 hover:bg-gray-700">
-            <td class="font-bold text-xl">${orders.length - i}</td>
-            <td class="text-sm">${order.date}</td>
-            <td class="font-bold text-green-400">${order.customer.name}</td>
-            <td>${order.customer.phone}</td>
-            <td class="text-sm max-w-xs">${order.customer.address}</td>
-            <td class="text-sm">${items}</td>
-            <td class="text-2xl font-bold text-yellow-400">${formatPrice(order.total)}</td>
-            
-            <!-- Status Button -->
+      const tbody = document.getElementById("orderBody");
+      tbody.innerHTML = orders.slice().reverse().map((o, idx) => {
+        const realIdx = orders.length - 1 - idx;
+        const items = o.items.map(it => `${it.name} x${it.qty}`).join("<br>");
+        return `
+          <tr class="border-b border-gray-600">
+            <td>${orders.length - idx}</td>
+            <td>${o.date}</td>
+            <td>${o.customer.name}</td>
+            <td>${o.customer.phone}</td>
+            <td class="text-left">${items}</td>
+            <td>${formatPrice(o.total)}</td>
             <td>
-              <button onclick="toggleStatus(${realIndex})" 
-                      class="px-6 py-3 rounded-lg font-bold text-lg ${order.status === 'complete' ? 'bg-green-600' : 'bg-yellow-600'}">
-                ${order.status === 'complete' ? 'Complete' : 'Pending'}
-              </button>
+              <select onchange="updateStatus(${realIdx}, this.value)" class="bg-gray-700 rounded p-2">
+                <option value="pending" ${o.status==='pending'?'selected':''}>Pending</option>
+                <option value="complete" ${o.status==='complete'?'selected':''}>Complete</option>
+              </select>
             </td>
-
-            <!-- Tracking ID - اب پکا سیو ہوگا -->
             <td>
-              <input type="text" value="${order.tracking_id || ''}" 
-                     onchange="saveTracking(${realIndex}, this.value)" 
-                     placeholder="Enter Tracking ID"
-                     class="bg-gray-600 text-white px-4 py-3 rounded-lg w-40 text-center font-bold">
+              <input type="text" value="${o.tracking_id||''}" onchange="updateTracking(${realIdx}, this.value)" class="bg-gray-700 rounded p-2 w-full">
             </td>
-
-            <!-- Delete Button -->
             <td>
-              <button onclick="deleteOrder(${realIndex})" 
-                      class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg font-bold">
-                Delete
-              </button>
+              <button onclick="deleteOrder(${realIdx})" class="bg-red-600 px-4 py-2 rounded">Delete</button>
             </td>
           </tr>`;
-      });
+      }).join("") || "<tr><td colspan='9' class='py-10 text-2xl text-gray-500'>No orders</td></tr>";
     }
 
-    // Status Toggle + Save
-    function toggleStatus(i) {
-      orders[i].status = orders[i].status === "complete" ? "pending" : "complete";
-      saveData();
-      loadOrders();
+    function updateStatus(i, s) { orders[i].status = s; saveData(); alert("Status updated!"); }
+    function updateTracking(i, t) { orders[i].tracking_id = t; saveData(); alert("Tracking ID saved!"); }
+    function deleteOrder(i) { if(confirm("Delete?")) { orders.splice(i,1); saveData(); loadOrders(); } }
+
+    function loadProducts() {
+      document.getElementById("productList").innerHTML = products.map(p => `
+        <div class="bg-gray-700 p-4 rounded">
+          <img src="${p.image}" class="w-full h-32 object-cover mb-2">
+          <h3 class="font-bold">${p.name}</h3>
+          <p>${formatPrice(p.price)}</p>
+          <p class="text-sm">${p.desc}</p>
+          <button onclick="editProduct(${p.id})" class="bg-blue-600 px-4 py-2 rounded mt-2">Edit</button>
+          <button onclick="deleteProduct(${p.id})" class="bg-red-600 px-4 py-2 rounded mt-2">Delete</button>
+        </div>
+      `).join("") || "<p>No products</p>";
     }
 
-    // Tracking ID Save (فوراً سیو)
-    function saveTracking(i, value) {
-      orders[i].tracking_id = value.trim();
-      saveData();
-      alert("Tracking ID saved successfully!");
-    }
+    function addOrEditProduct() {
+      const name = document.getElementById("prodName").value.trim();
+      const price = Number(document.getElementById("prodPrice").value);
+      const desc = document.getElementById("prodDesc").value.trim();
+      const file = document.getElementById("prodMedia").files[0];
 
-    // Delete Order
-    function deleteOrder(i) {
-      if (confirm("Delete this order permanently?")) {
-        orders.splice(i, 1);
-        saveData();
-        loadOrders();
+      if (!name || !price) return alert("Name and price required!");
+      const id = document.getElementById("prodId")?.value || Date.now();
+
+      if(file) {
+        handleImageUpload({target: {files: [file]}}, (media) => {
+          updateProduct(id, name, price, desc, media);
+        });
+      } else {
+        updateProduct(id, name, price, desc);
       }
     }
 
-    // Search
-    function searchOrders() {
-      const term = document.getElementById("searchBox").value.toLowerCase();
-      const rows = document.querySelectorAll("#ordersBody tr");
-      rows.forEach(row => {
-        row.style.display = row.textContent.toLowerCase().includes(term) ? "" : "none";
-      });
+    function updateProduct(id, name, price, desc, media) {
+      const index = products.findIndex(p => p.id === id);
+      if (index > -1) {
+        products[index].name = name;
+        products[index].price = price;
+        products[index].desc = desc;
+        if(media) products[index].image = media;
+        alert("Product updated!");
+      } else {
+        products.push({id, name, price, image: media, desc});
+        alert("Product added!");
+      }
+      saveData();
+      loadProducts();
+      clearProductForm();
     }
 
-    // Excel Export
-    function exportToExcel() {
-      if (orders.length === 0) return alert("No orders to export!");
+    function editProduct(id) {
+      const p = products.find(x => x.id === id);
+      document.getElementById("prodName").value = p.name;
+      document.getElementById("prodPrice").value = p.price;
+      document.getElementById("prodDesc").value = p.desc;
+      // For image/video, user can re-upload if needed
+      document.getElementById("prodId") = id; // Hidden, but use variable if needed
+    }
 
-      let csv = "No,Date,Name,Phone,Address,Items,Total,Status,Tracking_ID\n";
-      orders.forEach((o, i) => {
-        const items = o.items.map(it => `${it.name} x${it.qty}`).join(" | ");
-        csv += `${i+1},"${o.date}","${o.customer.name}","${o.customer.phone}","${o.customer.address.replace(/"/g,'""')}","${items}","${o.total}","${o.status}","${o.tracking_id || ''}"\n`;
-      });
+    function deleteProduct(id) { if(confirm("Delete product?")) { products = products.filter(x => x.id !== id); saveData(); loadProducts(); } }
 
-      const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "ZentroMall_Orders_" + new Date().toISOString().slice(0,10) + ".csv";
-      link.click();
+    function clearProductForm() {
+      document.getElementById("prodName").value = "";
+      document.getElementById("prodPrice").value = "";
+      document.getElementById("prodDesc").value = "";
+      document.getElementById("prodMedia").value = "";
+    }
+
+    function loadBanners() {
+      document.getElementById("bannerList").innerHTML = banners.map((t,i) => `
+        <div class="bg-gray-700 p-4 rounded flex justify-between">
+          <span>${t}</span>
+          <button onclick="banners.splice(i,1);localStorage.setItem('zm_banners',JSON.stringify(banners));loadBanners()" class="text-red-400">Delete</button>
+        </div>
+      `).join("") || "<p class='text-gray-500'>No banner added</p>";
+    }
+    function addOrEditBanner() {
+      const text = document.getElementById("bannerText").value.trim();
+      const file = document.getElementById("bannerMedia").files[0];
+      if(!text) return alert("Banner text required!");
+      if(file) {
+        handleImageUpload({target: {files: [file]}}, (media) => {
+          banners.push({text, media});
+          localStorage.setItem("zm_banners", JSON.stringify(banners));
+          loadBanners();
+        });
+      } else {
+        banners.push({text, media: ""});
+        localStorage.setItem("zm_banners", JSON.stringify(banners));
+        loadBanners();
+      }
+      document.getElementById("bannerText").value = "";
+      document.getElementById("bannerMedia").value = "";
     }
   </script>
 </body>
