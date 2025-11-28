@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="View your wishlist at ZentroMall." />
+  <title>Wishlist – ZentroMall</title>
+  <link rel="icon" href="logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+  <header role="banner" class="bg-indigo-800 dark:bg-indigo-950 shadow-xl sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-4">
+        <img src="logo.png" alt="ZentroMall Logo" class="h-14 rounded-lg" />
+        <h1 class="text-2xl font-bold">ZentroMall</h1>
+      </a>
+      <a href="cart.html" class="hover:text-yellow-400">Cart (<span id="cart-count">0</span>)</a>
+    </div>
+  </header>
+
+  <div class="max-w-4xl mx-auto px-4 py-16">
+    <h1 class="text-5xl font-bold text-center mb-12">Your Wishlist</h1>
+    <div id="wishlist-items" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </div>
+
+  <script src="main.js"></script>
+  <script>
+    const wishlist = JSON.parse(localStorage.getItem("zm_wishlist") || "[]");
+    document.getElementById("wishlist-items").innerHTML = wishlist.length ? wishlist.map(id => {
+      const p = products.find(x => x.id === id);
+      return p ? `
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl flex items-center justify-between">
+          <img src="${p.image}" alt="${p.name}" class="w-24 h-24 object-cover rounded" />
+          <div class="flex-1 mx-6">
+            <h3 class="text-2xl font-bold">${p.name}</h3>
+            <p class="text-gray-600 dark:text-gray-300">₹${p.price.toLocaleString()}</p>
+          </div>
+          <button onclick="toggleWishlist(${p.id})" class="bg-red-500 text-white px-6 py-3 rounded" aria-label="Remove from wishlist">❤️ Remove</button>
+        </div>` : "";
+    }).join("") : "<p class='text-center text-2xl'>Wishlist is empty</p>";
+    updateCartCount();
+  </script>
+</body>
+</html>
