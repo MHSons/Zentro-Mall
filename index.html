@@ -8,217 +8,209 @@
 
     <title>ZentroMall | Pakistan's Premium Online Shopping Store</title>
 
+    <!-- SEO Meta Tags -->
     <meta name="description" content="Buy 100% Original Products from ZentroMall. Mobiles, Laptops, Fashion, Electronics and much more with Fast Delivery across Pakistan.">
     <meta name="keywords" content="Pakistan Online Shopping, Electronics, Mobiles, Laptop, Fashion, Watches, ZentroMall">
     <meta name="author" content="ZentroMall">
     <meta name="theme-color" content="#4F46E5">
 
+    <!-- OpenGraph Social Sharing -->
     <meta property="og:title" content="ZentroMall - Premium Shopping Experience">
     <meta property="og:description" content="Pakistan's Premium Online Shopping Store">
     <meta property="og:image" content="logo.png">
     <meta property="og:type" content="website">
 
+    <!-- Favicon & Stylesheets -->
     <link rel="icon" href="logo.png">
-
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <style>
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background: linear-gradient(135deg, #14002c, #1b1464, #050505);
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(18px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .hero-bg {
-            background: radial-gradient(circle at top left, #6d28d9, transparent 35%),
-                        radial-gradient(circle at bottom right, #2563eb, transparent 35%);
-        }
-
-        .nav-link {
-            transition: .3s;
-        }
-
-        .nav-link:hover {
-            color: #facc15;
-        }
-
-        .btn-main {
-            background: linear-gradient(to right, #facc15, #f97316);
-            color: #000;
-            font-weight: bold;
-            transition: .3s;
-        }
-
-        .btn-main:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, .4);
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-12px); }
-            100% { transform: translateY(0px); }
-        }
-
-        .float {
-            animation: float 4s ease-in-out infinite;
-        }
-
-        @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-
-        .animate-marquee {
-            animation: marquee 30s linear infinite;
-        }
-
-        .animate-marquee:hover {
-            animation-play-state: paused;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="text-white min-h-screen flex flex-col justify-between">
 
-    <!-- Announcement Banner -->
-    <div id="topBanner" class="hidden bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400 py-3 overflow-hidden shadow-lg">
-        <div id="bannerContainer" class="animate-marquee whitespace-nowrap text-lg md:text-xl font-bold">
-            <!-- Dynamic Banner Loaded via main.js -->
+    <!-- Announcement Bar -->
+    <div id="topBanner" class="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400 py-2.5 overflow-hidden shadow-lg border-b border-white/10">
+        <div id="bannerContainer" class="animate-marquee whitespace-nowrap text-sm md:text-base font-bold text-black flex gap-12 items-center">
+            <span>🔥 FREE Nationwide Express Delivery on Orders Above PKR 5,000!</span>
+            <span>⚡ Flash Sale: Get Up to 40% OFF on Genuine Accessories!</span>
+            <span>💬 24/7 Order Support via WhatsApp Hotline!</span>
         </div>
     </div>
 
-    <!-- Header Navbar -->
-    <nav class="sticky top-0 z-50 glass">
+    <!-- Header / Navbar -->
+    <nav class="sticky top-0 z-50 glass backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
                 
-                <!-- Logo -->
+                <!-- Brand Logo -->
                 <a href="index.html" class="flex items-center gap-4">
-                    <img src="logo.png" class="h-12 w-12 rounded-full shadow-2xl object-cover" onerror="this.src='https://via.placeholder.com/100/4f46e5/ffffff?text=ZM'">
+                    <img src="logo.png" class="h-12 w-12 rounded-full shadow-2xl object-cover border border-white/20" onerror="this.src='https://via.placeholder.com/100/4f46e5/ffffff?text=ZM'">
                     <div>
-                        <h1 class="text-2xl md:text-3xl font-black tracking-wide">ZentroMall</h1>
-                        <p class="text-xs text-gray-300 hidden sm:block">Premium Shopping Experience</p>
+                        <h1 class="text-2xl md:text-3xl font-black tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-yellow-400">ZentroMall</h1>
+                        <p class="text-xs text-yellow-400 font-semibold hidden sm:block">Premium Shopping Destination</p>
                     </div>
                 </a>
 
-                <!-- Desktop Menu Nav -->
-                <div class="hidden lg:flex gap-6 items-center font-medium">
-                    <a href="index.html" class="nav-link text-yellow-400">Home</a>
+                <!-- Desktop Navigation Links -->
+                <div class="hidden lg:flex gap-6 items-center font-semibold text-sm">
+                    <a href="index.html" class="text-yellow-400 border-b-2 border-yellow-400 pb-1">Home</a>
                     <a href="products.html" class="nav-link">Products</a>
-                    <a href="wishlist.html" class="nav-link">
-                        Wishlist (<span id="wishlist-count">0</span>)
+                    <a href="wishlist.html" class="nav-link flex items-center gap-1.5">
+                        <i class="fa-regular fa-heart"></i> Wishlist <span id="wishlist-count" class="wishlist-badge">0</span>
                     </a>
-                    <a href="cart.html" class="nav-link">
-                        Cart (<span id="cart-count">0</span>)
+                    <a href="cart.html" class="nav-link flex items-center gap-1.5">
+                        <i class="fa-solid fa-cart-shopping"></i> Cart <span id="cart-count" class="cart-badge">0</span>
                     </a>
-                    <a href="my-orders.html" class="nav-link">Orders</a>
-                    <a href="profile.html" class="nav-link">Profile</a>
-                    <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
-                    <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold transition">Admin</a>
+                    <a href="my-orders.html" class="nav-link">My Orders</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                    
+                    <!-- Dynamic Auth / User Profile Link -->
+                    <div id="navAuthLinks" class="flex items-center gap-3 pl-4 border-l border-white/20">
+                        <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition shadow-lg">Login</a>
+                        <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-xl font-bold transition">Admin</a>
+                    </div>
                 </div>
 
-                <!-- Mobile Menu Toggle Button -->
-                <button id="mobileBtn" onclick="toggleMobileMenu()" class="lg:hidden text-3xl focus:outline-none">
+                <!-- Mobile Navigation Toggle Button -->
+                <button id="mobileBtn" onclick="toggleMobileMenu()" class="lg:hidden text-2xl focus:outline-none p-2 rounded-lg bg-white/10">
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
 
             <!-- Mobile Drawer Menu -->
-            <div id="mobileMenu" class="hidden pt-4 pb-2 space-y-3 lg:hidden border-t border-white/10 mt-3">
-                <a href="index.html" class="block py-1 hover:text-yellow-400">Home</a>
-                <a href="products.html" class="block py-1 hover:text-yellow-400">Products</a>
-                <a href="wishlist.html" class="block py-1 hover:text-yellow-400">Wishlist (<span class="wishlist-badge">0</span>)</a>
-                <a href="cart.html" class="block py-1 hover:text-yellow-400">Cart (<span id="cart-count-mobile">0</span>)</a>
-                <a href="my-orders.html" class="block py-1 hover:text-yellow-400">My Orders</a>
-                <a href="profile.html" class="block py-1 hover:text-yellow-400">Profile</a>
-                <div class="flex gap-4 pt-2">
-                    <a href="login.html" class="bg-yellow-400 text-black px-4 py-2 rounded-lg font-bold text-sm w-full text-center">Login</a>
-                    <a href="admin.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold text-sm w-full text-center">Admin</a>
+            <div id="mobileMenu" class="hidden pt-4 pb-3 space-y-3 lg:hidden border-t border-white/10 mt-3 text-sm">
+                <a href="index.html" class="block py-2 text-yellow-400 font-bold border-b border-white/5">Home</a>
+                <a href="products.html" class="block py-2 hover:text-yellow-400 border-b border-white/5">Products Catalog</a>
+                <a href="wishlist.html" class="block py-2 hover:text-yellow-400 border-b border-white/5 flex justify-between">
+                    <span>Wishlist</span>
+                    <span class="wishlist-badge">0</span>
+                </a>
+                <a href="cart.html" class="block py-2 hover:text-yellow-400 border-b border-white/5 flex justify-between">
+                    <span>Shopping Cart</span>
+                    <span id="cart-count-mobile" class="cart-badge">0</span>
+                </a>
+                <a href="my-orders.html" class="block py-2 hover:text-yellow-400 border-b border-white/5">My Orders</a>
+                <a href="contact.html" class="block py-2 hover:text-yellow-400 border-b border-white/5">Contact Us</a>
+                
+                <div class="flex gap-3 pt-3">
+                    <a href="login.html" class="bg-yellow-400 text-black px-4 py-2.5 rounded-xl font-bold text-center w-full shadow-md">Login</a>
+                    <a href="admin.html" class="bg-indigo-600 text-white px-4 py-2.5 rounded-xl font-bold text-center w-full shadow-md">Admin</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content Area -->
+    <!-- Main Page Content -->
     <main>
+        
         <!-- Hero Section -->
-        <section class="hero-bg border-b border-white/10">
-            <div class="max-w-7xl mx-auto px-6 py-20 lg:py-28">
+        <section class="hero-bg border-b border-white/10 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-6 py-20 lg:py-28 relative z-10">
                 <div class="grid lg:grid-cols-2 gap-14 items-center">
                     <div>
-                        <div class="inline-block bg-yellow-400 text-black px-5 py-2 rounded-full font-bold text-sm mb-6 shadow-lg">
-                            🔥 Trusted by Thousands of Customers Across Pakistan
+                        <div class="inline-flex items-center gap-2 bg-yellow-400/20 border border-yellow-400/40 text-yellow-300 px-4 py-2 rounded-full font-bold text-xs sm:text-sm mb-6 backdrop-blur-md">
+                            <i class="fa-solid fa-fire text-orange-400"></i> Trusted Online Store in Pakistan
                         </div>
                         <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black leading-tight">
-                            The Future Of <span class="text-yellow-400">Online Shopping</span> Starts Here.
+                            The Future Of <span class="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-500">Online Shopping</span> Starts Here.
                         </h1>
-                        <p class="text-gray-300 text-lg md:text-xl mt-6 leading-relaxed">
-                            Discover premium quality products with secure checkout, fast nationwide delivery, cash on delivery, and unbeatable prices.
+                        <p class="text-gray-300 text-base sm:text-lg lg:text-xl mt-6 leading-relaxed">
+                            Discover original tech accessories, smartphones, and fashion items with fast nationwide delivery, cash on delivery, and 100% buyer protection.
                         </p>
                         
-                        <div class="flex flex-wrap gap-5 mt-10">
-                            <a href="products.html" class="btn-main px-8 py-4 rounded-xl text-lg shadow-xl">
-                                Shop Now <i class="fa-solid fa-arrow-right ml-2"></i>
+                        <div class="flex flex-wrap gap-4 sm:gap-5 mt-10">
+                            <a href="products.html" class="btn-main px-8 py-4 rounded-xl text-lg font-bold flex items-center gap-2 shadow-2xl">
+                                Explore Store <i class="fa-solid fa-arrow-right"></i>
                             </a>
-                            <a href="#featured-section" class="glass hover:bg-white/20 transition px-8 py-4 rounded-xl text-lg font-semibold">
-                                Explore Featured
+                            <a href="#categories-section" class="glass hover:bg-white/20 transition px-8 py-4 rounded-xl text-lg font-semibold border border-white/20">
+                                Categories
                             </a>
                         </div>
 
-                        <!-- Highlights Stats -->
-                        <div class="grid grid-cols-3 gap-6 mt-14 pt-8 border-t border-white/10">
+                        <!-- Highlight Statistics -->
+                        <div class="grid grid-cols-3 gap-6 mt-14 pt-8 border-t border-white/10 text-center sm:text-left">
                             <div>
                                 <h2 class="text-3xl lg:text-4xl font-black text-yellow-400">10K+</h2>
-                                <p class="text-gray-400 text-sm mt-1">Happy Customers</p>
+                                <p class="text-gray-400 text-xs sm:text-sm mt-1">Happy Customers</p>
                             </div>
                             <div>
-                                <h2 class="text-3xl lg:text-4xl font-black text-yellow-400">500+</h2>
-                                <p class="text-gray-400 text-sm mt-1">Original Products</p>
+                                <h2 class="text-3xl lg:text-4xl font-black text-yellow-400">100%</h2>
+                                <p class="text-gray-400 text-xs sm:text-sm mt-1">Authentic Gear</p>
                             </div>
                             <div>
                                 <h2 class="text-3xl lg:text-4xl font-black text-yellow-400">24/7</h2>
-                                <p class="text-gray-400 text-sm mt-1">WhatsApp Support</p>
+                                <p class="text-gray-400 text-xs sm:text-sm mt-1">WhatsApp Support</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Hero Floating Image -->
+                    <!-- Floating Branding Graphics -->
                     <div class="text-center relative">
-                        <div class="absolute inset-0 bg-indigo-500/20 blur-3xl rounded-full"></div>
-                        <img src="logo.png" alt="ZentroMall Logo" class="w-80 lg:w-96 mx-auto float drop-shadow-2xl relative z-10 rounded-full" onerror="this.src='https://via.placeholder.com/400/4f46e5/ffffff?text=ZentroMall'">
+                        <div class="absolute inset-0 bg-indigo-600/30 blur-3xl rounded-full"></div>
+                        <img src="logo.png" alt="ZentroMall" class="w-72 sm:w-80 lg:w-96 mx-auto float drop-shadow-2xl relative z-10 rounded-full border-4 border-white/10" onerror="this.src='https://via.placeholder.com/400/4f46e5/ffffff?text=ZentroMall'">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Featured Products Container Section -->
-        <section id="featured-section" class="max-w-7xl mx-auto px-6 py-20">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <!-- Categories Section -->
+        <section id="categories-section" class="max-w-7xl mx-auto px-6 py-16">
+            <div class="text-center max-w-xl mx-auto mb-10">
+                <span class="text-indigo-400 font-bold text-xs uppercase tracking-widest">Browse Collection</span>
+                <h2 class="text-3xl font-black mt-1">Shop By Categories</h2>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                <a href="products.html?category=Electronics" class="glass p-6 rounded-2xl text-center hover:border-yellow-400 transition group hover:-translate-y-2">
+                    <div class="w-16 h-16 mx-auto bg-indigo-600/20 text-yellow-400 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-laptop"></i>
+                    </div>
+                    <h3 class="font-bold text-lg">Electronics</h3>
+                    <p class="text-xs text-gray-400 mt-1">Gadgets & Tech</p>
+                </a>
+
+                <a href="products.html?category=Mobiles" class="glass p-6 rounded-2xl text-center hover:border-yellow-400 transition group hover:-translate-y-2">
+                    <div class="w-16 h-16 mx-auto bg-indigo-600/20 text-yellow-400 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+                    <h3 class="font-bold text-lg">Mobiles</h3>
+                    <p class="text-xs text-gray-400 mt-1">Smartphones & Tabs</p>
+                </a>
+
+                <a href="products.html?category=Fashion" class="glass p-6 rounded-2xl text-center hover:border-yellow-400 transition group hover:-translate-y-2">
+                    <div class="w-16 h-16 mx-auto bg-indigo-600/20 text-yellow-400 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-shirt"></i>
+                    </div>
+                    <h3 class="font-bold text-lg">Fashion</h3>
+                    <p class="text-xs text-gray-400 mt-1">Clothing & Shoes</p>
+                </a>
+
+                <a href="products.html?category=Watches" class="glass p-6 rounded-2xl text-center hover:border-yellow-400 transition group hover:-translate-y-2">
+                    <div class="w-16 h-16 mx-auto bg-indigo-600/20 text-yellow-400 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-stopwatch"></i>
+                    </div>
+                    <h3 class="font-bold text-lg">Smart Watches</h3>
+                    <p class="text-xs text-gray-400 mt-1">Wearables & Fitness</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- Featured Products Section -->
+        <section id="featured-section" class="max-w-7xl mx-auto px-6 py-12">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
                 <div>
-                    <span class="text-indigo-400 uppercase font-bold text-xs tracking-widest">Trending Now</span>
-                    <h2 class="text-3xl md:text-5xl font-black mt-1">Featured Products</h2>
+                    <span class="text-yellow-400 uppercase font-bold text-xs tracking-widest">Handpicked Items</span>
+                    <h2 class="text-3xl md:text-4xl font-black mt-1">Featured Products</h2>
                 </div>
-                <a href="products.html" class="text-yellow-400 hover:underline font-bold flex items-center gap-2">
-                    View Full Catalog <i class="fa-solid fa-chevron-right text-sm"></i>
+                <a href="products.html" class="text-yellow-400 hover:underline font-bold flex items-center gap-2 text-sm">
+                    View Full Catalog <i class="fa-solid fa-chevron-right text-xs"></i>
                 </a>
             </div>
 
-            <!-- Dynamic Products Loading Container (Rendered via main.js) -->
+            <!-- Dynamic Products Container (Rendered via main.js) -->
             <div id="featured" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Skeleton Loading Placeholders -->
+                <!-- Skeleton Placeholders -->
                 <div class="glass p-5 rounded-2xl animate-pulse h-80 flex flex-col justify-between">
                     <div class="bg-white/10 h-44 rounded-xl"></div>
                     <div class="space-y-3 mt-4">
@@ -250,7 +242,24 @@
             </div>
         </section>
 
-        <!-- Trust Badges & Guarantee -->
+        <!-- Newsletter Section -->
+        <section class="max-w-7xl mx-auto px-6 py-16">
+            <div class="glass p-8 md:p-12 rounded-3xl text-center relative overflow-hidden">
+                <div class="max-w-2xl mx-auto relative z-10 space-y-4">
+                    <h2 class="text-3xl md:text-4xl font-black text-yellow-400">Subscribe For Exclusive Deals</h2>
+                    <p class="text-gray-300 text-sm md:text-base">Get instant updates on flash sales, discount coupons, and new arrivals directly in your inbox.</p>
+                    
+                    <form onsubmit="event.preventDefault(); alert('Subscribed successfully!');" class="flex flex-col sm:flex-row gap-3 pt-4 max-w-md mx-auto">
+                        <input type="email" required placeholder="Enter your email address..." class="p-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 flex-grow text-sm">
+                        <button type="submit" class="bg-yellow-400 hover:bg-yellow-300 text-black px-6 py-4 rounded-xl font-bold text-sm transition">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guarantees & Features Grid -->
         <section class="glass border-y border-white/10 py-12">
             <div class="max-w-7xl mx-auto px-6">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
@@ -262,63 +271,72 @@
                     <div class="p-4">
                         <i class="fa-solid fa-shield-check text-4xl text-yellow-400 mb-4"></i>
                         <h3 class="text-xl font-bold mb-1">100% Authentic</h3>
-                        <p class="text-gray-400 text-sm">PTA approved and official warranty items</p>
+                        <p class="text-gray-400 text-sm">PTA approved & official warranty items</p>
                     </div>
                     <div class="p-4">
                         <i class="fa-solid fa-hand-holding-dollar text-4xl text-yellow-400 mb-4"></i>
                         <h3 class="text-xl font-bold mb-1">Cash on Delivery</h3>
-                        <p class="text-gray-400 text-sm">Pay at your doorstep conveniently</p>
+                        <p class="text-gray-400 text-sm">Pay conveniently at your doorstep</p>
                     </div>
                     <div class="p-4">
                         <i class="fa-brands fa-whatsapp text-4xl text-yellow-400 mb-4"></i>
                         <h3 class="text-xl font-bold mb-1">Instant Support</h3>
-                        <p class="text-gray-400 text-sm">Quick order tracking and updates via WhatsApp</p>
+                        <p class="text-gray-400 text-sm">24/7 Order assistance via WhatsApp</p>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- WhatsApp Quick Float Button -->
+    <a href="https://wa.me/923001234567?text=Hello%20ZentroMall!%20I%20have%20a%20query." target="_blank" class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-600 text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-2xl z-50 transition transform hover:scale-110">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
     <!-- Footer -->
     <footer class="bg-black/60 border-t border-white/10 pt-16 pb-8">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
-            <div>
-                <h3 class="text-2xl font-black text-yellow-400 mb-4">ZentroMall</h3>
-                <p class="text-gray-400 text-sm leading-relaxed">
-                    Pakistan's premier shopping portal delivering authentic tech devices, mobile phones, accessories, and electronics directly to your home.
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+            <div class="md:col-span-2">
+                <a href="index.html" class="flex items-center gap-3 mb-4">
+                    <img src="logo.png" class="h-10 w-10 rounded-full" onerror="this.src='https://via.placeholder.com/100/4f46e5/ffffff?text=ZM'">
+                    <span class="text-2xl font-black text-yellow-400">ZentroMall</span>
+                </a>
+                <p class="text-gray-400 text-sm leading-relaxed max-w-sm">
+                    Pakistan's premier online store bringing you original electronics, mobile phones, luxury wearables, and fashion accessories directly to your home.
                 </p>
             </div>
             <div>
-                <h4 class="text-lg font-bold mb-4 text-white">Quick Navigation</h4>
+                <h4 class="text-lg font-bold mb-4 text-white">Quick Links</h4>
                 <ul class="space-y-2 text-sm text-gray-400">
                     <li><a href="products.html" class="hover:text-yellow-400 transition">All Products</a></li>
                     <li><a href="wishlist.html" class="hover:text-yellow-400 transition">My Wishlist</a></li>
                     <li><a href="cart.html" class="hover:text-yellow-400 transition">Shopping Cart</a></li>
-                    <li><a href="my-orders.html" class="hover:text-yellow-400 transition">Track Orders</a></li>
+                    <li><a href="my-orders.html" class="hover:text-yellow-400 transition">Order History</a></li>
+                    <li><a href="contact.html" class="hover:text-yellow-400 transition">Contact Us</a></li>
                 </ul>
             </div>
             <div>
-                <h4 class="text-lg font-bold mb-4 text-white">Need Assistance?</h4>
-                <p class="text-gray-400 text-sm mb-4">Have a query regarding an order or product?</p>
-                <button onclick="openWhatsApp('Hi ZentroMall, I need assistance regarding a product.')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-6 rounded-xl text-sm transition flex items-center gap-3">
-                    <i class="fa-brands fa-whatsapp text-xl"></i> Chat on WhatsApp
-                </button>
+                <h4 class="text-lg font-bold mb-4 text-white">Policies</h4>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="privacy-policy.html" class="hover:text-yellow-400 transition">Privacy Policy</a></li>
+                    <li><a href="privacy-policy.html" class="hover:text-yellow-400 transition">Terms & Conditions</a></li>
+                    <li><a href="privacy-policy.html" class="hover:text-yellow-400 transition">Return & Exchange</a></li>
+                </ul>
             </div>
         </div>
         <div class="max-w-7xl mx-auto px-6 pt-6 border-t border-white/10 text-center text-xs text-gray-500">
-            &copy; 2026 ZentroMall. All rights reserved.
+            &copy; 2026 ZentroMall. All rights reserved. Built for excellence.
         </div>
     </footer>
 
-    <!-- Inline Mobile Menu Helper -->
+    <!-- Mobile Menu Script -->
     <script>
         function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('hidden');
+            document.getElementById('mobileMenu').classList.toggle('hidden');
         }
     </script>
 
-    <!-- Core Main JavaScript Logic -->
+    <!-- Main JS Operations -->
     <script src="main.js"></script>
 </body>
 
