@@ -180,6 +180,7 @@
                         </a>
                     </div>`;
                 summaryBox.classList.add("hidden");
+                appliedDiscount = 0;
                 localStorage.removeItem("zm_discount");
                 updateBadges();
                 return;
@@ -235,15 +236,16 @@
         }
 
         function calculateTotals(subtotal) {
-            let finalTotal = Math.max(0, subtotal - appliedDiscount);
+            const actualDiscount = Math.min(subtotal, appliedDiscount);
+            let finalTotal = Math.max(0, subtotal - actualDiscount);
             
             document.getElementById("subtotal").textContent = formatPrice(subtotal);
             document.getElementById("total").textContent = formatPrice(finalTotal);
 
             const discountRow = document.getElementById("discount-row");
-            if (appliedDiscount > 0) {
+            if (actualDiscount > 0) {
                 discountRow.classList.remove("hidden");
-                document.getElementById("discount-val").textContent = `-${formatPrice(appliedDiscount)}`;
+                document.getElementById("discount-val").textContent = `-${formatPrice(actualDiscount)}`;
             } else {
                 discountRow.classList.add("hidden");
             }
@@ -251,7 +253,14 @@
 
         function changeQty(id, delta) {
             const item = cart.find(x => x.id === id);
+            const product = products.find(p => p.id === id);
+
             if (item) {
+                if (delta > 0 && product && product.stock !== undefined && item.qty + delta > product.stock) {
+                    showToast(`Only ${product.stock} units available in stock`, "error");
+                    return;
+                }
+
                 item.qty += delta;
                 if (item.qty <= 0) {
                     confirmRemove(id);
