@@ -103,7 +103,7 @@
                 <h1 class="text-3xl md:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-amber-400 to-indigo-400">
                     Store Dashboard
                 </h1>
-                <p class="text-xs text-gray-400 mt-1">Manage product catalog, order statuses, banners, and security settings</p>
+                <p class="text-xs text-gray-400 mt-1">Manage product catalog, order statuses, tracking IDs, banners, and security settings</p>
             </div>
             <button onclick="logout()" class="bg-rose-600/20 border border-rose-500/40 hover:bg-rose-600 text-rose-300 hover:text-white px-6 py-3 rounded-xl font-bold transition flex items-center gap-2">
                 <i class="fa-solid fa-power-off"></i> Exit Admin Session
@@ -157,7 +157,7 @@
         <!-- ================= ORDERS TAB ================= -->
         <div id="ordersTab" class="tab-content hidden space-y-6">
             <h2 class="text-2xl font-bold text-yellow-400 flex items-center gap-2">
-                <i class="fa-solid fa-cart-shopping"></i> Customer Orders
+                <i class="fa-solid fa-cart-shopping"></i> Customer Orders & Tracking Management
             </h2>
             <div id="ordersList" class="space-y-4"></div>
         </div>
@@ -354,14 +354,22 @@
                         <p><strong class="text-white">Phone:</strong> ${o.customer?.phone || 'N/A'}</p>
                         <p class="md:col-span-2"><strong class="text-white">Shipping Address:</strong> ${o.customer?.address || 'N/A'}</p>
                         <p class="text-emerald-400 font-bold"><strong class="text-white">Total Amount:</strong> ${safeFormatPrice(o.total || 0)}</p>
+                        <p class="md:col-span-2"><strong class="text-white">Tracking ID:</strong> <span class="text-yellow-300 font-mono">${o.trackingId || 'Not assigned yet'}</span></p>
                     </div>
 
-                    <div class="flex flex-wrap gap-2 pt-2 border-t border-white/10">
-                        <button onclick="updateOrderStatus(${idx}, 'pending')" class="bg-amber-600/30 hover:bg-amber-600 text-amber-200 border border-amber-500/40 px-4 py-2 rounded-xl text-xs font-bold transition">Mark Pending</button>
-                        <button onclick="updateOrderStatus(${idx}, 'completed')" class="bg-emerald-600/30 hover:bg-emerald-600 text-emerald-200 border border-emerald-500/40 px-4 py-2 rounded-xl text-xs font-bold transition">Mark Completed</button>
-                        <button onclick="openWhatsAppOrder(${idx})" class="bg-emerald-500 text-black hover:bg-emerald-400 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1">
-                            <i class="fa-brands fa-whatsapp"></i> WhatsApp Dispatch
-                        </button>
+                    <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-white/10">
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="updateOrderStatus(${idx}, 'pending')" class="bg-amber-600/30 hover:bg-amber-600 text-amber-200 border border-amber-500/40 px-4 py-2 rounded-xl text-xs font-bold transition">Mark Pending</button>
+                            <button onclick="updateOrderStatus(${idx}, 'completed')" class="bg-emerald-600/30 hover:bg-emerald-600 text-emerald-200 border border-emerald-500/40 px-4 py-2 rounded-xl text-xs font-bold transition">Mark Completed</button>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="assignTracking(${idx})" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-truck-fast text-xs"></i> ${o.trackingId ? 'Update Tracking' : 'Add Tracking ID'}
+                            </button>
+                            <button onclick="openWhatsAppOrder(${idx})" class="bg-emerald-500 text-black hover:bg-emerald-400 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1">
+                                <i class="fa-brands fa-whatsapp"></i> Dispatch
+                            </button>
+                        </div>
                     </div>
                 </div>
             `).join("");
@@ -372,9 +380,20 @@
             saveData(); renderOrders();
         }
 
+        function assignTracking(idx) {
+            const currentTracking = orders[idx].trackingId || "";
+            const newTracking = prompt("Enter Courier Tracking ID:", currentTracking);
+            
+            if (newTracking !== null) {
+                orders[idx].trackingId = newTracking.trim();
+                saveData();
+                renderOrders();
+            }
+        }
+
         function openWhatsAppOrder(idx) {
             const o = orders[idx];
-            let msg = `*Order Details – ZentroMall*\nName: ${o.customer?.name || 'N/A'}\nPhone: ${o.customer?.phone || 'N/A'}\nAddress: ${o.customer?.address || 'N/A'}\nItems:\n`;
+            let msg = `*Order Details – ZentroMall*\nName: ${o.customer?.name || 'N/A'}\nPhone: ${o.customer?.phone || 'N/A'}\nAddress: ${o.customer?.address || 'N/A'}\nTracking ID: ${o.trackingId || 'Not assigned'}\nItems:\n`;
             if (o.items && o.items.length) {
                 o.items.forEach(i => msg += `• ${i.name} x ${i.qty}\n`);
             }
