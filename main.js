@@ -13,7 +13,7 @@ if (!localStorage.getItem("zm_admin_pass")) {
     localStorage.setItem("zm_admin_pass", "asad123");
 }
 
-// Default Seed Data
+// Default Seed Data Initialization
 if (products.length === 0) {
     products = [
         {
@@ -21,8 +21,8 @@ if (products.length === 0) {
             name: "iPhone 15 Pro Max",
             price: 429999,
             category: "Mobiles",
-            image: "https://store.storeimages.cdn-apple.com/4668/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-blacktitanium?wid=5120&hei=2880&fmt=p-jpg&qlt=80",
-            desc: "PTA Approved | 256GB | Natural Titanium",
+            image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?q=80&w=800&auto=format&fit=crop",
+            desc: "PTA Approved | 256GB | Natural Titanium | Official Apple Warranty",
             rating: 4.9
         },
         {
@@ -30,9 +30,27 @@ if (products.length === 0) {
             name: "Samsung S24 Ultra",
             price: 389999,
             category: "Mobiles",
-            image: "https://images.samsung.com/is/image/samsung/p6pim/in/2401/gallery/in-galaxy-s24-ultra-sm-s928bztqins-539574-sm-s928bztqins-571363123?$650_519_PNG$",
-            desc: "1 Year Official Warranty | Titanium Gray",
+            image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?q=80&w=800&auto=format&fit=crop",
+            desc: "1 Year Official Warranty | Titanium Gray | Galaxy AI Integrated",
             rating: 4.8
+        },
+        {
+            id: 3,
+            name: "MacBook Pro M3 Max",
+            price: 749999,
+            category: "Electronics",
+            image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=800&auto=format&fit=crop",
+            desc: "16-inch Liquid Retina XDR | 36GB RAM | 1TB SSD | Space Black",
+            rating: 5.0
+        },
+        {
+            id: 4,
+            name: "Apple Watch Ultra 2",
+            price: 239999,
+            category: "Watches",
+            image: "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?q=80&w=800&auto=format&fit=crop",
+            desc: "Titanium Case | Cellular + GPS | Alpine Loop Strap",
+            rating: 4.7
         }
     ];
     localStorage.setItem("zm_products", JSON.stringify(products));
@@ -47,10 +65,11 @@ function saveData() {
     localStorage.setItem("zm_wishlist", JSON.stringify(wishlist));
     localStorage.setItem("zm_orders", JSON.stringify(orders));
     localStorage.setItem("zm_banners", JSON.stringify(banners));
+    localStorage.setItem("zm_user", JSON.stringify(currentUser));
 }
 
 function formatPrice(price) {
-    return "₨ " + Number(price).toLocaleString("en-PK");
+    return "PKR " + Number(price).toLocaleString("en-PK");
 }
 
 // Toast Notification System
@@ -86,6 +105,31 @@ function handleFileUpload(event, callback) {
     reader.readAsDataURL(file);
 }
 
+// ======================== User Auth Navigation Handler ========================
+function setupNavAuth() {
+    const navAuth = document.getElementById("navAuthLinks");
+    if (!navAuth) return;
+
+    if (currentUser) {
+        navAuth.innerHTML = `
+            <a href="profile.html" class="flex items-center gap-2 text-yellow-400 font-bold hover:underline">
+                <i class="fa-solid fa-user-circle text-lg"></i>
+                <span class="max-w-[100px] truncate">${currentUser.name || "Account"}</span>
+            </a>
+            <button onclick="logoutUser()" class="bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white px-3 py-1.5 rounded-lg font-bold text-xs transition">
+                Logout
+            </button>
+        `;
+    }
+}
+
+function logoutUser() {
+    currentUser = null;
+    localStorage.removeItem("zm_user");
+    showToast("Logged out successfully");
+    setTimeout(() => window.location.href = "login.html", 800);
+}
+
 // ======================== Cart & Wishlist Operations ========================
 function addToCart(id, qty = 1) {
     const item = cart.find(x => x.id === id);
@@ -97,6 +141,20 @@ function addToCart(id, qty = 1) {
     saveData();
     updateBadges();
     showToast("Product added to cart!");
+}
+
+function updateCartQty(id, change) {
+    const item = cart.find(x => x.id === id);
+    if (item) {
+        item.qty += change;
+        if (item.qty <= 0) {
+            removeFromCart(id);
+            return;
+        }
+    }
+    saveData();
+    updateBadges();
+    if (typeof renderCart === "function") renderCart();
 }
 
 function removeFromCart(id) {
@@ -119,6 +177,7 @@ function toggleWishlist(id) {
     saveData();
     updateBadges();
     if (typeof renderWishlist === "function") renderWishlist();
+    if (typeof renderProducts === "function") renderProducts();
 }
 
 function updateBadges() {
@@ -198,34 +257,32 @@ function createProductCard(p) {
     const isVideo = p.image?.startsWith("data:video") || p.image?.endsWith(".mp4") || p.image?.endsWith(".webm");
 
     return `
-        <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1 transition duration-300 flex flex-col justify-between">
-            <div class="relative group">
+        <div class="glass border border-white/10 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1.5 transition duration-300 flex flex-col justify-between group">
+            <div class="relative overflow-hidden">
                 ${
                     isVideo
                     ? `<video src="${p.image}" class="w-full h-56 object-cover" controls loop muted></video>`
                     : `<img src="${p.image || 'https://via.placeholder.com/400'}" alt="${p.name}" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://via.placeholder.com/400/333/fff?text=No+Image'">`
                 }
-                <button onclick="toggleWishlist(${p.id})" class="absolute top-3 right-3 p-2 bg-white/80 rounded-full shadow hover:bg-white transition">
-                    <svg class="w-5 h-5 ${isWishlisted ? 'text-red-500 fill-current' : 'text-gray-600'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                    </svg>
+                <button onclick="toggleWishlist(${p.id})" class="absolute top-3 right-3 p-2.5 glass rounded-full shadow-lg hover:bg-white transition z-10">
+                    <i class="fa-solid fa-heart ${isWishlisted ? 'text-red-500' : 'text-gray-400'} text-lg"></i>
                 </button>
             </div>
             
             <div class="p-5 flex-1 flex flex-col justify-between">
                 <div>
-                    <span class="text-xs text-indigo-400 uppercase font-semibold tracking-wider">${p.category || 'General'}</span>
-                    <h3 class="text-lg font-bold text-white mt-1 hover:text-indigo-300 cursor-pointer" onclick="window.location.href='product-detail.html?id=${p.id}'">${p.name}</h3>
-                    <p class="text-gray-300 text-sm mt-1 line-clamp-2">${p.desc || ""}</p>
+                    <span class="text-xs text-yellow-400 font-bold uppercase tracking-wider">${p.category || 'General'}</span>
+                    <h3 class="text-lg font-bold text-white mt-1 hover:text-yellow-300 cursor-pointer transition line-clamp-1" onclick="window.location.href='product-detail.html?id=${p.id}'">${p.name}</h3>
+                    <p class="text-gray-300 text-xs mt-1.5 line-clamp-2">${p.desc || ""}</p>
                 </div>
                 
-                <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between">
+                <div class="mt-5 pt-3 border-t border-white/10 flex items-center justify-between">
                     <div>
-                        <p class="text-xs text-gray-400">Price</p>
-                        <p class="text-xl font-extrabold text-emerald-400">${formatPrice(p.price)}</p>
+                        <p class="text-[10px] uppercase text-gray-400">Price</p>
+                        <p class="text-lg font-black text-yellow-400">${formatPrice(p.price)}</p>
                     </div>
-                    <button onclick="addToCart(${p.id})" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:from-indigo-600 hover:to-purple-700 transition shadow-lg">
-                        Add to Cart
+                    <button onclick="addToCart(${p.id})" class="bg-gradient-to-r from-yellow-400 to-amber-500 text-black px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 transition shadow-md flex items-center gap-1.5">
+                        <i class="fa-solid fa-cart-plus"></i> Add
                     </button>
                 </div>
             </div>
@@ -233,39 +290,55 @@ function createProductCard(p) {
     `;
 }
 
-function renderProducts() {
+function renderProducts(filterCategory = "All", searchQuery = "") {
     const featuredContainer = document.getElementById("featured");
     const allProductsContainer = document.getElementById("allProducts");
+
+    let filtered = products;
+
+    if (filterCategory && filterCategory !== "All") {
+        filtered = filtered.filter(p => p.category.toLowerCase() === filterCategory.toLowerCase());
+    }
+
+    if (searchQuery) {
+        filtered = filtered.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.desc.toLowerCase().includes(searchQuery.toLowerCase()));
+    }
 
     if (featuredContainer) {
         featuredContainer.innerHTML = products.slice(0, 8).map(createProductCard).join("");
     }
+
     if (allProductsContainer) {
-        allProductsContainer.innerHTML = products.map(createProductCard).join("");
+        if (filtered.length === 0) {
+            allProductsContainer.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400 font-semibold">No products found matching your search.</div>`;
+        } else {
+            allProductsContainer.innerHTML = filtered.map(createProductCard).join("");
+        }
     }
 }
 
-// ======================== Page Load Initialization ========================
+// ======================== Global Search & Dynamic Init ========================
 document.addEventListener("DOMContentLoaded", () => {
     updateBadges();
+    setupNavAuth();
 
     if (document.getElementById("featured") || document.getElementById("allProducts")) {
         renderProducts();
     }
 
-    // Render Banners
+    // Dynamic Banner Rendering
     const bannerContainer = document.getElementById("bannerContainer");
     if (bannerContainer && banners.length > 0) {
         document.getElementById("topBanner")?.classList.remove("hidden");
         bannerContainer.innerHTML = banners.map(b => {
             if (b.media) {
                 return b.media.startsWith("data:video") || b.media.endsWith(".mp4") || b.media.endsWith(".webm")
-                    ? `<video src="${b.media}" class="inline-block h-20 mx-6 rounded-xl shadow-lg" loop muted playsinline autoplay></video>`
-                    : `<img src="${b.media}" class="inline-block h-20 mx-6 rounded-xl shadow-lg object-cover">`;
+                    ? `<video src="${b.media}" class="inline-block h-12 mx-6 rounded-lg shadow-lg" loop muted playsinline autoplay></video>`
+                    : `<img src="${b.media}" class="inline-block h-12 mx-6 rounded-lg shadow-lg object-cover">`;
             }
-            return `<span class="inline-block mx-8 text-2xl font-bold tracking-wide">${b.text}</span>`;
+            return `<span class="inline-block mx-8 text-sm md:text-base font-bold text-black">${b.text}</span>`;
         }).join("");
     }
 });
 
-console.log("🚀 ZentroMall Core Engine v2.0 Fully Loaded");
+console.log("🚀 ZentroMall Engine Active & Ready!");
