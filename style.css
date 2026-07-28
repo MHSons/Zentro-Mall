@@ -1,33 +1,154 @@
-body {
-  font-family: 'Arial', sans-serif;
+/* ============================================================
+   ZentroMall - Global Glassmorphic Stylesheet
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+/* --- Root Variables & Theme Colors --- */
+:root {
+    --bg-gradient: linear-gradient(135deg, #14002c, #1b1464, #050505);
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-card: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --accent-yellow: #facc15;
+    --accent-purple: #8128ff;
+    --accent-emerald: #10b981;
+    --font-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Hover grow effect */
+/* --- Base Rules --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-family: var(--font-primary);
+}
+
+body {
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    color: #ffffff;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* --- Custom Scrollbar --- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0d061e;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4f46e5;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-yellow);
+}
+
+/* --- Glassmorphism Component Utility Classes --- */
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--glass-border);
+}
+
+.glass-card {
+    background: var(--glass-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(250, 204, 21, 0.4);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.glow {
+    box-shadow: 0 0 35px rgba(99, 102, 241, 0.35);
+}
+
+.glow-hover:hover {
+    box-shadow: 0 0 25px rgba(250, 204, 21, 0.4);
+}
+
+/* --- Hover Grow Effect --- */
 .hover-grow {
-  transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 .hover-grow:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
-/* Dark mode image adjustment */
+/* --- Dark Mode Image Adjustment --- */
 .dark img {
-  filter: brightness(0.9);
+    filter: brightness(0.9);
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background: #4f46e5;
-  border-radius: 10px;
+/* --- Navigation Links & Badges --- */
+.nav-link {
+    transition: color 0.3s ease;
 }
 
-/* Responsive grid for small screens */
+.nav-link:hover {
+    color: var(--accent-yellow);
+}
+
+.cart-badge, .wishlist-badge {
+    background: var(--accent-yellow);
+    color: #000000;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+}
+
+/* --- Form Input Enhancements --- */
+input, select, textarea {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none !important;
+    border-color: var(--accent-yellow) !important;
+    box-shadow: 0 0 12px rgba(250, 204, 21, 0.25) !important;
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease forwards;
+}
+
+/* --- Responsive Grid for Small Screens --- */
 @media (max-width: 640px) {
-  .grid-cols-4 {
-    grid-template-columns: repeat(2, 1fr); /* Cleaner syntax */
-  }
+    .grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
