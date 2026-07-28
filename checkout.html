@@ -201,15 +201,34 @@
             menu.classList.toggle('hidden');
         }
 
+        function populateUserInfo() {
+            if (typeof currentUser !== "undefined" && currentUser) {
+                const nameInput = document.getElementById("name");
+                const phoneInput = document.getElementById("phone");
+                if (nameInput && !nameInput.value) nameInput.value = currentUser.name || "";
+                if (phoneInput && !phoneInput.value) phoneInput.value = currentUser.phone || "";
+            }
+        }
+
         function renderOrderSummary() {
             const container = document.getElementById("order-items");
+            const submitBtn = document.getElementById("submitBtn");
             let subtotal = 0;
 
             if (!cart || cart.length === 0) {
                 container.innerHTML = `<p class="text-center text-gray-400 py-8">Your cart is empty.</p>`;
                 document.getElementById("subtotal").textContent = formatPrice(0);
                 document.getElementById("final-total").textContent = formatPrice(0);
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add("opacity-50", "cursor-not-allowed");
+                }
                 return;
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove("opacity-50", "cursor-not-allowed");
             }
 
             container.innerHTML = cart.map(item => {
@@ -236,15 +255,16 @@
         }
 
         function calculateFinalTotals(subtotal) {
-            let finalTotal = Math.max(0, subtotal - discount);
+            const actualDiscount = Math.min(subtotal, discount);
+            let finalTotal = Math.max(0, subtotal - actualDiscount);
 
             document.getElementById("subtotal").textContent = formatPrice(subtotal);
             document.getElementById("final-total").textContent = formatPrice(finalTotal);
 
             const discountRow = document.getElementById("discount-row");
-            if (discount > 0) {
+            if (actualDiscount > 0) {
                 discountRow.classList.remove("hidden");
-                document.getElementById("discount-val").textContent = `-${formatPrice(discount)}`;
+                document.getElementById("discount-val").textContent = `-${formatPrice(actualDiscount)}`;
             } else {
                 discountRow.classList.add("hidden");
             }
@@ -305,13 +325,19 @@
                     const itemTotal = p.price * item.qty;
                     subtotal += itemTotal;
                     msgText += `• ${p.name} × ${item.qty} = ${formatPrice(itemTotal)}\n`;
+                    
+                    // Deduct product stock automatically
+                    if (typeof p.stock !== "undefined") {
+                        p.stock = Math.max(0, p.stock - item.qty);
+                    }
                 }
             });
 
-            let finalTotal = Math.max(0, subtotal - discount);
+            const actualDiscount = Math.min(subtotal, discount);
+            let finalTotal = Math.max(0, subtotal - actualDiscount);
 
-            if (discount > 0) {
-                msgText += `\n💸 *Discount Applied: ${formatPrice(discount)}*`;
+            if (actualDiscount > 0) {
+                msgText += `\n💸 *Discount Applied: ${formatPrice(actualDiscount)}*`;
             }
 
             msgText += `\n💰 *Total Amount: ${formatPrice(finalTotal)}*\n🚚 Cash on Delivery Across Pakistan\n\nThank you for shopping with ZentroMall!`;
@@ -349,6 +375,7 @@
         });
 
         document.addEventListener("DOMContentLoaded", () => {
+            populateUserInfo();
             renderOrderSummary();
             updateBadges();
         });
