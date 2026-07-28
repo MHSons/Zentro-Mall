@@ -65,7 +65,8 @@
                         Cart (<span id="cart-count" class="cart-badge">0</span>)
                     </a>
                     <a href="my-orders.html" class="nav-link">Orders</a>
-                    <a href="profile.html" class="nav-link text-yellow-400">Profile</a>
+                    <a href="profile.html" class="nav-link text-yellow-400 font-bold">Profile</a>
+                    
                     <button onclick="logout()" class="bg-rose-600 hover:bg-rose-700 text-white px-5 py-2 rounded-xl font-bold transition">Logout</button>
                     <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold transition">Admin</a>
                 </div>
@@ -83,7 +84,7 @@
                 <a href="wishlist.html" class="block py-1 hover:text-yellow-400">Wishlist (<span class="wishlist-badge">0</span>)</a>
                 <a href="cart.html" class="block py-1 hover:text-yellow-400">Cart (<span class="cart-badge">0</span>)</a>
                 <a href="my-orders.html" class="block py-1 hover:text-yellow-400">My Orders</a>
-                <a href="profile.html" class="block py-1 text-yellow-400">Profile</a>
+                <a href="profile.html" class="block py-1 text-yellow-400 font-bold">Profile</a>
                 <div class="flex gap-4 pt-2">
                     <button onclick="logout()" class="bg-rose-600 text-white px-4 py-2 rounded-lg font-bold text-sm w-full text-center">Logout</button>
                     <a href="admin.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold text-sm w-full text-center">Admin</a>
@@ -100,8 +101,8 @@
 
         <div class="glass p-8 md:p-10 rounded-3xl shadow-2xl space-y-8">
             <div class="flex items-center gap-6 border-b border-white/10 pb-6">
-                <div class="w-20 h-20 bg-gradient-to-tr from-yellow-400 to-amber-600 rounded-full flex items-center justify-center text-3xl font-black text-black shadow-lg">
-                    <i class="fa-solid fa-user"></i>
+                <div id="user-avatar" class="w-20 h-20 bg-gradient-to-tr from-yellow-400 to-amber-600 rounded-full flex items-center justify-center text-3xl font-black text-black shadow-lg uppercase">
+                    U
                 </div>
                 <div>
                     <h2 id="user-name" class="text-2xl md:text-3xl font-black text-white">---</h2>
@@ -143,12 +144,18 @@
         }
 
         function initProfile() {
-            if (!currentUser) {
+            if (typeof currentUser === "undefined" || !currentUser) {
                 window.location.href = "login.html";
                 return;
             }
 
-            document.getElementById("user-name").textContent = currentUser.name || "User";
+            const userName = currentUser.name || "User";
+            document.getElementById("user-name").textContent = userName;
+            
+            const avatar = document.getElementById("user-avatar");
+            if (avatar) {
+                avatar.textContent = userName.charAt(0).toUpperCase();
+            }
 
             const profileDiv = document.getElementById("profile-details");
             profileDiv.innerHTML = `
@@ -172,18 +179,24 @@
         function updateProfile() {
             const newPhone = prompt("Enter your new phone number:", currentUser.phone || "");
             if (newPhone !== null && newPhone.trim() !== "") {
-                currentUser.phone = newPhone.trim();
+                const cleanPhone = newPhone.trim();
+                currentUser.phone = cleanPhone;
 
                 const users = JSON.parse(localStorage.getItem("zm_users") || "[]");
                 const index = users.findIndex(u => u.email === currentUser.email);
                 if (index !== -1) {
-                    users[index] = currentUser;
+                    users[index].phone = cleanPhone;
                 }
 
                 localStorage.setItem("zm_users", JSON.stringify(users));
                 localStorage.setItem("zm_user", JSON.stringify(currentUser));
 
-                alert("✅ Profile updated successfully!");
+                if (typeof showToast === "function") {
+                    showToast("Profile updated successfully!", "success");
+                } else {
+                    alert("✅ Profile updated successfully!");
+                }
+                
                 initProfile();
             }
         }
