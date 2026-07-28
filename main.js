@@ -167,7 +167,6 @@ function generateSKU(name, category) {
 }
 
 function generateBarcode() {
-    // 13-digit EAN-like
     return "89" + Array.from({length: 11}, () => Math.floor(Math.random() * 10)).join("");
 }
 
@@ -260,7 +259,7 @@ function toggleWishlist(id) {
 function updateBadges() {
     const totalCart = cart.reduce((s, i) => s + (i.qty || 0), 0);
     const totalWish = wishlist.length;
-    document.querySelectorAll("#cart-count, .cart-badge, #cartCount").forEach(el => {
+    document.querySelectorAll("#cart-count, .cart-badge, #cartCount, #cart-count-mobile").forEach(el => {
         if (el) el.textContent = totalCart;
     });
     document.querySelectorAll("#wishlist-count, .wishlist-badge, #wishlistCount").forEach(el => {
@@ -413,7 +412,7 @@ function renderProducts(filterCategory = "All", searchQuery = "") {
     }
 }
 
-// ---------- 8. Reports & Analytics Helpers (used by Admin) ----------
+// ---------- 8. Reports & Analytics Helpers ----------
 function getSalesReport() {
     const completed = orders.filter(o => o.status === "completed" || o.status === "complete" || o.status === "Completed");
     const pending   = orders.filter(o => o.status === "Pending" || o.status === "pending");
@@ -468,7 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const bannerContainer = document.getElementById("bannerContainer");
     if (bannerContainer && banners.length > 0) {
         document.getElementById("topBanner")?.classList.remove("hidden");
-        bannerContainer.innerHTML = banners.map(b => {
+        const bannerMarkup = banners.map(b => {
             if (b.media) {
                 return (b.media.startsWith("data:video") || b.media.endsWith(".mp4") || b.media.endsWith(".webm"))
                     ? `<video src="${b.media}" class="inline-block h-12 mx-6 rounded-lg shadow-lg" loop muted playsinline autoplay></video>`
@@ -476,6 +475,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             return `<span class="inline-block mx-8 text-sm md:text-base font-bold text-black">${b.text || ""}</span>`;
         }).join("");
+        
+        bannerContainer.innerHTML = bannerMarkup + bannerMarkup; // Double copy for smooth CSS loop
     }
 });
 
