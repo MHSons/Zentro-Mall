@@ -61,12 +61,16 @@
                     <a href="wishlist.html" class="nav-link">
                         Wishlist (<span id="wishlist-count" class="wishlist-badge">0</span>)
                     </a>
-                    <a href="cart.html" class="nav-link text-yellow-400">
+                    <a href="cart.html" class="nav-link text-yellow-400 font-bold">
                         Cart (<span id="cart-count" class="cart-badge">0</span>)
                     </a>
                     <a href="my-orders.html" class="nav-link">Orders</a>
-                    <a href="profile.html" class="nav-link">Profile</a>
-                    <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    
+                    <!-- Dynamic Auth Links -->
+                    <div id="navAuthLinks" class="flex items-center gap-4">
+                        <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    </div>
+
                     <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold transition">Admin</a>
                 </div>
 
@@ -81,7 +85,7 @@
                 <a href="index.html" class="block py-1 hover:text-yellow-400">Home</a>
                 <a href="products.html" class="block py-1 hover:text-yellow-400">Products</a>
                 <a href="wishlist.html" class="block py-1 hover:text-yellow-400">Wishlist (<span class="wishlist-badge">0</span>)</a>
-                <a href="cart.html" class="block py-1 text-yellow-400">Cart (<span class="cart-badge">0</span>)</a>
+                <a href="cart.html" class="block py-1 text-yellow-400 font-bold">Cart (<span class="cart-badge">0</span>)</a>
                 <a href="my-orders.html" class="block py-1 hover:text-yellow-400">My Orders</a>
                 <a href="profile.html" class="block py-1 hover:text-yellow-400">Profile</a>
                 <div class="flex gap-4 pt-2">
@@ -154,7 +158,7 @@
 
     <!-- Cart Page Script -->
     <script>
-        let appliedDiscount = 0;
+        let appliedDiscount = parseInt(localStorage.getItem("zm_discount") || "0");
 
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
@@ -176,6 +180,7 @@
                         </a>
                     </div>`;
                 summaryBox.classList.add("hidden");
+                localStorage.removeItem("zm_discount");
                 updateBadges();
                 return;
             }
@@ -295,14 +300,17 @@
 
             if (code === "ZENTRO50") {
                 appliedDiscount = Math.round(subtotal * 0.5);
+                localStorage.setItem("zm_discount", appliedDiscount);
                 msg.className = "text-sm font-bold text-emerald-400 mt-2";
                 msg.textContent = "🎉 ZENTRO50 Applied! 50% Discount Saved.";
             } else if (code === "EID100") {
                 appliedDiscount = 100000;
+                localStorage.setItem("zm_discount", appliedDiscount);
                 msg.className = "text-sm font-bold text-emerald-400 mt-2";
                 msg.textContent = "🎉 EID100 Applied! PKR 100,000 Special Discount.";
             } else {
                 appliedDiscount = 0;
+                localStorage.removeItem("zm_discount");
                 msg.className = "text-sm font-bold text-rose-400 mt-2";
                 msg.textContent = "❌ Invalid Coupon Code";
             }
