@@ -70,7 +70,11 @@
                     </a>
                     <a href="my-orders.html" class="nav-link">Orders</a>
                     <a href="profile.html" class="nav-link">Profile</a>
-                    <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    
+                    <div id="navAuthLinks" class="flex items-center gap-4">
+                        <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    </div>
+
                     <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold transition text-yellow-300">Admin</a>
                 </div>
 
@@ -109,7 +113,7 @@
             </div>
 
             <!-- Password Form Block -->
-            <div class="space-y-6">
+            <form id="adminLoginForm" onsubmit="event.preventDefault(); login();" class="space-y-6">
                 <div class="relative">
                     <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                     <input 
@@ -118,25 +122,26 @@
                         placeholder="Enter Admin Password"
                         class="w-full py-4 pl-12 pr-12 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 font-bold tracking-wider"
                         autocomplete="off"
+                        required
                     />
-                    <button type="button" onclick="togglePassVisibility()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
+                    <button type="button" onclick="togglePassVisibility()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none">
                         <i id="eyeIcon" class="fa-solid fa-eye"></i>
                     </button>
                 </div>
 
                 <button
+                    type="submit"
                     id="loginBtn"
-                    onclick="login()"
                     class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white py-4 rounded-xl font-black text-lg transition shadow-xl flex items-center justify-center gap-2"
                 >
                     <i class="fa-solid fa-key"></i> Login Securely
                 </button>
 
                 <div class="text-center text-xs text-gray-400 space-y-1 pt-2 border-t border-white/10">
-                    <p>Default Access Pass: <code class="bg-white/10 text-yellow-300 px-2 py-0.5 rounded font-mono">asad123</code></p>
+                    <p>Current Pass Passcode: <code id="passHint" class="bg-white/10 text-yellow-300 px-2 py-0.5 rounded font-mono">asad123</code></p>
                     <p class="text-gray-500">Can be updated anytime inside the Admin Dashboard.</p>
                 </div>
-            </div>
+            </form>
 
         </div>
     </main>
@@ -184,7 +189,7 @@
                 localStorage.setItem("zm_admin_logged", "true");
 
                 btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Access Granted! Redirecting...`;
-                btn.className = "w-full bg-emerald-500 text-black py-4 rounded-xl font-black text-lg transition shadow-xl";
+                btn.className = "w-full bg-emerald-500 text-black py-4 rounded-xl font-black text-lg transition shadow-xl cursor-default";
                 btn.disabled = true;
 
                 setTimeout(() => {
@@ -192,17 +197,30 @@
                 }, 800);
 
             } else {
-                alert("❌ Invalid Admin Password! Please try again.");
+                if (typeof showToast === "function") {
+                    showToast("Invalid Admin Password!", "error");
+                } else {
+                    alert("❌ Invalid Admin Password! Please try again.");
+                }
                 document.getElementById("pass").value = "";
                 document.getElementById("pass").focus();
             }
         }
 
-        document.getElementById("pass").addEventListener("keyup", e => {
-            if (e.key === "Enter") login();
-        });
-
         document.addEventListener("DOMContentLoaded", () => {
+            // Auto redirect if already authenticated as Admin
+            if (localStorage.getItem("zm_admin_logged") === "true") {
+                window.location.href = "admin-panel.html";
+                return;
+            }
+
+            // Sync Passcode Hint dynamically
+            const currentPass = localStorage.getItem("zm_admin_pass") || "asad123";
+            const hintElem = document.getElementById("passHint");
+            if (hintElem) {
+                hintElem.textContent = currentPass;
+            }
+
             updateBadges();
         });
     </script>
