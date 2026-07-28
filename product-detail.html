@@ -1,99 +1,247 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Product Detail – ZentroMall</title>
-  <link rel="icon" href="logo.png">
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gradient-to-br from-purple-900 via-indigo-900 to-black text-white min-h-screen p-6">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details – ZentroMall</title>
+    <link rel="icon" href="logo.png">
 
-  <!-- Navbar -->
-  <nav class="bg-black bg-opacity-90 backdrop-blur-lg p-6 sticky top-0 z-50 shadow-2xl">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <a href="index.html" class="flex items-center gap-4">
-        <img src="logo.png" alt="ZentroMall" class="h-14 rounded-full shadow-lg">
-        <h1 class="text-4xl font-extrabold text-yellow-400 drop-shadow-lg">ZentroMall</h1>
-      </a>
-      <div class="flex gap-8 items-center text-xl">
-        <a href="index.html" class="hover:text-yellow-400">Home</a>
-        <a href="cart.html" class="hover:text-yellow-400">Cart (<span id="cart-count">0</span>)</a>
-        <a href="my-orders.html" class="hover:text-yellow-400">My Orders</a>
-        <a href="admin.html" class="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-4 rounded-full font-bold shadow-lg">Admin</a>
-      </div>
-    </div>
-  </nav>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Product Detail Container -->
-  <div id="product-detail" class="max-w-6xl mx-auto mt-12 grid md:grid-cols-2 gap-12 p-6"></div>
-
-  <script src="main.js"></script>
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = parseInt(urlParams.get("id"));
-    const product = products.find(p => p.id === id);
-
-    if (!product) {
-      document.getElementById("product-detail").innerHTML = `
-        <div class="col-span-2 text-center py-20">
-          <p class="text-5xl text-gray-500">Product Not Found</p>
-          <a href="index.html" class="mt-8 inline-block bg-yellow-500 text-black px-12 py-6 rounded-full text-2xl font-bold">Go Home</a>
-        </div>`;
-    } else {
-      let viewed = JSON.parse(localStorage.getItem("zm_viewed") || "[]");
-      viewed = [id, ...viewed.filter(x => x !== id)].slice(0, 10);
-      localStorage.setItem("zm_viewed", JSON.stringify(viewed));
-
-      let mediaHTML = '';
-      if(product.image) {
-        if(product.image.startsWith("data:video") || product.image.endsWith(".mp4") || product.image.endsWith(".webm")) {
-          mediaHTML = `<video src="${product.image}" class="w-full h-96 md:h-full object-cover rounded-3xl shadow-2xl" controls loop autoplay muted playsinline></video>`;
-        } else if(product.image.endsWith(".gif")) {
-          mediaHTML = `<img src="${product.image}" class="w-full h-96 md:h-full object-cover rounded-3xl shadow-2xl" alt="${product.name}">`;
-        } else {
-          mediaHTML = `<img src="${product.image}" class="w-full h-96 md:h-full object-cover rounded-3xl shadow-2xl" alt="${product.name}" onerror="this.src='https://via.placeholder.com/400/333/fff?text=No+Image'">`;
+    <style>
+        html {
+            scroll-behavior: smooth;
         }
-      }
 
-      document.getElementById("product-detail").innerHTML = `
-        <div class="zoom">${mediaHTML}</div>
-        <div class="space-y-8">
-          <div>
-            <h1 class="text-5xl font-extrabold text-yellow-400 mb-4">${product.name}</h1>
-            <p class="text-2xl text-gray-300 leading-relaxed">${product.desc || "No description available"}</p>
-          </div>
-          <div class="bg-gray-800 rounded-3xl p-8 shadow-xl">
-            <p class="text-6xl font-extrabold text-green-400">${formatPrice(product.price)}</p>
-            <p class="text-xl text-gray-400 mt-2">Cash on Delivery Available Across Pakistan</p>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <button onclick="addToCart(${product.id})" 
-                    class="bg-gradient-to-r from-indigo-600 to-purple-600 py-6 rounded-2xl text-3xl font-bold hover:scale-105 transition shadow-lg">
-              Add to Cart
-            </button>
-            <button onclick="buyNow(${product.id})" 
-                    class="bg-gradient-to-r from-green-600 to-emerald-600 py-6 rounded-2xl text-3xl font-bold hover:scale-105 transition shadow-lg">
-              Buy Now
-            </button>
-          </div>
-          <div class="text-center pt-8 border-t border-gray-700">
-            <p class="text-gray-400 mb-4">Share with friends</p>
-            <div class="flex justify-center gap-6 text-4xl">
-              <a href="https://wa.me/?text=Check this amazing product: ${encodeURIComponent(window.location.href)}" target="_blank" class="text-green-400 hover:scale-125 transition">WhatsApp</a>
+        body {
+            background: linear-gradient(135deg, #14002c, #1b1464, #050505);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link {
+            transition: .3s;
+        }
+
+        .nav-link:hover {
+            color: #facc15;
+        }
+    </style>
+</head>
+
+<body class="text-white min-h-screen flex flex-col justify-between">
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 glass">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-4">
+                    <img src="logo.png" class="h-12 w-12 rounded-full shadow-2xl object-cover" onerror="this.src='https://via.placeholder.com/100/4f46e5/ffffff?text=ZM'">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-black tracking-wide">ZentroMall</h1>
+                        <p class="text-xs text-gray-300 hidden sm:block">Premium Shopping Experience</p>
+                    </div>
+                </a>
+
+                <!-- Desktop Menu Nav -->
+                <div class="hidden lg:flex gap-6 items-center font-medium">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="products.html" class="nav-link">Products</a>
+                    <a href="wishlist.html" class="nav-link">
+                        Wishlist (<span id="wishlist-count" class="wishlist-badge">0</span>)
+                    </a>
+                    <a href="cart.html" class="nav-link">
+                        Cart (<span id="cart-count" class="cart-badge">0</span>)
+                    </a>
+                    <a href="my-orders.html" class="nav-link">Orders</a>
+                    <a href="profile.html" class="nav-link">Profile</a>
+                    <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold transition">Admin</a>
+                </div>
+
+                <!-- Mobile Menu Toggle Button -->
+                <button id="mobileBtn" onclick="toggleMobileMenu()" class="lg:hidden text-3xl focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
             </div>
-          </div>
+
+            <!-- Mobile Drawer Menu -->
+            <div id="mobileMenu" class="hidden pt-4 pb-2 space-y-3 lg:hidden border-t border-white/10 mt-3">
+                <a href="index.html" class="block py-1 hover:text-yellow-400">Home</a>
+                <a href="products.html" class="block py-1 hover:text-yellow-400">Products</a>
+                <a href="wishlist.html" class="block py-1 hover:text-yellow-400">Wishlist (<span class="wishlist-badge">0</span>)</a>
+                <a href="cart.html" class="block py-1 hover:text-yellow-400">Cart (<span class="cart-badge">0</span>)</a>
+                <a href="my-orders.html" class="block py-1 hover:text-yellow-400">My Orders</a>
+                <a href="profile.html" class="block py-1 hover:text-yellow-400">Profile</a>
+                <div class="flex gap-4 pt-2">
+                    <a href="login.html" class="bg-yellow-400 text-black px-4 py-2 rounded-lg font-bold text-sm w-full text-center">Login</a>
+                    <a href="admin.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold text-sm w-full text-center">Admin</a>
+                </div>
+            </div>
         </div>
-      `;
-    }
+    </nav>
 
-    function buyNow(pid) {
-      addToCart(pid);
-      setTimeout(() => location.href = "checkout.html", 500);
-    }
+    <!-- Main Product Detail Container -->
+    <main class="max-w-7xl mx-auto px-6 py-12 flex-grow w-full">
+        <div id="product-detail" class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+            <!-- Dynamic Content Injected via JS -->
+            <div class="glass p-8 rounded-3xl animate-pulse h-96"></div>
+            <div class="space-y-6 animate-pulse">
+                <div class="bg-white/10 h-10 w-3/4 rounded-xl"></div>
+                <div class="bg-white/10 h-6 w-1/2 rounded-xl"></div>
+                <div class="bg-white/10 h-24 w-full rounded-2xl"></div>
+            </div>
+        </div>
 
-    updateCartCount();
-  </script>
+        <!-- Related Products Section -->
+        <section id="related-section" class="mt-20 pt-12 border-t border-white/10 hidden">
+            <h2 class="text-3xl font-black mb-8">Related Products</h2>
+            <div id="related-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+        </section>
+    </main>
 
+    <!-- Footer -->
+    <footer class="bg-black/60 border-t border-white/10 pt-10 pb-8 mt-16">
+        <div class="max-w-7xl mx-auto px-6 text-center text-xs text-gray-500">
+            &copy; 2026 ZentroMall. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Main Logic Script -->
+    <script src="main.js"></script>
+
+    <!-- Page Specific Script -->
+    <script>
+        let selectedQty = 1;
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function updateQty(change) {
+            selectedQty = Math.max(1, selectedQty + change);
+            document.getElementById("qty-display").textContent = selectedQty;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = parseInt(urlParams.get("id"));
+        const product = products.find(p => p.id === id);
+
+        if (!product) {
+            document.getElementById("product-detail").innerHTML = `
+                <div class="col-span-full text-center py-20 glass rounded-3xl">
+                    <i class="fa-solid fa-circle-exclamation text-6xl text-rose-500 mb-4"></i>
+                    <p class="text-3xl font-bold text-gray-300">Product Not Found</p>
+                    <a href="products.html" class="mt-6 inline-block bg-yellow-400 text-black px-8 py-3 rounded-xl font-bold text-lg hover:bg-yellow-300 transition">
+                        Browse Catalog
+                    </a>
+                </div>`;
+        } else {
+            // Save to Recently Viewed Storage
+            let viewed = JSON.parse(localStorage.getItem("zm_viewed") || "[]");
+            viewed = [id, ...viewed.filter(x => x !== id)].slice(0, 10);
+            localStorage.setItem("zm_viewed", JSON.stringify(viewed));
+
+            const isWishlisted = wishlist.includes(product.id);
+            const isVideo = product.image?.startsWith("data:video") || product.image?.endsWith(".mp4") || product.image?.endsWith(".webm");
+
+            let mediaHTML = isVideo
+                ? `<video src="${product.image}" class="w-full h-[450px] object-cover rounded-3xl shadow-2xl" controls loop autoplay muted playsinline></video>`
+                : `<img src="${product.image || 'https://via.placeholder.com/600'}" class="w-full h-[450px] object-cover rounded-3xl shadow-2xl" alt="${product.name}" onerror="this.src='https://via.placeholder.com/600/333/fff?text=No+Image'">`;
+
+            document.getElementById("product-detail").innerHTML = `
+                <!-- Media Container -->
+                <div class="relative glass rounded-3xl p-4 overflow-hidden group">
+                    ${mediaHTML}
+                    <button onclick="toggleWishlist(${product.id})" class="absolute top-8 right-8 p-3 bg-black/60 backdrop-blur-md rounded-full text-white hover:text-red-500 transition shadow-lg">
+                        <i class="fa-solid fa-heart ${isWishlisted ? 'text-red-500' : 'text-white'} text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Product Specifications & Buying Controls -->
+                <div class="space-y-6">
+                    <div>
+                        <span class="text-xs text-indigo-400 uppercase font-bold tracking-widest bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">${product.category || 'General'}</span>
+                        <h1 class="text-3xl sm:text-5xl font-black text-white mt-3">${product.name}</h1>
+                        <p class="text-gray-300 text-lg mt-4 leading-relaxed">${product.desc || "No detailed description available for this item."}</p>
+                    </div>
+
+                    <!-- Pricing Box -->
+                    <div class="glass p-6 rounded-2xl border border-white/10">
+                        <p class="text-xs text-gray-400">Total Price</p>
+                        <p class="text-4xl font-black text-emerald-400 mt-1">${formatPrice(product.price)}</p>
+                        <p class="text-xs text-gray-300 mt-2 flex items-center gap-2">
+                            <i class="fa-solid fa-truck-fast text-yellow-400"></i> Cash on Delivery Available Across Pakistan
+                        </p>
+                    </div>
+
+                    <!-- Quantity Control -->
+                    <div class="flex items-center gap-4">
+                        <span class="text-gray-300 font-bold">Quantity:</span>
+                        <div class="flex items-center glass rounded-xl overflow-hidden border border-white/20">
+                            <button onclick="updateQty(-1)" class="px-4 py-2 hover:bg-white/10 text-xl font-bold transition">-</button>
+                            <span id="qty-display" class="px-5 py-2 font-black text-yellow-400">1</span>
+                            <button onclick="updateQty(1)" class="px-4 py-2 hover:bg-white/10 text-xl font-bold transition">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                        <button onclick="addToCart(${product.id}, selectedQty)" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-2xl font-bold text-lg hover:from-indigo-500 hover:to-purple-500 transition shadow-xl flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                        </button>
+                        <button onclick="buyNow(${product.id})" class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-4 rounded-2xl font-bold text-lg hover:from-emerald-400 hover:to-teal-500 transition shadow-xl flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-bolt"></i> Buy Now
+                        </button>
+                    </div>
+
+                    <!-- Share & Warranty Badges -->
+                    <div class="pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-2 text-sm text-gray-400">
+                            <i class="fa-solid fa-shield-check text-emerald-400 text-lg"></i> Official Warranty Verified
+                        </div>
+                        <button onclick="openWhatsApp('Check out this product on ZentroMall: ' + window.location.href)" class="text-emerald-400 hover:text-emerald-300 font-bold text-sm flex items-center gap-2 transition">
+                            <i class="fa-brands fa-whatsapp text-lg"></i> Share via WhatsApp
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Render Related Products
+            const related = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+            if (related.length > 0) {
+                document.getElementById("related-section").classList.remove("hidden");
+                document.getElementById("related-products").innerHTML = related.map(p => `
+                    <div class="glass p-4 rounded-2xl hover:-translate-y-1 transition duration-300 cursor-pointer" onclick="window.location.href='product-detail.html?id=${p.id}'">
+                        <img src="${p.image}" class="w-full h-40 object-cover rounded-xl mb-3" onerror="this.src='https://via.placeholder.com/300'">
+                        <h4 class="font-bold text-white truncate">${p.name}</h4>
+                        <p class="text-emerald-400 font-black text-sm mt-1">${formatPrice(p.price)}</p>
+                    </div>
+                `).join("");
+            }
+        }
+
+        function buyNow(pid) {
+            addToCart(pid, selectedQty);
+            setTimeout(() => location.href = "checkout.html", 400);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            updateBadges();
+        });
+    </script>
 </body>
+
 </html>
