@@ -58,7 +58,7 @@
                 <div class="hidden lg:flex gap-6 items-center font-medium">
                     <a href="index.html" class="nav-link">Home</a>
                     <a href="products.html" class="nav-link">Products</a>
-                    <a href="wishlist.html" class="nav-link text-yellow-400">
+                    <a href="wishlist.html" class="nav-link text-yellow-400 font-bold">
                         Wishlist (<span id="wishlist-count" class="wishlist-badge">0</span>)
                     </a>
                     <a href="cart.html" class="nav-link">
@@ -66,7 +66,12 @@
                     </a>
                     <a href="my-orders.html" class="nav-link">Orders</a>
                     <a href="profile.html" class="nav-link">Profile</a>
-                    <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    
+                    <!-- Dynamic Auth Links -->
+                    <div id="navAuthLinks" class="flex items-center gap-4">
+                        <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    </div>
+
                     <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold transition">Admin</a>
                 </div>
 
@@ -80,7 +85,7 @@
             <div id="mobileMenu" class="hidden pt-4 pb-2 space-y-3 lg:hidden border-t border-white/10 mt-3">
                 <a href="index.html" class="block py-1 hover:text-yellow-400">Home</a>
                 <a href="products.html" class="block py-1 hover:text-yellow-400">Products</a>
-                <a href="wishlist.html" class="block py-1 text-yellow-400">Wishlist (<span class="wishlist-badge">0</span>)</a>
+                <a href="wishlist.html" class="block py-1 text-yellow-400 font-bold">Wishlist (<span class="wishlist-badge">0</span>)</a>
                 <a href="cart.html" class="block py-1 hover:text-yellow-400">Cart (<span class="cart-badge">0</span>)</a>
                 <a href="my-orders.html" class="block py-1 hover:text-yellow-400">My Orders</a>
                 <a href="profile.html" class="block py-1 hover:text-yellow-400">Profile</a>
@@ -150,7 +155,7 @@
                                 ? `<video src="${p.image}" class="w-full h-56 object-cover" controls loop muted></video>`
                                 : `<img src="${p.image || 'https://via.placeholder.com/400'}" alt="${p.name}" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://via.placeholder.com/400'">`
                             }
-                            <button onclick="removeAndRender(${p.id})" class="absolute top-3 right-3 p-2 bg-black/60 backdrop-blur-md rounded-full text-rose-500 hover:text-white hover:bg-rose-600 transition">
+                            <button onclick="removeAndRender(${p.id})" title="Remove from Wishlist" class="absolute top-3 right-3 p-2 bg-black/60 backdrop-blur-md rounded-full text-rose-500 hover:text-white hover:bg-rose-600 transition">
                                 <i class="fa-solid fa-trash text-sm"></i>
                             </button>
                         </div>
