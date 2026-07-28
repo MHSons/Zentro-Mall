@@ -57,7 +57,7 @@
                 <!-- Desktop Menu Nav -->
                 <div class="hidden lg:flex gap-6 items-center font-medium">
                     <a href="index.html" class="nav-link">Home</a>
-                    <a href="products.html" class="nav-link">Products</a>
+                    <a href="products.html" class="nav-link text-yellow-400 font-bold">Products</a>
                     <a href="wishlist.html" class="nav-link">
                         Wishlist (<span id="wishlist-count" class="wishlist-badge">0</span>)
                     </a>
@@ -66,7 +66,12 @@
                     </a>
                     <a href="my-orders.html" class="nav-link">Orders</a>
                     <a href="profile.html" class="nav-link">Profile</a>
-                    <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    
+                    <!-- Dynamic Auth Links Slot -->
+                    <div id="navAuthLinks" class="flex items-center gap-4">
+                        <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    </div>
+
                     <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold transition">Admin</a>
                 </div>
 
@@ -79,7 +84,7 @@
             <!-- Mobile Drawer Menu -->
             <div id="mobileMenu" class="hidden pt-4 pb-2 space-y-3 lg:hidden border-t border-white/10 mt-3">
                 <a href="index.html" class="block py-1 hover:text-yellow-400">Home</a>
-                <a href="products.html" class="block py-1 hover:text-yellow-400">Products</a>
+                <a href="products.html" class="block py-1 text-yellow-400 font-bold">Products</a>
                 <a href="wishlist.html" class="block py-1 hover:text-yellow-400">Wishlist (<span class="wishlist-badge">0</span>)</a>
                 <a href="cart.html" class="block py-1 hover:text-yellow-400">Cart (<span class="cart-badge">0</span>)</a>
                 <a href="my-orders.html" class="block py-1 hover:text-yellow-400">My Orders</a>
@@ -106,7 +111,7 @@
 
         <!-- Related Products Section -->
         <section id="related-section" class="mt-20 pt-12 border-t border-white/10 hidden">
-            <h2 class="text-3xl font-black mb-8">Related Products</h2>
+            <h2 class="text-3xl font-black mb-8 bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-amber-500">Related Products</h2>
             <div id="related-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </section>
     </main>
@@ -141,15 +146,16 @@
 
         if (!product) {
             document.getElementById("product-detail").innerHTML = `
-                <div class="col-span-full text-center py-20 glass rounded-3xl">
-                    <i class="fa-solid fa-circle-exclamation text-6xl text-rose-500 mb-4"></i>
+                <div class="col-span-full text-center py-20 glass rounded-3xl space-y-4">
+                    <i class="fa-solid fa-circle-exclamation text-6xl text-rose-500/80 mb-2"></i>
                     <p class="text-3xl font-bold text-gray-300">Product Not Found</p>
-                    <a href="products.html" class="mt-6 inline-block bg-yellow-400 text-black px-8 py-3 rounded-xl font-bold text-lg hover:bg-yellow-300 transition">
+                    <p class="text-gray-400 text-sm">The item you are looking for might have been removed or does not exist.</p>
+                    <a href="products.html" class="inline-block mt-4 bg-yellow-400 text-black px-8 py-3 rounded-xl font-bold text-base hover:bg-yellow-300 transition">
                         Browse Catalog
                     </a>
                 </div>`;
         } else {
-            // Save to Recently Viewed Storage
+            // Save to Recently Viewed LocalStorage
             let viewed = JSON.parse(localStorage.getItem("zm_viewed") || "[]");
             viewed = [id, ...viewed.filter(x => x !== id)].slice(0, 10);
             localStorage.setItem("zm_viewed", JSON.stringify(viewed));
@@ -159,89 +165,39 @@
 
             let mediaHTML = isVideo
                 ? `<video src="${product.image}" class="w-full h-[450px] object-cover rounded-3xl shadow-2xl" controls loop autoplay muted playsinline></video>`
-                : `<img src="${product.image || 'https://via.placeholder.com/600'}" class="w-full h-[450px] object-cover rounded-3xl shadow-2xl" alt="${product.name}" onerror="this.src='https://via.placeholder.com/600/333/fff?text=No+Image'">`;
+                : `<img src="${product.image \vert{}\vert{} 'https://via.placeholder.com/600'}" class="w-full h-[450px] object-cover rounded-3xl shadow-2xl" alt="${product.name}" onerror="this.src='https://via.placeholder.com/600/333/fff?text=No+Image'">`;
 
             document.getElementById("product-detail").innerHTML = `
                 <!-- Media Container -->
-                <div class="relative glass rounded-3xl p-4 overflow-hidden group">
-                    ${mediaHTML}
-                    <button onclick="toggleWishlist(${product.id})" class="absolute top-8 right-8 p-3 bg-black/60 backdrop-blur-md rounded-full text-white hover:text-red-500 transition shadow-lg">
-                        <i class="fa-solid fa-heart ${isWishlisted ? 'text-red-500' : 'text-white'} text-xl"></i>
-                    </button>
-                </div>
+                <div class="relative glass rounded-3xl p-4 overflow-hiddenThis is the source code for the **Product Detail Page (`product-detail.html`)** of **ZentroMall**, an e-commerce website interface built with **HTML5**, **Tailwind CSS**, and vanilla **JavaScript**.
 
-                <!-- Product Specifications & Buying Controls -->
-                <div class="space-y-6">
-                    <div>
-                        <span class="text-xs text-indigo-400 uppercase font-bold tracking-widest bg-indigo-500/10 px-3 py-1 rounded-full border border-indigo-500/20">${product.category || 'General'}</span>
-                        <h1 class="text-3xl sm:text-5xl font-black text-white mt-3">${product.name}</h1>
-                        <p class="text-gray-300 text-lg mt-4 leading-relaxed">${product.desc || "No detailed description available for this item."}</p>
-                    </div>
+---
 
-                    <!-- Pricing Box -->
-                    <div class="glass p-6 rounded-2xl border border-white/10">
-                        <p class="text-xs text-gray-400">Total Price</p>
-                        <p class="text-4xl font-black text-emerald-400 mt-1">${formatPrice(product.price)}</p>
-                        <p class="text-xs text-gray-300 mt-2 flex items-center gap-2">
-                            <i class="fa-solid fa-truck-fast text-yellow-400"></i> Cash on Delivery Available Across Pakistan
-                        </p>
-                    </div>
+## Key Features & Structure
 
-                    <!-- Quantity Control -->
-                    <div class="flex items-center gap-4">
-                        <span class="text-gray-300 font-bold">Quantity:</span>
-                        <div class="flex items-center glass rounded-xl overflow-hidden border border-white/20">
-                            <button onclick="updateQty(-1)" class="px-4 py-2 hover:bg-white/10 text-xl font-bold transition">-</button>
-                            <span id="qty-display" class="px-5 py-2 font-black text-yellow-400">1</span>
-                            <button onclick="updateQty(1)" class="px-4 py-2 hover:bg-white/10 text-xl font-bold transition">+</button>
-                        </div>
-                    </div>
+### 1. Header & Navigation (`<nav>`)
+* **Responsive Navbar:** Features responsive layouts for desktop and mobile devices using Tailwind classes (`hidden lg:flex`, `lg:hidden`).
+* **Glassmorphism Design:** Styled with custom background translucency and backdrop filters (`.glass`).
+* **Interactive Counters:** Includes dynamic badge counters for `Wishlist` and `Cart` items.
 
-                    <!-- Action Buttons -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                        <button onclick="addToCart(${product.id}, selectedQty)" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-2xl font-bold text-lg hover:from-indigo-500 hover:to-purple-500 transition shadow-xl flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-cart-plus"></i> Add to Cart
-                        </button>
-                        <button onclick="buyNow(${product.id})" class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white py-4 rounded-2xl font-bold text-lg hover:from-emerald-400 hover:to-teal-500 transition shadow-xl flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-bolt"></i> Buy Now
-                        </button>
-                    </div>
+---
 
-                    <!-- Share & Warranty Badges -->
-                    <div class="pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
-                        <div class="flex items-center gap-2 text-sm text-gray-400">
-                            <i class="fa-solid fa-shield-check text-emerald-400 text-lg"></i> Official Warranty Verified
-                        </div>
-                        <button onclick="openWhatsApp('Check out this product on ZentroMall: ' + window.location.href)" class="text-emerald-400 hover:text-emerald-300 font-bold text-sm flex items-center gap-2 transition">
-                            <i class="fa-brands fa-whatsapp text-lg"></i> Share via WhatsApp
-                        </button>
-                    </div>
-                </div>
-            `;
+### 2. Main Product Container (`<main>`)
+* **Skeleton Loading:** Displays animated placeholder skeletons (`animate-pulse`) while product details load via JavaScript.
+* **Dynamic Content Injection:**
+  * Extracts the product `id` parameter from URL query strings (`window.location.search`).
+  * Searches the global `products` array (loaded via `main.js`).
+  * If found, renders:
+    * **Media Display:** Handles both image (`<img>`) and video (`<video>`) media types with automatic fallbacks.
+    * **Wishlist Toggle:** Heart button to add/remove the item from local wishlist state.
+    * **Product Info:** Display name, category badge, detailed description, and price formatted with `formatPrice()`.
+    * **Quantity Controls:** Dynamic `+` and `-` quantity selectors.
+    * **Action Buttons:** "Add to Cart" and "Buy Now" (redirects directly to `checkout.html`).
+    * **Social Sharing:** WhatsApp share trigger.
+  * **Fallback Error State:** If the product ID is invalid or missing, it shows a "Product Not Found" card with a button to return to catalog browsing.
 
-            // Render Related Products
-            const related = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
-            if (related.length > 0) {
-                document.getElementById("related-section").classList.remove("hidden");
-                document.getElementById("related-products").innerHTML = related.map(p => `
-                    <div class="glass p-4 rounded-2xl hover:-translate-y-1 transition duration-300 cursor-pointer" onclick="window.location.href='product-detail.html?id=${p.id}'">
-                        <img src="${p.image}" class="w-full h-40 object-cover rounded-xl mb-3" onerror="this.src='https://via.placeholder.com/300'">
-                        <h4 class="font-bold text-white truncate">${p.name}</h4>
-                        <p class="text-emerald-400 font-black text-sm mt-1">${formatPrice(p.price)}</p>
-                    </div>
-                `).join("");
-            }
-        }
+---
 
-        function buyNow(pid) {
-            addToCart(pid, selectedQty);
-            setTimeout(() => location.href = "checkout.html", 400);
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            updateBadges();
-        });
-    </script>
-</body>
-
-</html>
+### 3. Features & Logic (`<script>`)
+* **Recently Viewed Items:** Saves up to 10 recently viewed product IDs to local storage (`localStorage.setItem("zm_viewed", ...)`).
+* **Related Products:** Filters and displays up to 4 items matching the current product's category.
