@@ -61,12 +61,17 @@
                     <a href="wishlist.html" class="nav-link">
                         Wishlist (<span id="wishlist-count" class="wishlist-badge">0</span>)
                     </a>
-                    <a href="cart.html" class="nav-link">
+                    <a href="cart.html" class="nav-link text-yellow-400 font-bold">
                         Cart (<span id="cart-count" class="cart-badge">0</span>)
                     </a>
                     <a href="my-orders.html" class="nav-link">Orders</a>
                     <a href="profile.html" class="nav-link">Profile</a>
-                    <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    
+                    <!-- Dynamic Auth Links Slot -->
+                    <div id="navAuthLinks" class="flex items-center gap-4">
+                        <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    </div>
+
                     <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold transition">Admin</a>
                 </div>
 
@@ -81,7 +86,7 @@
                 <a href="index.html" class="block py-1 hover:text-yellow-400">Home</a>
                 <a href="products.html" class="block py-1 hover:text-yellow-400">Products</a>
                 <a href="wishlist.html" class="block py-1 hover:text-yellow-400">Wishlist (<span class="wishlist-badge">0</span>)</a>
-                <a href="cart.html" class="block py-1 hover:text-yellow-400">Cart (<span class="cart-badge">0</span>)</a>
+                <a href="cart.html" class="block py-1 text-yellow-400 font-bold">Cart (<span class="cart-badge">0</span>)</a>
                 <a href="my-orders.html" class="block py-1 hover:text-yellow-400">My Orders</a>
                 <a href="profile.html" class="block py-1 hover:text-yellow-400">Profile</a>
                 <div class="flex gap-4 pt-2">
@@ -188,7 +193,8 @@
 
     <!-- Page Specific Script -->
     <script>
-        let discount = 0;
+        let discount = parseInt(localStorage.getItem("zm_discount") || "0");
+        const STORE_ADMIN_PHONE = "923000000000"; // Admin Store WhatsApp Contact Number
 
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
@@ -256,14 +262,17 @@
 
             if (code === "ZENTRO50") {
                 discount = Math.round(subtotal * 0.5);
+                localStorage.setItem("zm_discount", discount);
                 msg.className = "text-xs font-bold text-emerald-400 mt-2";
                 msg.textContent = "🎉 ZENTRO50 Applied! 50% OFF";
             } else if (code === "EID100") {
                 discount = 100000;
+                localStorage.setItem("zm_discount", discount);
                 msg.className = "text-xs font-bold text-emerald-400 mt-2";
                 msg.textContent = "🎉 EID100 Applied! PKR 100,000 OFF";
             } else {
                 discount = 0;
+                localStorage.removeItem("zm_discount");
                 msg.className = "text-xs font-bold text-rose-400 mt-2";
                 msg.textContent = "❌ Invalid Coupon Code";
             }
@@ -308,9 +317,10 @@
             msgText += `\n💰 *Total Amount: ${formatPrice(finalTotal)}*\n🚚 Cash on Delivery Across Pakistan\n\nThank you for shopping with ZentroMall!`;
 
             const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const targetPhone = STORE_ADMIN_PHONE || phone;
             const waURL = isMobile
-                ? `https://wa.me/${phone}?text=${encodeURIComponent(msgText)}`
-                : `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msgText)}`;
+                ? `https://wa.me/${targetPhone}?text=${encodeURIComponent(msgText)}`
+                : `https://web.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(msgText)}`;
 
             // Save Order Record to Local Storage
             orders.push({
@@ -323,9 +333,10 @@
             });
             saveData();
 
-            // Clear Cart State
+            // Clear Cart & Discount State
             cart = [];
             localStorage.setItem("zm_cart", "[]");
+            localStorage.removeItem("zm_discount");
             updateBadges();
 
             window.open(waURL, "_blank");
