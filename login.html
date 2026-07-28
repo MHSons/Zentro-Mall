@@ -71,7 +71,12 @@
                     </a>
                     <a href="my-orders.html" class="nav-link">Orders</a>
                     <a href="profile.html" class="nav-link">Profile</a>
-                    <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+
+                    <!-- Dynamic Auth Links Slot -->
+                    <div id="navAuthLinks" class="flex items-center gap-4">
+                        <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    </div>
+
                     <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold transition">Admin</a>
                 </div>
 
@@ -121,7 +126,7 @@
                     <input type="password" id="password" placeholder="Password" 
                            class="w-full py-3.5 pl-12 pr-12 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm font-medium" 
                            required aria-required="true" />
-                    <button type="button" onclick="togglePassVisibility()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
+                    <button type="button" onclick="togglePassVisibility()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white focus:outline-none">
                         <i id="eyeIcon" class="fa-solid fa-eye"></i>
                     </button>
                 </div>
@@ -173,23 +178,37 @@
             const password = document.getElementById("password").value.trim();
 
             const users = JSON.parse(localStorage.getItem("zm_users") || "[]");
-            const user = users.find(u => u.email.toLowerCase() === email && u.password === password);
+            const user = users.find(u => u.email && u.email.toLowerCase() === email && u.password === password);
 
             if (user) {
                 localStorage.setItem("zm_user", JSON.stringify(user));
+                if (typeof currentUser !== "undefined") {
+                    currentUser = user;
+                }
+
                 const btn = document.getElementById("submitBtn");
+                btn.disabled = true;
                 btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Login Successful!`;
-                btn.className = "w-full mt-2 bg-emerald-500 text-black py-4 rounded-xl font-black text-lg transition shadow-xl";
+                btn.className = "w-full mt-2 bg-emerald-500 text-black py-4 rounded-xl font-black text-lg transition shadow-xl cursor-default";
                 
                 setTimeout(() => {
                     window.location.href = "index.html";
                 }, 800);
             } else {
-                alert("❌ Invalid credentials! Please check your email and password.");
+                if (typeof showToast === "function") {
+                    showToast("Invalid email or password!", "error");
+                } else {
+                    alert("❌ Invalid credentials! Please check your email and password.");
+                }
             }
         });
 
         document.addEventListener("DOMContentLoaded", () => {
+            // Redirect if already logged in
+            if (typeof currentUser !== "undefined" && currentUser) {
+                window.location.href = "profile.html";
+                return;
+            }
             updateBadges();
         });
     </script>
