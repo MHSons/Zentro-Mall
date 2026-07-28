@@ -1,246 +1,456 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - ZentroMall</title>
-  <link rel="icon" href="logo.png">
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard – ZentroMall</title>
+    <link rel="icon" href="logo.png">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #14002c, #1b1464, #050505);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glow {
+            box-shadow: 0 0 35px rgba(99, 102, 241, 0.35);
+        }
+
+        .nav-link {
+            transition: .3s;
+        }
+
+        .nav-link:hover {
+            color: #facc15;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #ffffff;
+            border-color: rgba(250, 204, 21, 0.5);
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-purple-900 via-indigo-900 to-black text-white min-h-screen">
 
-  <!-- Admin Panel Container -->
-  <div class="max-w-7xl mx-auto py-12 px-6">
+<body class="text-white min-h-screen flex flex-col justify-between">
 
-    <!-- Header + Logout -->
-    <div class="flex justify-between items-center mb-10">
-      <h1 class="text-5xl font-extrabold text-yellow-400">ZentroMall Admin Panel</h1>
-      <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-xl font-bold text-xl">Logout</button>
-    </div>
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 glass">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-4">
+                    <img src="logo.png" class="h-12 w-12 rounded-full shadow-2xl object-cover" onerror="this.src='https://via.placeholder.com/100/4f46e5/ffffff?text=ZM'">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-black tracking-wide">ZentroMall</h1>
+                        <p class="text-xs text-yellow-400 font-bold hidden sm:block"><i class="fa-solid fa-shield-halved"></i> Admin Control Dashboard</p>
+                    </div>
+                </a>
 
-    <!-- Tabs -->
-    <div class="flex gap-6 mb-12">
-      <button onclick="showTab('productsTab')" class="tab-btn bg-indigo-600 px-6 py-3 rounded-xl font-bold">Products</button>
-      <button onclick="showTab('ordersTab')" class="tab-btn bg-indigo-600 px-6 py-3 rounded-xl font-bold">Orders</button>
-      <button onclick="showTab('bannersTab')" class="tab-btn bg-indigo-600 px-6 py-3 rounded-xl font-bold">Banners</button>
-      <button onclick="showTab('settingsTab')" class="tab-btn bg-indigo-600 px-6 py-3 rounded-xl font-bold">Settings</button>
-    </div>
+                <!-- Desktop Menu Nav -->
+                <div class="hidden lg:flex gap-6 items-center font-medium">
+                    <a href="index.html" class="nav-link">Home View</a>
+                    <a href="products.html" class="nav-link">Products View</a>
+                    <button onclick="logout()" class="bg-rose-600 hover:bg-rose-700 text-white px-5 py-2 rounded-xl font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-right-from-bracket"></i> Admin Logout
+                    </button>
+                </div>
 
-    <!-- PRODUCTS TAB -->
-    <div id="productsTab" class="tab-content">
-      <h2 class="text-4xl font-bold mb-6">Manage Products</h2>
-      <div class="mb-6">
-        <input type="text" id="newProductName" placeholder="Product Name" class="p-4 rounded-xl text-black w-full mb-4">
-        <input type="text" id="newProductDesc" placeholder="Description" class="p-4 rounded-xl text-black w-full mb-4">
-        <input type="number" id="newProductPrice" placeholder="Price" class="p-4 rounded-xl text-black w-full mb-4">
-        <input type="file" id="newProductImage" class="mb-4">
-        <button onclick="addProduct()" class="bg-green-600 hover:bg-green-700 px-8 py-4 rounded-xl font-bold">Add Product</button>
-      </div>
-      <div id="productsList" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-    </div>
+                <!-- Mobile Menu Toggle Button -->
+                <button id="mobileBtn" onclick="toggleMobileMenu()" class="lg:hidden text-3xl focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
 
-    <!-- ORDERS TAB -->
-    <div id="ordersTab" class="tab-content hidden">
-      <h2 class="text-4xl font-bold mb-6">Orders</h2>
-      <div id="ordersList" class="space-y-6"></div>
-    </div>
-
-    <!-- BANNERS TAB -->
-    <div id="bannersTab" class="tab-content hidden">
-      <h2 class="text-4xl font-bold mb-6">Manage Banners</h2>
-      <div class="mb-6">
-        <input type="text" id="newBannerText" placeholder="Banner Text" class="p-4 rounded-xl text-black w-full mb-4">
-        <input type="file" id="newBannerMedia" class="mb-4">
-        <button onclick="addBanner()" class="bg-green-600 hover:bg-green-700 px-8 py-4 rounded-xl font-bold">Add Banner</button>
-      </div>
-      <div id="bannersList" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-    </div>
-
-    <!-- SETTINGS TAB -->
-    <div id="settingsTab" class="tab-content hidden">
-      <h2 class="text-4xl font-bold mb-6">Settings</h2>
-      <div class="mb-6">
-        <input type="password" id="oldPass" placeholder="Current Password" class="p-4 rounded-xl text-black w-full mb-4">
-        <input type="password" id="newPass" placeholder="New Password" class="p-4 rounded-xl text-black w-full mb-4">
-        <button onclick="changePassword()" class="bg-yellow-500 hover:bg-yellow-600 px-8 py-4 rounded-xl font-bold text-black">Change Password</button>
-      </div>
-    </div>
-
-  </div>
-
-  <script src="main.js"></script>
-  <script>
-    // ---------------- ADMIN AUTH ----------------
-    if(localStorage.getItem("zm_admin_logged") !== "true"){
-      location.href="admin.html";
-    }
-
-    function logout(){
-      localStorage.setItem("zm_admin_logged","false");
-      location.href="admin.html";
-    }
-
-    // ---------------- TABS ----------------
-    function showTab(tabId){
-      document.querySelectorAll(".tab-content").forEach(t => t.classList.add("hidden"));
-      document.getElementById(tabId).classList.remove("hidden");
-    }
-
-    // ---------------- PRODUCTS ----------------
-    function renderProducts(){
-      const list = document.getElementById("productsList");
-      list.innerHTML = products.map(p => `
-        <div class="bg-white text-black rounded-3xl p-6 shadow-2xl">
-          <h3 class="text-xl font-bold mb-2">${p.name}</h3>
-          <p class="text-gray-600 mb-2">${p.desc}</p>
-          <p class="text-2xl font-bold text-green-600 mb-2">${formatPrice(p.price)}</p>
-          ${p.image ? `<img src="${p.image}" class="w-full h-48 object-cover mb-2 rounded-xl">` : ""}
-          <div class="flex gap-2">
-            <button onclick="editProduct(${p.id})" class="bg-blue-600 px-4 py-2 rounded-xl font-bold">Edit</button>
-            <button onclick="deleteProduct(${p.id})" class="bg-red-600 px-4 py-2 rounded-xl font-bold">Delete</button>
-          </div>
+            <!-- Mobile Drawer Menu -->
+            <div id="mobileMenu" class="hidden pt-4 pb-2 space-y-3 lg:hidden border-t border-white/10 mt-3">
+                <a href="index.html" class="block py-1 hover:text-yellow-400">Home Store View</a>
+                <a href="products.html" class="block py-1 hover:text-yellow-400">Products View</a>
+                <button onclick="logout()" class="bg-rose-600 text-white px-4 py-2 rounded-lg font-bold text-sm w-full text-center">Admin Logout</button>
+            </div>
         </div>
-      `).join("");
-    }
+    </nav>
 
-    function addProduct(){
-      const name = document.getElementById("newProductName").value.trim();
-      const desc = document.getElementById("newProductDesc").value.trim();
-      const price = parseFloat(document.getElementById("newProductPrice").value);
-      const file = document.getElementById("newProductImage").files[0];
+    <!-- Main Admin Dashboard Container -->
+    <main class="max-w-7xl mx-auto px-6 py-10 flex-grow w-full">
 
-      if(!name || !price){ alert("Enter Name and Price"); return; }
+        <!-- Page Heading & Quick Logout -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <div>
+                <h1 class="text-3xl md:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-amber-400 to-indigo-400">
+                    Store Dashboard
+                </h1>
+                <p class="text-xs text-gray-400 mt-1">Manage product catalog, order statuses, banners, and security settings</p>
+            </div>
+            <button onclick="logout()" class="bg-rose-600/20 border border-rose-500/40 hover:bg-rose-600 text-rose-300 hover:text-white px-6 py-3 rounded-xl font-bold transition flex items-center gap-2">
+                <i class="fa-solid fa-power-off"></i> Exit Admin Session
+            </button>
+        </div>
 
-      if(file){
-        const reader = new FileReader();
-        reader.onload = e => {
-          products.push({id:Date.now(), name, desc, price, image:e.target.result});
-          saveData(); renderProducts(); clearProductForm();
+        <!-- Dashboard Navigation Tabs -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
+            <button onclick="showTab('productsTab', this)" class="tab-btn active glass border border-white/10 px-6 py-4 rounded-2xl font-bold text-sm md:text-base transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-box"></i> Products
+            </button>
+            <button onclick="showTab('ordersTab', this)" class="tab-btn glass border border-white/10 px-6 py-4 rounded-2xl font-bold text-sm md:text-base transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-receipt"></i> Orders
+            </button>
+            <button onclick="showTab('bannersTab', this)" class="tab-btn glass border border-white/10 px-6 py-4 rounded-2xl font-bold text-sm md:text-base transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-images"></i> Banners
+            </button>
+            <button onclick="showTab('settingsTab', this)" class="tab-btn glass border border-white/10 px-6 py-4 rounded-2xl font-bold text-sm md:text-base transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-sliders"></i> Security Settings
+            </button>
+        </div>
+
+        <!-- ================= PRODUCTS TAB ================= -->
+        <div id="productsTab" class="tab-content space-y-8">
+            <div class="glass p-6 md:p-8 rounded-3xl space-y-6">
+                <h2 class="text-2xl font-bold text-yellow-400 flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Add New Product
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="newProductName" placeholder="Product Title" class="p-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm">
+                    <input type="number" id="newProductPrice" placeholder="Price (PKR)" class="p-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm">
+                    <input type="text" id="newProductDesc" placeholder="Description details" class="p-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm md:col-span-2">
+                    <div class="md:col-span-2 flex flex-col sm:flex-row gap-4 items-center">
+                        <label class="w-full sm:w-auto bg-white/10 border border-white/20 px-6 py-3.5 rounded-xl cursor-pointer hover:bg-white/20 transition text-sm text-center">
+                            <i class="fa-solid fa-upload"></i> Upload Image File
+                            <input type="file" id="newProductImage" class="hidden">
+                        </label>
+                        <button onclick="addProduct()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-3.5 rounded-xl font-bold transition shadow-lg flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-plus-circle"></i> Save Product
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-bold text-gray-300 mb-4">Existing Product Inventory</h3>
+                <div id="productsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </div>
+
+        <!-- ================= ORDERS TAB ================= -->
+        <div id="ordersTab" class="tab-content hidden space-y-6">
+            <h2 class="text-2xl font-bold text-yellow-400 flex items-center gap-2">
+                <i class="fa-solid fa-cart-shopping"></i> Customer Orders
+            </h2>
+            <div id="ordersList" class="space-y-4"></div>
+        </div>
+
+        <!-- ================= BANNERS TAB ================= -->
+        <div id="bannersTab" class="tab-content hidden space-y-8">
+            <div class="glass p-6 md:p-8 rounded-3xl space-y-6">
+                <h2 class="text-2xl font-bold text-yellow-400 flex items-center gap-2">
+                    <i class="fa-solid fa-images"></i> Add Promotional Banner
+                </h2>
+                <div class="space-y-4">
+                    <input type="text" id="newBannerText" placeholder="Banner Headline / Promotion Tag" class="w-full p-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm">
+                    <div class="flex flex-col sm:flex-row gap-4 items-center">
+                        <label class="w-full sm:w-auto bg-white/10 border border-white/20 px-6 py-3.5 rounded-xl cursor-pointer hover:bg-white/20 transition text-sm text-center">
+                            <i class="fa-solid fa-image"></i> Select Banner Image
+                            <input type="file" id="newBannerMedia" class="hidden">
+                        </label>
+                        <button onclick="addBanner()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-3.5 rounded-xl font-bold transition shadow-lg flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Publish Banner
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-bold text-gray-300 mb-4">Active Carousel Banners</h3>
+                <div id="bannersList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </div>
+
+        <!-- ================= SETTINGS TAB ================= -->
+        <div id="settingsTab" class="tab-content hidden space-y-6">
+            <div class="glass p-6 md:p-8 rounded-3xl max-w-xl mx-auto space-y-6">
+                <h2 class="text-2xl font-bold text-yellow-400 flex items-center gap-2">
+                    <i class="fa-solid fa-key"></i> Update Admin Credentials
+                </h2>
+                <div class="space-y-4">
+                    <input type="password" id="oldPass" placeholder="Current Admin Password" class="w-full p-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm">
+                    <input type="password" id="newPass" placeholder="New Password" class="w-full p-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm">
+                    <button onclick="changePassword()" class="w-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-black py-4 rounded-xl font-black text-lg transition shadow-xl flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-shield-check"></i> Save New Password
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black/60 border-t border-white/10 pt-10 pb-8 mt-16">
+        <div class="max-w-7xl mx-auto px-6 text-center text-xs text-gray-500">
+            &copy; 2026 ZentroMall Admin Portal. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Main Store Logic Script -->
+    <script src="main.js"></script>
+
+    <!-- Admin Panel Logic -->
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
         }
-        reader.readAsDataURL(file);
-      }else{
-        products.push({id:Date.now(), name, desc, price, image:""});
-        saveData(); renderProducts(); clearProductForm();
-      }
-    }
 
-    function clearProductForm(){
-      document.getElementById("newProductName").value="";
-      document.getElementById("newProductDesc").value="";
-      document.getElementById("newProductPrice").value="";
-      document.getElementById("newProductImage").value="";
-    }
-
-    function deleteProduct(id){
-      if(confirm("Delete this product?")){
-        products = products.filter(p=>p.id!==id);
-        saveData(); renderProducts();
-      }
-    }
-
-    function editProduct(id){
-      const p = products.find(p=>p.id===id);
-      const newName = prompt("Edit Name",p.name);
-      const newDesc = prompt("Edit Description",p.desc);
-      const newPrice = prompt("Edit Price",p.price);
-      if(newName) p.name=newName;
-      if(newDesc) p.desc=newDesc;
-      if(newPrice) p.price=parseFloat(newPrice);
-      saveData(); renderProducts();
-    }
-
-    renderProducts();
-
-    // ---------------- ORDERS ----------------
-    function renderOrders(){
-      const list = document.getElementById("ordersList");
-      if(!orders.length) list.innerHTML="<p>No orders yet</p>";
-      else list.innerHTML = orders.map(o => `
-        <div class="bg-gray-900 p-6 rounded-3xl shadow-xl">
-          <p class="mb-2"><strong>Date:</strong> ${o.date}</p>
-          <p class="mb-2"><strong>Name:</strong> ${o.customer.name}</p>
-          <p class="mb-2"><strong>Phone:</strong> ${o.customer.phone}</p>
-          <p class="mb-2"><strong>Address:</strong> ${o.customer.address}</p>
-          <p class="mb-2"><strong>Total:</strong> ${formatPrice(o.total)}</p>
-          <p class="mb-2"><strong>Status:</strong> ${o.status}</p>
-          <div class="flex gap-2 mt-2">
-            <button onclick="updateOrderStatus(${orders.indexOf(o)},'pending')" class="bg-yellow-500 px-4 py-2 rounded-xl font-bold">Pending</button>
-            <button onclick="updateOrderStatus(${orders.indexOf(o)},'completed')" class="bg-green-600 px-4 py-2 rounded-xl font-bold">Completed</button>
-            <button onclick="openWhatsAppOrder(${orders.indexOf(o)})" class="bg-green-400 px-4 py-2 rounded-xl font-bold">WhatsApp</button>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    function updateOrderStatus(idx,status){
-      orders[idx].status=status;
-      saveData(); renderOrders();
-    }
-
-    function openWhatsAppOrder(idx){
-      const o=orders[idx];
-      let msg=`*Order Details – ZentroMall*\nName: ${o.customer.name}\nPhone: ${o.customer.phone}\nAddress: ${o.customer.address}\nItems:\n`;
-      o.items.forEach(i=>msg+=`• ${i.name} x ${i.qty}\n`);
-      msg+=`Total: ${formatPrice(o.total)}`;
-      openWhatsApp(msg);
-    }
-
-    renderOrders();
-
-    // ---------------- BANNERS ----------------
-    function renderBanners(){
-      const list=document.getElementById("bannersList");
-      list.innerHTML=banners.map((b,i)=>`
-        <div class="bg-gray-800 p-6 rounded-3xl shadow-xl">
-          <p class="mb-2">${b.text || ''}</p>
-          ${b.media ? `<img src="${b.media}" class="w-full h-48 object-cover rounded-xl mb-2">` : ''}
-          <button onclick="deleteBanner(${i})" class="bg-red-600 px-4 py-2 rounded-xl font-bold">Delete</button>
-        </div>
-      `).join('');
-    }
-
-    function addBanner(){
-      const text=document.getElementById("newBannerText").value.trim();
-      const file=document.getElementById("newBannerMedia").files[0];
-
-      if(file){
-        const reader=new FileReader();
-        reader.onload=e=>{
-          banners.push({text,media:e.target.result});
-          saveData(); renderBanners(); clearBannerForm();
+        // Authentication Check
+        if (localStorage.getItem("zm_admin_logged") !== "true") {
+            location.href = "admin.html";
         }
-        reader.readAsDataURL(file);
-      }else{
-        banners.push({text,media:""});
-        saveData(); renderBanners(); clearBannerForm();
-      }
-    }
 
-    function deleteBanner(idx){
-      if(confirm("Delete this banner?")){
-        banners.splice(idx,1); saveData(); renderBanners();
-      }
-    }
+        function logout() {
+            localStorage.setItem("zm_admin_logged", "false");
+            location.href = "admin.html";
+        }
 
-    function clearBannerForm(){
-      document.getElementById("newBannerText").value="";
-      document.getElementById("newBannerMedia").value="";
-    }
+        // Tab Navigation
+        function showTab(tabId, btn) {
+            document.querySelectorAll(".tab-content").forEach(t => t.classList.add("hidden"));
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            
+            document.getElementById(tabId).classList.remove("hidden");
+            if(btn) btn.classList.add("active");
+        }
 
-    renderBanners();
+        // ---------------- PRODUCTS MANAGEMENT ----------------
+        function renderProducts() {
+            const list = document.getElementById("productsList");
+            if(!products || products.length === 0) {
+                list.innerHTML = `<p class="text-gray-400 text-sm col-span-full">No products found in database.</p>`;
+                return;
+            }
 
-    // ---------------- SETTINGS ----------------
-    function changePassword(){
-      const oldP=document.getElementById("oldPass").value.trim();
-      const newP=document.getElementById("newPass").value.trim();
-      if(oldP!==localStorage.getItem("zm_admin_pass")){ alert("Old password incorrect"); return; }
-      if(!newP){ alert("Enter new password"); return; }
-      localStorage.setItem("zm_admin_pass",newP);
-      alert("Password updated!");
-      document.getElementById("oldPass").value="";
-      document.getElementById("newPass").value="";
-    }
-  </script>
+            list.innerHTML = products.map(p => `
+                <div class="glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4 border border-white/10">
+                    <div class="space-y-3">
+                        ${p.image ? `<img src="${p.image}" class="w-full h-44 object-cover rounded-xl border border-white/10">` : `<div class="w-full h-44 bg-white/5 rounded-xl flex items-center justify-center text-gray-500 text-xs">No Image</div>`}
+                        <h4 class="text-lg font-bold text-white">${p.name}</h4>
+                        <p class="text-xs text-gray-400 line-clamp-2">${p.desc || 'No description provided.'}</p>
+                        <p class="text-xl font-black text-emerald-400">${formatPrice(p.price)}</p>
+                    </div>
+                    <div class="flex gap-2 pt-2 border-t border-white/10">
+                        <button onclick="editProduct(${p.id})" class="flex-1 bg-indigo-600/30 border border-indigo-500/50 hover:bg-indigo-600 text-indigo-200 hover:text-white py-2 rounded-xl text-xs font-bold transition">
+                            <i class="fa-solid fa-pen"></i> Edit
+                        </button>
+                        <button onclick="deleteProduct(${p.id})" class="flex-1 bg-rose-600/30 border border-rose-500/50 hover:bg-rose-600 text-rose-200 hover:text-white py-2 rounded-xl text-xs font-bold transition">
+                            <i class="fa-solid fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `).join("");
+        }
 
+        function addProduct() {
+            const name = document.getElementById("newProductName").value.trim();
+            const desc = document.getElementById("newProductDesc").value.trim();
+            const price = parseFloat(document.getElementById("newProductPrice").value);
+            const file = document.getElementById("newProductImage").files[0];
+
+            if (!name || isNaN(price)) {
+                alert("⚠️ Please enter a valid product name and price.");
+                return;
+            }
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    products.push({ id: Date.now(), name, desc, price, image: e.target.result });
+                    saveData(); renderProducts(); clearProductForm();
+                }
+                reader.readAsDataURL(file);
+            } else {
+                products.push({ id: Date.now(), name, desc, price, image: "" });
+                saveData(); renderProducts(); clearProductForm();
+            }
+        }
+
+        function clearProductForm() {
+            document.getElementById("newProductName").value = "";
+            document.getElementById("newProductDesc").value = "";
+            document.getElementById("newProductPrice").value = "";
+            document.getElementById("newProductImage").value = "";
+        }
+
+        function deleteProduct(id) {
+            if (confirm("Are you sure you want to delete this product?")) {
+                products = products.filter(p => p.id !== id);
+                saveData(); renderProducts();
+            }
+        }
+
+        function editProduct(id) {
+            const p = products.find(p => p.id === id);
+            if (!p) return;
+
+            const newName = prompt("Edit Product Name:", p.name);
+            const newDesc = prompt("Edit Description:", p.desc || "");
+            const newPrice = prompt("Edit Price:", p.price);
+
+            if (newName !== null && newName.trim() !== "") p.name = newName.trim();
+            if (newDesc !== null) p.desc = newDesc.trim();
+            if (newPrice !== null && !isNaN(parseFloat(newPrice))) p.price = parseFloat(newPrice);
+
+            saveData(); renderProducts();
+        }
+
+        // ---------------- ORDERS MANAGEMENT ----------------
+        function renderOrders() {
+            const list = document.getElementById("ordersList");
+            if (!orders || orders.length === 0) {
+                list.innerHTML = "<p class='text-gray-400 text-sm'>No orders recorded yet.</p>";
+                return;
+            }
+
+            list.innerHTML = orders.map((o, idx) => `
+                <div class="glass-card p-6 rounded-2xl border border-white/10 space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center border-b border-white/10 pb-3 gap-2">
+                        <div>
+                            <span class="text-xs text-yellow-400 font-bold uppercase">Order #${o.id || (idx + 1)}</span>
+                            <p class="text-xs text-gray-400">${o.date || 'N/A'}</p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold ${o.status === 'completed' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'}">
+                            ${o.status || 'pending'}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-300">
+                        <p><strong class="text-white">Customer:</strong> ${o.customer?.name || 'N/A'}</p>
+                        <p><strong class="text-white">Phone:</strong> ${o.customer?.phone || 'N/A'}</p>
+                        <p class="md:col-span-2"><strong class="text-white">Shipping Address:</strong> ${o.customer?.address || 'N/A'}</p>
+                        <p class="text-emerald-400 font-bold"><strong class="text-white">Total Amount:</strong> ${formatPrice(o.total || 0)}</p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 pt-2 border-t border-white/10">
+                        <button onclick="updateOrderStatus(${idx}, 'pending')" class="bg-amber-600/30 hover:bg-amber-600 text-amber-200 border border-amber-500/40 px-4 py-2 rounded-xl text-xs font-bold transition">Mark Pending</button>
+                        <button onclick="updateOrderStatus(${idx}, 'completed')" class="bg-emerald-600/30 hover:bg-emerald-600 text-emerald-200 border border-emerald-500/40 px-4 py-2 rounded-xl text-xs font-bold transition">Mark Completed</button>
+                        <button onclick="openWhatsAppOrder(${idx})" class="bg-emerald-500 text-black hover:bg-emerald-400 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1">
+                            <i class="fa-brands fa-whatsapp"></i> WhatsApp Dispatch
+                        </button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function updateOrderStatus(idx, status) {
+            orders[idx].status = status;
+            saveData(); renderOrders();
+        }
+
+        function openWhatsAppOrder(idx) {
+            const o = orders[idx];
+            let msg = `*Order Details – ZentroMall*\nName: ${o.customer.name}\nPhone: ${o.customer.phone}\nAddress: ${o.customer.address}\nItems:\n`;
+            if (o.items && o.items.length) {
+                o.items.forEach(i => msg += `• ${i.name} x ${i.qty}\n`);
+            }
+            msg += `Total: ${formatPrice(o.total)}`;
+            openWhatsApp(msg);
+        }
+
+        // ---------------- BANNERS MANAGEMENT ----------------
+        function renderBanners() {
+            const list = document.getElementById("bannersList");
+            if (!banners || banners.length === 0) {
+                list.innerHTML = `<p class="text-gray-400 text-sm col-span-full">No active banners found.</p>`;
+                return;
+            }
+
+            list.innerHTML = banners.map((b, i) => `
+                <div class="glass-card p-5 rounded-2xl border border-white/10 space-y-3">
+                    ${b.media ? `<img src="${b.media}" class="w-full h-40 object-cover rounded-xl border border-white/10">` : `<div class="w-full h-40 bg-white/5 rounded-xl flex items-center justify-center text-gray-500 text-xs">No Image</div>`}
+                    <p class="text-sm font-bold text-white">${b.text || 'Untitled Banner'}</p>
+                    <button onclick="deleteBanner(${i})" class="w-full bg-rose-600/30 border border-rose-500/50 hover:bg-rose-600 text-rose-200 hover:text-white py-2 rounded-xl text-xs font-bold transition">
+                        <i class="fa-solid fa-trash"></i> Remove Banner
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addBanner() {
+            const text = document.getElementById("newBannerText").value.trim();
+            const file = document.getElementById("newBannerMedia").files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    banners.push({ text, media: e.target.result });
+                    saveData(); renderBanners(); clearBannerForm();
+                }
+                reader.readAsDataURL(file);
+            } else {
+                banners.push({ text, media: "" });
+                saveData(); renderBanners(); clearBannerForm();
+            }
+        }
+
+        function deleteBanner(idx) {
+            if (confirm("Are you sure you want to remove this banner?")) {
+                banners.splice(idx, 1);
+                saveData(); renderBanners();
+            }
+        }
+
+        function clearBannerForm() {
+            document.getElementById("newBannerText").value = "";
+            document.getElementById("newBannerMedia").value = "";
+        }
+
+        // ---------------- SETTINGS ----------------
+        function changePassword() {
+            const oldP = document.getElementById("oldPass").value.trim();
+            const newP = document.getElementById("newPass").value.trim();
+
+            if (oldP !== localStorage.getItem("zm_admin_pass")) {
+                alert("❌ Incorrect current password!");
+                return;
+            }
+            if (!newP) {
+                alert("⚠️ Please enter a new password.");
+                return;
+            }
+
+            localStorage.setItem("zm_admin_pass", newP);
+            alert("✅ Admin password updated successfully!");
+            document.getElementById("oldPass").value = "";
+            document.getElementById("newPass").value = "";
+        }
+
+        // Initialization
+        document.addEventListener("DOMContentLoaded", () => {
+            renderProducts();
+            renderOrders();
+            renderBanners();
+        });
+    </script>
 </body>
+
 </html>
