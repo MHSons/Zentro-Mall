@@ -24,9 +24,10 @@ body {
     color: var(--text);
     min-height: 100vh;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    overflow-x: hidden;
 }
 
-/* Glass */
+/* Glassmorphism Classes */
 .glass {
     background: var(--glass-bg);
     backdrop-filter: blur(18px);
@@ -37,10 +38,16 @@ body {
 .glass-card {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Navigation */
+.glass-card:hover {
+    border-color: rgba(250, 204, 21, 0.3);
+}
+
+/* Navigation Links */
 .nav-link {
     transition: color 0.25s ease, border-color 0.25s ease;
 }
@@ -53,14 +60,15 @@ body {
     background: linear-gradient(135deg, #facc15, #f59e0b);
     color: #000;
     font-weight: 700;
-    transition: filter 0.2s, transform 0.2s;
+    transition: filter 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 .btn-main:hover {
     filter: brightness(1.1);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px rgba(250, 204, 21, 0.4);
 }
 
-/* Hero */
+/* Hero Section Background */
 .hero-bg {
     background: radial-gradient(ellipse at 30% 50%, rgba(79, 70, 229, 0.25), transparent 60%),
                 radial-gradient(ellipse at 70% 20%, rgba(250, 204, 21, 0.12), transparent 50%);
@@ -75,17 +83,21 @@ body {
     50% { transform: translateY(-12px); }
 }
 
-/* Marquee */
+/* Marquee Continuous Banner Animation */
 .animate-marquee {
     display: inline-flex;
-    animation: marquee 28s linear infinite;
+    white-space: nowrap;
+    animation: marquee 25s linear infinite;
+}
+.animate-marquee:hover {
+    animation-play-state: paused;
 }
 @keyframes marquee {
-    0% { transform: translateX(0); }
+    0% { transform: translateX(0%); }
     100% { transform: translateX(-50%); }
 }
 
-/* Badges */
+/* Cart & Wishlist Badges */
 .cart-badge,
 .wishlist-badge {
     display: inline-flex;
@@ -97,12 +109,12 @@ body {
     font-size: 0.65rem;
     font-weight: 800;
     border-radius: 9999px;
-    background: #facc15;
+    background: var(--yellow);
     color: #000;
     line-height: 1;
 }
 
-/* Line clamp */
+/* Line Clamp Helpers */
 .line-clamp-1 {
     display: -webkit-box;
     -webkit-line-clamp: 1;
@@ -116,25 +128,25 @@ body {
     overflow: hidden;
 }
 
-/* Glow */
+/* Custom Glow Effect */
 .glow {
     box-shadow: 0 0 35px rgba(99, 102, 241, 0.35);
 }
 
-/* Tab active state (admin) */
+/* Admin Dashboard Tab Buttons Active State */
 .tab-btn.active {
     background: linear-gradient(135deg, #4f46e5, #7c3aed);
     color: #fff;
     border-color: rgba(250, 204, 21, 0.5);
 }
 
-/* Custom scrollbar */
+/* Custom Scrollbar Styles */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
 ::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
 }
 ::-webkit-scrollbar-thumb {
     background: rgba(250, 204, 21, 0.4);
@@ -144,7 +156,7 @@ body {
     background: rgba(250, 204, 21, 0.7);
 }
 
-/* Print friendly (reports) */
+/* Print Friendly Styles */
 @media print {
     body {
         background: #fff !important;
@@ -160,20 +172,20 @@ body {
     }
 }
 
-/* Mobile tweaks */
+/* Responsive Mobile Adjustments */
 @media (max-width: 640px) {
     .hero-bg h1 {
-        font-size: 1.85rem !important;
+        font-size: 2rem !important;
     }
 }
 
-/* Focus visible for accessibility */
+/* Accessibility Focus Ring */
 :focus-visible {
     outline: 2px solid var(--yellow);
     outline-offset: 2px;
 }
 
-/* Skeleton */
+/* Skeleton Loading Pulse */
 .animate-pulse {
     animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
