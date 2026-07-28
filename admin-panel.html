@@ -139,7 +139,7 @@
                     <div class="md:col-span-2 flex flex-col sm:flex-row gap-4 items-center">
                         <label class="w-full sm:w-auto bg-white/10 border border-white/20 px-6 py-3.5 rounded-xl cursor-pointer hover:bg-white/20 transition text-sm text-center">
                             <i class="fa-solid fa-upload"></i> Upload Image File
-                            <input type="file" id="newProductImage" class="hidden">
+                            <input type="file" id="newProductImage" accept="image/*" class="hidden">
                         </label>
                         <button onclick="addProduct()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-3.5 rounded-xl font-bold transition shadow-lg flex items-center justify-center gap-2">
                             <i class="fa-solid fa-plus-circle"></i> Save Product
@@ -173,7 +173,7 @@
                     <div class="flex flex-col sm:flex-row gap-4 items-center">
                         <label class="w-full sm:w-auto bg-white/10 border border-white/20 px-6 py-3.5 rounded-xl cursor-pointer hover:bg-white/20 transition text-sm text-center">
                             <i class="fa-solid fa-image"></i> Select Banner Image
-                            <input type="file" id="newBannerMedia" class="hidden">
+                            <input type="file" id="newBannerMedia" accept="image/*" class="hidden">
                         </label>
                         <button onclick="addBanner()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-3.5 rounded-xl font-bold transition shadow-lg flex items-center justify-center gap-2">
                             <i class="fa-solid fa-cloud-arrow-up"></i> Publish Banner
@@ -218,19 +218,19 @@
 
     <!-- Admin Panel Logic -->
     <script>
+        // Security Check
+        if (localStorage.getItem("zm_admin_logged") !== "true") {
+            window.location.href = "admin.html";
+        }
+
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
             menu.classList.toggle('hidden');
         }
 
-        // Authentication Check
-        if (localStorage.getItem("zm_admin_logged") !== "true") {
-            location.href = "admin.html";
-        }
-
         function logout() {
             localStorage.setItem("zm_admin_logged", "false");
-            location.href = "admin.html";
+            window.location.href = "admin.html";
         }
 
         // Tab Navigation
@@ -239,13 +239,19 @@
             document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
             
             document.getElementById(tabId).classList.remove("hidden");
-            if(btn) btn.classList.add("active");
+            if (btn) btn.classList.add("active");
+        }
+
+        // Helper for formatting prices if missing in main.js
+        function safeFormatPrice(price) {
+            if (typeof formatPrice === "function") return formatPrice(price);
+            return "PKR " + Number(price || 0).toLocaleString();
         }
 
         // ---------------- PRODUCTS MANAGEMENT ----------------
         function renderProducts() {
             const list = document.getElementById("productsList");
-            if(!products || products.length === 0) {
+            if (!products || products.length === 0) {
                 list.innerHTML = `<p class="text-gray-400 text-sm col-span-full">No products found in database.</p>`;
                 return;
             }
@@ -256,7 +262,7 @@
                         ${p.image ? `<img src="${p.image}" class="w-full h-44 object-cover rounded-xl border border-white/10">` : `<div class="w-full h-44 bg-white/5 rounded-xl flex items-center justify-center text-gray-500 text-xs">No Image</div>`}
                         <h4 class="text-lg font-bold text-white">${p.name}</h4>
                         <p class="text-xs text-gray-400 line-clamp-2">${p.desc || 'No description provided.'}</p>
-                        <p class="text-xl font-black text-emerald-400">${formatPrice(p.price)}</p>
+                        <p class="text-xl font-black text-emerald-400">${safeFormatPrice(p.price)}</p>
                     </div>
                     <div class="flex gap-2 pt-2 border-t border-white/10">
                         <button onclick="editProduct(${p.id})" class="flex-1 bg-indigo-600/30 border border-indigo-500/50 hover:bg-indigo-600 text-indigo-200 hover:text-white py-2 rounded-xl text-xs font-bold transition">
@@ -286,7 +292,7 @@
                 reader.onload = e => {
                     products.push({ id: Date.now(), name, desc, price, image: e.target.result });
                     saveData(); renderProducts(); clearProductForm();
-                }
+                };
                 reader.readAsDataURL(file);
             } else {
                 products.push({ id: Date.now(), name, desc, price, image: "" });
@@ -347,7 +353,7 @@
                         <p><strong class="text-white">Customer:</strong> ${o.customer?.name || 'N/A'}</p>
                         <p><strong class="text-white">Phone:</strong> ${o.customer?.phone || 'N/A'}</p>
                         <p class="md:col-span-2"><strong class="text-white">Shipping Address:</strong> ${o.customer?.address || 'N/A'}</p>
-                        <p class="text-emerald-400 font-bold"><strong class="text-white">Total Amount:</strong> ${formatPrice(o.total || 0)}</p>
+                        <p class="text-emerald-400 font-bold"><strong class="text-white">Total Amount:</strong> ${safeFormatPrice(o.total || 0)}</p>
                     </div>
 
                     <div class="flex flex-wrap gap-2 pt-2 border-t border-white/10">
@@ -368,12 +374,16 @@
 
         function openWhatsAppOrder(idx) {
             const o = orders[idx];
-            let msg = `*Order Details – ZentroMall*\nName: ${o.customer.name}\nPhone: ${o.customer.phone}\nAddress: ${o.customer.address}\nItems:\n`;
+            let msg = `*Order Details – ZentroMall*\nName: ${o.customer?.name || 'N/A'}\nPhone: ${o.customer?.phone || 'N/A'}\nAddress: ${o.customer?.address || 'N/A'}\nItems:\n`;
             if (o.items && o.items.length) {
                 o.items.forEach(i => msg += `• ${i.name} x ${i.qty}\n`);
             }
-            msg += `Total: ${formatPrice(o.total)}`;
-            openWhatsApp(msg);
+            msg += `Total: ${safeFormatPrice(o.total)}`;
+            if (typeof openWhatsApp === "function") {
+                openWhatsApp(msg);
+            } else {
+                window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+            }
         }
 
         // ---------------- BANNERS MANAGEMENT ----------------
@@ -404,7 +414,7 @@
                 reader.onload = e => {
                     banners.push({ text, media: e.target.result });
                     saveData(); renderBanners(); clearBannerForm();
-                }
+                };
                 reader.readAsDataURL(file);
             } else {
                 banners.push({ text, media: "" });
