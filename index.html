@@ -27,11 +27,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="text-white min-h-screen flex flex-col justify-between">
+<body class="text-white min-h-screen flex flex-col justify-between bg-slate-950">
 
     <!-- Announcement Bar -->
     <div id="topBanner" class="bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400 py-2.5 overflow-hidden shadow-lg border-b border-white/10">
-        <div id="bannerContainer" class="animate-marquee whitespace-nowrap text-sm md:text-base font-bold text-black flex gap-12 items-center">
+        <div id="bannerContainer" class="animate-marquee whitespace-nowrap text-sm md:text-base font-bold text-black flex gap-12 items-center justify-around">
             <span>🔥 FREE Nationwide Express Delivery on Orders Above PKR 5,000!</span>
             <span>⚡ Flash Sale: Get Up to 40% OFF on Genuine Accessories!</span>
             <span>💬 24/7 Order Support via WhatsApp Hotline!</span>
@@ -39,7 +39,7 @@
     </div>
 
     <!-- Header / Navbar -->
-    <nav class="sticky top-0 z-50 glass backdrop-blur-md">
+    <nav class="sticky top-0 z-50 glass backdrop-blur-md bg-black/40 border-b border-white/10">
         <div class="max-w-7xl mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
                 
@@ -55,20 +55,20 @@
                 <!-- Desktop Navigation Links -->
                 <div class="hidden lg:flex gap-6 items-center font-semibold text-sm">
                     <a href="index.html" class="text-yellow-400 border-b-2 border-yellow-400 pb-1">Home</a>
-                    <a href="products.html" class="nav-link">Products</a>
-                    <a href="wishlist.html" class="nav-link flex items-center gap-1.5">
-                        <i class="fa-regular fa-heart"></i> Wishlist <span id="wishlist-count" class="wishlist-badge">0</span>
+                    <a href="products.html" class="hover:text-yellow-400 transition">Products</a>
+                    <a href="wishlist.html" class="hover:text-yellow-400 transition flex items-center gap-1.5">
+                        <i class="fa-regular fa-heart"></i> Wishlist <span id="wishlist-count" class="bg-yellow-400 text-black px-2 py-0.5 rounded-full text-xs font-bold">0</span>
                     </a>
-                    <a href="cart.html" class="nav-link flex items-center gap-1.5">
-                        <i class="fa-solid fa-cart-shopping"></i> Cart <span id="cart-count" class="cart-badge">0</span>
+                    <a href="cart.html" class="hover:text-yellow-400 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-cart-shopping"></i> Cart <span id="cart-count" class="bg-yellow-400 text-black px-2 py-0.5 rounded-full text-xs font-bold">0</span>
                     </a>
-                    <a href="my-orders.html" class="nav-link">My Orders</a>
-                    <a href="contact.html" class="nav-link">Contact</a>
+                    <a href="my-orders.html" class="hover:text-yellow-400 transition">My Orders</a>
+                    <a href="contact.html" class="hover:text-yellow-400 transition">Contact</a>
                     
                     <!-- Dynamic Auth / User Profile Link -->
                     <div id="navAuthLinks" class="flex items-center gap-3 pl-4 border-l border-white/20">
                         <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition shadow-lg">Login</a>
-                        <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-xl font-bold transition">Admin</a>
+                        <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl font-bold transition">Admin</a>
                     </div>
                 </div>
 
@@ -84,11 +84,11 @@
                 <a href="products.html" class="block py-2 hover:text-yellow-400 border-b border-white/5">Products Catalog</a>
                 <a href="wishlist.html" class="block py-2 hover:text-yellow-400 border-b border-white/5 flex justify-between">
                     <span>Wishlist</span>
-                    <span class="wishlist-badge">0</span>
+                    <span class="bg-yellow-400 text-black px-2 py-0.5 rounded-full text-xs font-bold">0</span>
                 </a>
                 <a href="cart.html" class="block py-2 hover:text-yellow-400 border-b border-white/5 flex justify-between">
                     <span>Shopping Cart</span>
-                    <span id="cart-count-mobile" class="cart-badge">0</span>
+                    <span id="cart-count-mobile" class="bg-yellow-400 text-black px-2 py-0.5 rounded-full text-xs font-bold">0</span>
                 </a>
                 <a href="my-orders.html" class="block py-2 hover:text-yellow-400 border-b border-white/5">My Orders</a>
                 <a href="contact.html" class="block py-2 hover:text-yellow-400 border-b border-white/5">Contact Us</a>
@@ -120,10 +120,10 @@
                         </p>
                         
                         <div class="flex flex-wrap gap-4 sm:gap-5 mt-10">
-                            <a href="products.html" class="btn-main px-8 py-4 rounded-xl text-lg font-bold flex items-center gap-2 shadow-2xl">
+                            <a href="products.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-8 py-4 rounded-xl text-lg font-bold flex items-center gap-2 shadow-2xl transition">
                                 Explore Store <i class="fa-solid fa-arrow-right"></i>
                             </a>
-                            <a href="#categories-section" class="glass hover:bg-white/20 transition px-8 py-4 rounded-xl text-lg font-semibold border border-white/20">
+                            <a href="#categories-section" class="bg-white/10 hover:bg-white/20 transition px-8 py-4 rounded-xl text-lg font-semibold border border-white/20">
                                 Categories
                             </a>
                         </div>
@@ -148,7 +148,7 @@
                     <!-- Floating Branding Graphics -->
                     <div class="text-center relative">
                         <div class="absolute inset-0 bg-indigo-600/30 blur-3xl rounded-full"></div>
-                        <img src="logo.png" alt="ZentroMall" class="w-72 sm:w-80 lg:w-96 mx-auto float drop-shadow-2xl relative z-10 rounded-full border-4 border-white/10" onerror="this.src='https://via.placeholder.com/400/4f46e5/ffffff?text=ZentroMall'">
+                        <img src="logo.png" alt="ZentroMall" class="w-72 sm:w-80 lg:w-96 mx-auto drop-shadow-2xl relative z-10 rounded-full border-4 border-white/10" onerror="this.src='https://via.placeholder.com/400/4f46e5/ffffff?text=ZentroMall'">
                     </div>
                 </div>
             </div>
@@ -162,7 +162,7 @@
             </div>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
-                <a href="products.html?category=Electronics" class="glass p-6 rounded-2xl text-center hover:border-yellow-400 transition group hover:-translate-y-2">
+                <a href="products.html?category=Electronics" class="bg-white/5 border border-white/10 p-6 rounded-2xl text-center hover:border-yellow-400 transition group hover:-translate-y-2">
                     <div class="w-16 h-16 mx-auto bg-indigo-600/20 text-yellow-400 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
                         <i class="fa-solid fa-laptop"></i>
                     </div>
@@ -170,7 +170,7 @@
                     <p class="text-xs text-gray-400 mt-1">Gadgets & Tech</p>
                 </a>
 
-                <a href="products.html?category=Mobiles" class="glass p-6 rounded-2xl text-center hover:border-yellow-400 transition group hover:-translate-y-2">
+                <a href="products.html?category=Mobiles" class="bg-white/5 border border-white/10 p-6 rounded-2xl text-center hover:border-yellow-400 transition group hover:-translate-y-2">
                     <div class="w-16 h-16 mx-auto bg-indigo-600/20 text-yellow-400 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
                         <i class="fa-solid fa-mobile-screen-button"></i>
                     </div>
@@ -178,7 +178,7 @@
                     <p class="text-xs text-gray-400 mt-1">Smartphones & Tabs</p>
                 </a>
 
-                <a href="products.html?category=Fashion" class="glass p-6 rounded-2xl text-center hover:border-yellow-400 transition group hover:-translate-y-2">
+                <a href="products.html?category=Fashion" class="bg-white/5 border border-white/10 p-6 rounded-2xl text-center hover:border-yellow-400 transition group hover:-translate-y-2">
                     <div class="w-16 h-16 mx-auto bg-indigo-600/20 text-yellow-400 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
                         <i class="fa-solid fa-shirt"></i>
                     </div>
@@ -186,7 +186,7 @@
                     <p class="text-xs text-gray-400 mt-1">Clothing & Shoes</p>
                 </a>
 
-                <a href="products.html?category=Watches" class="glass p-6 rounded-2xl text-center hover:border-yellow-400 transition group hover:-translate-y-2">
+                <a href="products.html?category=Watches" class="bg-white/5 border border-white/10 p-6 rounded-2xl text-center hover:border-yellow-400 transition group hover:-translate-y-2">
                     <div class="w-16 h-16 mx-auto bg-indigo-600/20 text-yellow-400 rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition">
                         <i class="fa-solid fa-stopwatch"></i>
                     </div>
@@ -211,28 +211,28 @@
             <!-- Dynamic Products Container (Rendered via main.js) -->
             <div id="featured" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <!-- Skeleton Placeholders -->
-                <div class="glass p-5 rounded-2xl animate-pulse h-80 flex flex-col justify-between">
+                <div class="bg-white/5 border border-white/10 p-5 rounded-2xl animate-pulse h-80 flex flex-col justify-between">
                     <div class="bg-white/10 h-44 rounded-xl"></div>
                     <div class="space-y-3 mt-4">
                         <div class="bg-white/10 h-4 rounded w-3/4"></div>
                         <div class="bg-white/10 h-4 rounded w-1/2"></div>
                     </div>
                 </div>
-                <div class="glass p-5 rounded-2xl animate-pulse h-80 flex flex-col justify-between">
+                <div class="bg-white/5 border border-white/10 p-5 rounded-2xl animate-pulse h-80 flex flex-col justify-between">
                     <div class="bg-white/10 h-44 rounded-xl"></div>
                     <div class="space-y-3 mt-4">
                         <div class="bg-white/10 h-4 rounded w-3/4"></div>
                         <div class="bg-white/10 h-4 rounded w-1/2"></div>
                     </div>
                 </div>
-                <div class="glass p-5 rounded-2xl animate-pulse h-80 flex flex-col justify-between">
+                <div class="bg-white/5 border border-white/10 p-5 rounded-2xl animate-pulse h-80 flex flex-col justify-between">
                     <div class="bg-white/10 h-44 rounded-xl"></div>
                     <div class="space-y-3 mt-4">
                         <div class="bg-white/10 h-4 rounded w-3/4"></div>
                         <div class="bg-white/10 h-4 rounded w-1/2"></div>
                     </div>
                 </div>
-                <div class="glass p-5 rounded-2xl animate-pulse h-80 flex flex-col justify-between">
+                <div class="bg-white/5 border border-white/10 p-5 rounded-2xl animate-pulse h-80 flex flex-col justify-between">
                     <div class="bg-white/10 h-44 rounded-xl"></div>
                     <div class="space-y-3 mt-4">
                         <div class="bg-white/10 h-4 rounded w-3/4"></div>
@@ -244,7 +244,7 @@
 
         <!-- Newsletter Section -->
         <section class="max-w-7xl mx-auto px-6 py-16">
-            <div class="glass p-8 md:p-12 rounded-3xl text-center relative overflow-hidden">
+            <div class="bg-white/5 border border-white/10 p-8 md:p-12 rounded-3xl text-center relative overflow-hidden">
                 <div class="max-w-2xl mx-auto relative z-10 space-y-4">
                     <h2 class="text-3xl md:text-4xl font-black text-yellow-400">Subscribe For Exclusive Deals</h2>
                     <p class="text-gray-300 text-sm md:text-base">Get instant updates on flash sales, discount coupons, and new arrivals directly in your inbox.</p>
@@ -260,7 +260,7 @@
         </section>
 
         <!-- Guarantees & Features Grid -->
-        <section class="glass border-y border-white/10 py-12">
+        <section class="bg-white/5 border-y border-white/10 py-12">
             <div class="max-w-7xl mx-auto px-6">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
                     <div class="p-4">
@@ -269,7 +269,7 @@
                         <p class="text-gray-400 text-sm">Express nationwide shipping across Pakistan</p>
                     </div>
                     <div class="p-4">
-                        <i class="fa-solid fa-shield-check text-4xl text-yellow-400 mb-4"></i>
+                        <i class="fa-solid fa-shield-halved text-4xl text-yellow-400 mb-4"></i>
                         <h3 class="text-xl font-bold mb-1">100% Authentic</h3>
                         <p class="text-gray-400 text-sm">PTA approved & official warranty items</p>
                     </div>
@@ -318,9 +318,9 @@
             <div>
                 <h4 class="text-lg font-bold mb-4 text-white">Policies</h4>
                 <ul class="space-y-2 text-sm text-gray-400">
-                    <li><a href="privacy-policy.html" class="hover:text-yellow-400 transition">Privacy Policy</a></li>
-                    <li><a href="privacy-policy.html" class="hover:text-yellow-400 transition">Terms & Conditions</a></li>
-                    <li><a href="privacy-policy.html" class="hover:text-yellow-400 transition">Return & Exchange</a></li>
+                    <li><a href="#" class="hover:text-yellow-400 transition">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-yellow-400 transition">Terms & Conditions</a></li>
+                    <li><a href="#" class="hover:text-yellow-400 transition">Return & Exchange</a></li>
                 </ul>
             </div>
         </div>
