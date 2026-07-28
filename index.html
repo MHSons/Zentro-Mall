@@ -1,119 +1,465 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ZentroMall - Pakistan's #1 Online Store</title>
-  <link rel="icon" href="logo.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-    .animate-marquee { animation: marquee 30s linear infinite; }
-    .animate-marquee:hover { animation-play-state: paused; }
-  </style>
-</head>
-<body class="bg-gradient-to-br from-purple-900 via-indigo-900 to-black text-white min-h-screen">
 
-<!-- Flash Banner -->
-<div id="topBanner" class="bg-gradient-to-r from-red-600 via-orange-600 to-yellow-600 py-6 overflow-hidden hidden">
-  <div id="bannerContainer" class="inline-block animate-marquee text-3xl font-bold whitespace-nowrap"></div>
+<head>
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ZentroMall | Pakistan's Premium Online Shopping Store</title>
+
+<meta name="description" content="Buy 100% Original Products from ZentroMall. Mobiles, Laptops, Fashion, Electronics and much more with Fast Delivery across Pakistan.">
+
+<meta name="keywords" content="Pakistan Online Shopping, Electronics, Mobiles, Laptop, Fashion, Watches, ZentroMall">
+
+<meta name="author" content="ZentroMall">
+
+<meta name="theme-color" content="#4F46E5">
+
+<meta property="og:title" content="ZentroMall">
+<meta property="og:description" content="Pakistan's Premium Online Shopping Store">
+<meta property="og:image" content="logo.png">
+<meta property="og:type" content="website">
+
+<link rel="icon" href="logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+
+background:
+linear-gradient(135deg,#14002c,#1b1464,#050505);
+
+}
+
+.glass{
+
+background:rgba(255,255,255,.08);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.1);
+
+}
+
+.hero-bg{
+
+background:
+
+radial-gradient(circle at top left,#6d28d9,transparent 35%),
+
+radial-gradient(circle at bottom right,#2563eb,transparent 35%);
+
+}
+
+.nav-link{
+
+transition:.3s;
+
+}
+
+.nav-link:hover{
+
+color:#facc15;
+
+}
+
+.btn-main{
+
+background:linear-gradient(to right,#facc15,#f97316);
+
+color:#000;
+
+font-weight:bold;
+
+transition:.3s;
+
+}
+
+.btn-main:hover{
+
+transform:translateY(-4px);
+
+box-shadow:0 20px 40px rgba(0,0,0,.4);
+
+}
+
+@keyframes float{
+
+0%{transform:translateY(0px);}
+
+50%{transform:translateY(-12px);}
+
+100%{transform:translateY(0px);}
+
+}
+
+.float{
+
+animation:float 4s ease-in-out infinite;
+
+}
+
+@keyframes marquee{
+
+0%{
+
+transform:translateX(100%);
+
+}
+
+100%{
+
+transform:translateX(-100%);
+
+}
+
+}
+
+.animate-marquee{
+
+animation:marquee 30s linear infinite;
+
+}
+
+.animate-marquee:hover{
+
+animation-play-state:paused;
+
+}
+
+</style>
+
+</head>
+
+<body class="text-white">
+
+<!-- Announcement -->
+
+<div id="topBanner"
+
+class="hidden bg-gradient-to-r from-red-600 via-orange-500 to-yellow-400 py-5 overflow-hidden">
+
+<div id="bannerContainer"
+
+class="animate-marquee whitespace-nowrap text-2xl font-bold">
+
+</div>
+
 </div>
 
 <!-- Navbar -->
-<nav class="bg-black bg-opacity-90 backdrop-blur-md p-6 sticky top-0 z-50 shadow-2xl">
-  <div class="max-w-7xl mx-auto flex justify-between items-center">
-    <div class="flex items-center gap-4">
-      <img src="logo.png" alt="ZentroMall Logo" class="h-14 rounded-full shadow-lg">
-      <h1 class="text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-pink-500">
-        ZentroMall
-      </h1>
-    </div>
-    <div class="hidden md:flex gap-10 text-xl font-semibold">
-      <a href="index.html" class="hover:text-yellow-400 transition">Home</a>
-      <a href="products.html" class="hover:text-yellow-400 transition">Products</a>
-      <a href="cart.html" class="hover:text-yellow-400 transition">Cart (<span id="cart-count">0</span>)</a>
-      <a href="my-orders.html" class="hover:text-yellow-400 transition">My Orders</a>
-      <a href="admin.html" class="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-3 rounded-full font-bold hover:scale-105 transition shadow-lg">
-        Admin
-      </a>
-    </div>
-  </div>
+
+<nav class="sticky top-0 z-50 glass">
+
+<div class="max-w-7xl mx-auto">
+
+<div class="flex justify-between items-center px-6 py-5">
+
+<a href="index.html"
+
+class="flex items-center gap-4">
+
+<img
+
+src="logo.png"
+
+class="h-14 w-14 rounded-full shadow-2xl">
+
+<div>
+
+<h1 class="text-3xl font-black">
+
+ZentroMall
+
+</h1>
+
+<p class="text-sm text-gray-300">
+
+Premium Shopping Experience
+
+</p>
+
+</div>
+
+</a>
+
+<div class="hidden lg:flex gap-8 items-center">
+
+<a href="index.html"
+
+class="nav-link">
+
+Home
+
+</a>
+
+<a href="products.html"
+
+class="nav-link">
+
+Products
+
+</a>
+
+<a href="wishlist.html"
+
+class="nav-link">
+
+Wishlist
+
+</a>
+
+<a href="cart.html"
+
+class="nav-link">
+
+Cart
+
+(<span id="cart-count">0</span>)
+
+</a>
+
+<a href="my-orders.html"
+
+class="nav-link">
+
+Orders
+
+</a>
+
+<a href="profile.html"
+
+class="nav-link">
+
+Profile
+
+</a>
+
+<a href="login.html"
+
+class="bg-yellow-400 text-black px-5 py-2 rounded-xl font-bold">
+
+Login
+
+</a>
+
+<a href="admin.html"
+
+class="bg-indigo-600 px-5 py-2 rounded-xl font-bold">
+
+Admin
+
+</a>
+
+</div>
+
+<button
+
+id="mobileBtn"
+
+class="lg:hidden text-4xl">
+
+☰
+
+</button>
+
+</div>
+
+<div
+
+id="mobileMenu"
+
+class="hidden px-6 pb-6 space-y-4 lg:hidden">
+
+<a href="index.html" class="block">Home</a>
+
+<a href="products.html" class="block">Products</a>
+
+<a href="wishlist.html" class="block">Wishlist</a>
+
+<a href="cart.html" class="block">
+
+Cart
+
+(<span id="cart-count-mobile">0</span>)
+
+</a>
+
+<a href="profile.html" class="block">
+
+Profile
+
+</a>
+
+<a href="login.html" class="block">
+
+Login
+
+</a>
+
+<a href="admin.html" class="block">
+
+Admin
+
+</a>
+
+</div>
+
+</div>
+
 </nav>
 
-<!-- Hero Section -->
-<div class="text-center py-28 px-6">
-  <h1 class="text-6xl md:text-8xl font-extrabold mb-6">
-    <span class="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-red-500">
-      Welcome to ZentroMall
-    </span>
-  </h1>
-  <p class="text-2xl md:text-4xl mb-12 font-light opacity-90">
-    Best Prices • Cash on Delivery • 100% Original Products
-  </p>
-  <a href="products.html"
-     class="inline-block bg-yellow-500 text-black px-20 py-7 rounded-full text-4xl font-bold hover:bg-yellow-400 transform hover:scale-110 transition duration-300 shadow-2xl">
-     SHOP NOW
-  </a>
+<!-- Hero -->
+
+<section class="hero-bg">
+
+<div class="max-w-7xl mx-auto">
+
+<div
+
+class="grid lg:grid-cols-2 gap-14 items-center px-6 py-24">
+
+<div>
+
+<div
+
+class="inline-block bg-yellow-400 text-black px-5 py-2 rounded-full font-bold mb-8">
+
+🔥 Trusted by Thousands of Customers
+
 </div>
 
-<!-- Featured Products -->
-<div class="max-w-7xl mx-auto px-6 pb-20">
-  <h2 class="text-5xl font-bold text-center mb-16 text-yellow-400 drop-shadow-lg">
-    Featured Products
-  </h2>
-  <div id="featured" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10"></div>
+<h1
+
+class="text-5xl md:text-7xl font-black leading-tight">
+
+The Future Of
+
+<span class="text-yellow-400">
+
+Online Shopping
+
+</span>
+
+Starts Here.
+
+</h1>
+
+<p
+
+class="text-gray-300 text-xl mt-8 leading-9">
+
+Discover premium quality products with secure checkout,
+
+fast nationwide delivery, cash on delivery,
+
+and unbeatable prices.
+
+</p>
+
+<div class="flex flex-wrap gap-5 mt-10">
+
+<a
+
+href="products.html"
+
+class="btn-main px-10 py-5 rounded-xl">
+
+Shop Now
+
+</a>
+
+<a
+
+href="#featured"
+
+class="glass px-10 py-5 rounded-xl">
+
+Explore Products
+
+</a>
+
 </div>
 
-<!-- Footer -->
-<footer class="bg-black py-10 text-center border-t border-gray-800">
-  <p class="text-xl opacity-80">© 2025 ZentroMall.pk • ❤️ Made by Mr.Asad </p>
-</footer>
+<div
 
-<script src="main.js"></script>
-<script>
-  // Flash Banner
-  const banners = JSON.parse(localStorage.getItem("zm_banners") || "[]");
-  if (banners.length > 0) {
-    document.getElementById("topBanner").classList.remove("hidden");
-    document.getElementById("bannerContainer").innerHTML = banners.map(b=>{
-      if(b.media){
-        if(b.media.startsWith("data:video")){
-          return `<video src="${b.media}" class="inline-block h-24 mx-10 rounded-lg shadow-lg object-cover" loop muted autoplay playsinline></video>`;
-        } else {
-          return `<img src="${b.media}" class="inline-block h-24 mx-10 rounded-lg shadow-lg object-cover" onerror="this.src='https://via.placeholder.com/150/333/fff?text=No+Image'">`;
-        }
-      } else {
-        return `<span class="inline-block mx-12 text-4xl font-bold drop-shadow-2xl">${b.text || ''}</span>`;
-      }
-    }).join("") + "&nbsp;&nbsp;&nbsp;&nbsp;".repeat(20);
-  }
+class="grid grid-cols-3 gap-6 mt-16">
 
-  // Featured Products Rendering
-  const featuredContainer = document.getElementById("featured");
-  if (typeof products !== "undefined" && products.length > 0) {
-    featuredContainer.innerHTML = products.slice(0,12).map(p => `
-      <div class="bg-white text-black rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition duration-300">
-        ${
-          p.image && p.image.startsWith("data:video")
-            ? `<video src="${p.image}" class="w-full h-64 object-cover" controls loop muted></video>`
-            : `<img src="${p.image || 'https://via.placeholder.com/400'}" class="w-full h-64 object-cover" onerror="this.src='https://via.placeholder.com/400/333/fff?text=No+Image'">`
-        }
-        <div class="p-6">
-          <h3 class="text-xl font-bold mb-2 line-clamp-2">${p.name}</h3>
-          <p class="text-gray-600 text-sm mb-3">${p.desc || ""}</p>
-          <p class="text-3xl font-bold text-green-600 mb-4">${formatPrice(p.price)}</p>
-          <button onclick="addToCart(${p.id})"
-            class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition">
-            Add to Cart
-          </button>
-        </div>
-      </div>
-    `).join("");
-  }
+<div>
 
-  // Update Cart Count on Load
-  if(typeof updateCartCount === "function") updateCartCount();
-</script>
+<h2 class="text-4xl font-black">
 
-</body>
-</html>
+10K+
+
+</h2>
+
+<p class="text-gray-400">
+
+Happy Customers
+
+</p>
+
+</div>
+
+<div>
+
+<h2 class="text-4xl font-black">
+
+500+
+
+</h2>
+
+<p class="text-gray-400">
+
+Products
+
+</p>
+
+</div>
+
+<div>
+
+<h2 class="text-4xl font-black">
+
+24/7
+
+</h2>
+
+<p class="text-gray-400">
+
+Support
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="text-center">
+
+<img
+
+src="logo.png"
+
+class="w-96 mx-auto float drop-shadow-2xl">
+
+</div>
+
+</div>
+
+</div>
+
+</section>
