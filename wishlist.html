@@ -99,9 +99,14 @@
 
     <!-- Main Wishlist Section -->
     <main class="max-w-7xl mx-auto px-6 py-12 flex-grow w-full">
-        <h1 class="text-4xl md:text-6xl font-black text-center mb-10 bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-500">
-            Saved Favorites
-        </h1>
+        <div class="flex flex-col md:flex-row items-center justify-between mb-10 gap-4">
+            <h1 class="text-4xl md:text-6xl font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-500">
+                Saved Favorites
+            </h1>
+            <button id="clearWishlistBtn" onclick="clearWishlist()" class="hidden bg-rose-600/80 hover:bg-rose-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-2">
+                <i class="fa-solid fa-trash-can"></i> Clear All Favorites
+            </button>
+        </div>
 
         <!-- Wishlist Grid Container -->
         <div id="wishlist-items" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
@@ -126,8 +131,10 @@
 
         function renderWishlistPage() {
             const container = document.getElementById("wishlist-items");
+            const clearBtn = document.getElementById("clearWishlistBtn");
 
             if (!wishlist || wishlist.length === 0) {
+                if (clearBtn) clearBtn.classList.add("hidden");
                 container.innerHTML = `
                     <div class="col-span-full text-center py-20 glass rounded-3xl space-y-4">
                         <i class="fa-solid fa-heart-crack text-6xl text-rose-500/80 mb-2"></i>
@@ -141,6 +148,8 @@
                 return;
             }
 
+            if (clearBtn) clearBtn.classList.remove("hidden");
+
             container.innerHTML = wishlist.map(id => {
                 const p = products.find(x => x.id === id);
                 if (!p) return "";
@@ -149,13 +158,13 @@
 
                 return `
                     <div class="glass rounded-3xl overflow-hidden shadow-2xl flex flex-col justify-between group hover:-translate-y-2 transition duration-300">
-                        <div class="relative">
+                        <div class="relative cursor-pointer" onclick="window.location.href='product-detail.html?id=${p.id}'">
                             ${
                                 isVideo
                                 ? `<video src="${p.image}" class="w-full h-56 object-cover" controls loop muted></video>`
                                 : `<img src="${p.image || 'https://via.placeholder.com/400'}" alt="${p.name}" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://via.placeholder.com/400'">`
                             }
-                            <button onclick="removeAndRender(${p.id})" title="Remove from Wishlist" class="absolute top-3 right-3 p-2 bg-black/60 backdrop-blur-md rounded-full text-rose-500 hover:text-white hover:bg-rose-600 transition">
+                            <button onclick="event.stopPropagation(); removeAndRender(${p.id})" title="Remove from Wishlist" class="absolute top-3 right-3 p-2 bg-black/60 backdrop-blur-md rounded-full text-rose-500 hover:text-white hover:bg-rose-600 transition z-10">
                                 <i class="fa-solid fa-trash text-sm"></i>
                             </button>
                         </div>
@@ -186,9 +195,27 @@
         }
 
         function moveToCart(pid) {
+            const product = products.find(p => p.id === pid);
+            if (product && product.stock !== undefined && product.stock <= 0) {
+                if (typeof showToast === "function") {
+                    showToast("Sorry, this item is out of stock!", "error");
+                } else {
+                    alert("Sorry, this item is out of stock!");
+                }
+                return;
+            }
+
             addToCart(pid);
             toggleWishlist(pid);
             renderWishlistPage();
+        }
+
+        function clearWishlist() {
+            if (confirm("Are you sure you want to remove all items from your wishlist?")) {
+                wishlist = [];
+                saveData();
+                renderWishlistPage();
+            }
         }
 
         document.addEventListener("DOMContentLoaded", () => {
