@@ -1,70 +1,195 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en" class="scroll-smooth">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="View your wishlist at ZentroMall." />
-  <title>Wishlist – ZentroMall</title>
-  <link rel="icon" href="logo.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist – ZentroMall</title>
+    <link rel="icon" href="logo.png">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #14002c, #1b1464, #050505);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link {
+            transition: .3s;
+        }
+
+        .nav-link:hover {
+            color: #facc15;
+        }
+    </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
 
-  <!-- Header -->
-  <header role="banner" class="bg-indigo-800 dark:bg-indigo-950 shadow-xl sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-      <a href="index.html" class="flex items-center gap-4">
-        <img src="logo.png" alt="ZentroMall Logo" class="h-14 rounded-lg" />
-        <h1 class="text-2xl font-bold">ZentroMall</h1>
-      </a>
-      <a href="cart.html" class="hover:text-yellow-400">Cart (<span id="cart-count">0</span>)</a>
-    </div>
-  </header>
+<body class="text-white min-h-screen flex flex-col justify-between">
 
-  <!-- Wishlist Content -->
-  <div class="max-w-4xl mx-auto px-4 py-16">
-    <h1 class="text-5xl font-bold text-center mb-12">Your Wishlist</h1>
-    <div id="wishlist-items" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-  </div>
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 glass">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-4">
+                    <img src="logo.png" class="h-12 w-12 rounded-full shadow-2xl object-cover" onerror="this.src='https://via.placeholder.com/100/4f46e5/ffffff?text=ZM'">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-black tracking-wide">ZentroMall</h1>
+                        <p class="text-xs text-gray-300 hidden sm:block">Premium Shopping Experience</p>
+                    </div>
+                </a>
 
-  <script src="main.js"></script>
-  <script>
-    function renderWishlist() {
-      const wishlist = JSON.parse(localStorage.getItem("zm_wishlist") || "[]");
-      const container = document.getElementById("wishlist-items");
+                <!-- Desktop Menu Nav -->
+                <div class="hidden lg:flex gap-6 items-center font-medium">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="products.html" class="nav-link">Products</a>
+                    <a href="wishlist.html" class="nav-link text-yellow-400">
+                        Wishlist (<span id="wishlist-count" class="wishlist-badge">0</span>)
+                    </a>
+                    <a href="cart.html" class="nav-link">
+                        Cart (<span id="cart-count" class="cart-badge">0</span>)
+                    </a>
+                    <a href="my-orders.html" class="nav-link">Orders</a>
+                    <a href="profile.html" class="nav-link">Profile</a>
+                    <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold transition">Admin</a>
+                </div>
 
-      if (!wishlist.length) {
-        container.innerHTML = "<p class='text-center text-2xl'>Your wishlist is empty</p>";
-        return;
-      }
-
-      container.innerHTML = wishlist.map(id => {
-        const p = products.find(x => x.id === id);
-        if (!p) return "";
-        return `
-          <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl flex items-center justify-between hover:scale-105 transition">
-            <img src="${p.image}" alt="${p.name}" class="w-24 h-24 object-cover rounded" />
-            <div class="flex-1 mx-6">
-              <h3 class="text-2xl font-bold">${p.name}</h3>
-              <p class="text-gray-600 dark:text-gray-300">₨${p.price.toLocaleString()}</p>
+                <!-- Mobile Menu Toggle Button -->
+                <button id="mobileBtn" onclick="toggleMobileMenu()" class="lg:hidden text-3xl focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
             </div>
-            <div class="flex flex-col gap-2">
-              <button onclick="addToCart(${p.id}); toggleWishlist(${p.id}); renderWishlist();" 
-                      class="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700" aria-label="Move to Cart">
-                🛒 Add to Cart
-              </button>
-              <button onclick="toggleWishlist(${p.id}); renderWishlist();" 
-                      class="bg-red-500 text-white px-6 py-3 rounded hover:bg-red-600" aria-label="Remove from wishlist">
-                ❤️ Remove
-              </button>
-            </div>
-          </div>`;
-      }).join("");
-    }
 
-    renderWishlist();
-    updateCartCount();
-  </script>
+            <!-- Mobile Drawer Menu -->
+            <div id="mobileMenu" class="hidden pt-4 pb-2 space-y-3 lg:hidden border-t border-white/10 mt-3">
+                <a href="index.html" class="block py-1 hover:text-yellow-400">Home</a>
+                <a href="products.html" class="block py-1 hover:text-yellow-400">Products</a>
+                <a href="wishlist.html" class="block py-1 text-yellow-400">Wishlist (<span class="wishlist-badge">0</span>)</a>
+                <a href="cart.html" class="block py-1 hover:text-yellow-400">Cart (<span class="cart-badge">0</span>)</a>
+                <a href="my-orders.html" class="block py-1 hover:text-yellow-400">My Orders</a>
+                <a href="profile.html" class="block py-1 hover:text-yellow-400">Profile</a>
+                <div class="flex gap-4 pt-2">
+                    <a href="login.html" class="bg-yellow-400 text-black px-4 py-2 rounded-lg font-bold text-sm w-full text-center">Login</a>
+                    <a href="admin.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold text-sm w-full text-center">Admin</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Wishlist Section -->
+    <main class="max-w-7xl mx-auto px-6 py-12 flex-grow w-full">
+        <h1 class="text-4xl md:text-6xl font-black text-center mb-10 bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-500">
+            Saved Favorites
+        </h1>
+
+        <!-- Wishlist Grid Container -->
+        <div id="wishlist-items" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black/60 border-t border-white/10 pt-10 pb-8 mt-16">
+        <div class="max-w-7xl mx-auto px-6 text-center text-xs text-gray-500">
+            &copy; 2026 ZentroMall. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Main Logic Script -->
+    <script src="main.js"></script>
+
+    <!-- Wishlist Page Script -->
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function renderWishlistPage() {
+            const container = document.getElementById("wishlist-items");
+
+            if (!wishlist || wishlist.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-20 glass rounded-3xl space-y-4">
+                        <i class="fa-solid fa-heart-crack text-6xl text-rose-500/80 mb-2"></i>
+                        <h2 class="text-2xl font-bold text-gray-300">Your Wishlist is Empty</h2>
+                        <p class="text-gray-400 text-sm">Explore our products and tap the heart icon to save your favorites!</p>
+                        <a href="products.html" class="inline-block mt-4 bg-yellow-400 text-black font-bold px-8 py-3 rounded-xl hover:bg-yellow-300 transition">
+                            Explore Catalog
+                        </a>
+                    </div>`;
+                updateBadges();
+                return;
+            }
+
+            container.innerHTML = wishlist.map(id => {
+                const p = products.find(x => x.id === id);
+                if (!p) return "";
+
+                const isVideo = p.image?.startsWith("data:video") || p.image?.endsWith(".mp4") || p.image?.endsWith(".webm");
+
+                return `
+                    <div class="glass rounded-3xl overflow-hidden shadow-2xl flex flex-col justify-between group hover:-translate-y-2 transition duration-300">
+                        <div class="relative">
+                            ${
+                                isVideo
+                                ? `<video src="${p.image}" class="w-full h-56 object-cover" controls loop muted></video>`
+                                : `<img src="${p.image || 'https://via.placeholder.com/400'}" alt="${p.name}" class="w-full h-56 object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://via.placeholder.com/400'">`
+                            }
+                            <button onclick="removeAndRender(${p.id})" class="absolute top-3 right-3 p-2 bg-black/60 backdrop-blur-md rounded-full text-rose-500 hover:text-white hover:bg-rose-600 transition">
+                                <i class="fa-solid fa-trash text-sm"></i>
+                            </button>
+                        </div>
+
+                        <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                            <div>
+                                <span class="text-xs text-indigo-400 font-bold uppercase tracking-wider">${p.category || 'General'}</span>
+                                <h3 class="text-lg font-bold text-white hover:text-yellow-400 cursor-pointer truncate mt-1" onclick="window.location.href='product-detail.html?id=${p.id}'">${p.name}</h3>
+                                <p class="text-emerald-400 font-black text-lg mt-2">${formatPrice(p.price)}</p>
+                            </div>
+
+                            <div class="pt-3 border-t border-white/10">
+                                <button onclick="moveToCart(${p.id})" class="w-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-black py-2.5 rounded-xl font-bold transition shadow-lg text-sm flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cart-shopping"></i> Move to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+
+            updateBadges();
+        }
+
+        function removeAndRender(pid) {
+            toggleWishlist(pid);
+            renderWishlistPage();
+        }
+
+        function moveToCart(pid) {
+            addToCart(pid);
+            toggleWishlist(pid);
+            renderWishlistPage();
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderWishlistPage();
+        });
+    </script>
 </body>
+
 </html>
