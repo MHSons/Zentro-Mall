@@ -142,18 +142,27 @@
 
         function checkOrders() {
             const rawPhone = document.getElementById("phoneInput").value.trim();
-            const phone = rawPhone.replace(/\D/g, '');
+            const cleanInputPhone = rawPhone.replace(/\D/g, '');
 
-            if (!phone || phone.length < 8) {
-                alert("⚠️ Please enter a valid phone number!");
+            if (!cleanInputPhone || cleanInputPhone.length < 7) {
+                if (typeof showToast === "function") {
+                    showToast("Please enter a valid phone number!", "error");
+                } else {
+                    alert("⚠️ Please enter a valid phone number!");
+                }
                 return;
             }
 
             const container = document.getElementById("orderList");
 
+            // Match phone by checking substring or tail digits
             const userOrders = (orders || [])
-                .filter(o => o.customer && o.customer.phone && o.customer.phone.replace(/\D/g, '').includes(phone))
-                .sort((a, b) => new Date(b.date) - new Date(a.date));
+                .filter(o => {
+                    if (!o.customer || !o.customer.phone) return false;
+                    const oPhone = o.customer.phone.replace(/\D/g, '');
+                    return oPhone.endsWith(cleanInputPhone.slice(-10)) || cleanInputPhone.endsWith(oPhone.slice(-10));
+                })
+                .sort((a, b) => new Date(b.date || a.id) - new Date(a.date || b.id));
 
             if (userOrders.length === 0) {
                 container.innerHTML = `
@@ -170,16 +179,26 @@
 
             container.innerHTML = userOrders.map((o, idx) => {
                 const itemsList = (o.items || []).map(it => {
-                    const product = products.find(p => p.id === it.id);
-                    const itemTotal = product ? product.price * it.qty : (it.price ? it.price * it.qty : 0);
+                    const product = (typeof products !== "undefined") ? products.find(p => p.id === it.id) : null;
+                    const unitPrice = product ? product.price : (it.price || 0);
+                    const itemTotal = unitPrice * (it.qty || 1);
+
                     return `
-                        <div class="flex justify-between items-center text-sm py-1 border-b border-white/5">
-                            <span class="text-gray-300">• ${it.name || "Product"} × ${it.qty}</span>
+                        <div class="flex justify-between items-center text-sm py-1.5 border-b border-white/5">
+                            <span class="text-gray-300">• ${it.name || "Product"} × ${it.qty || 1}</span>
                             <span class="font-bold text-emerald-400">${formatPrice(itemTotal)}</span>
                         </div>`;
                 }).join("");
 
                 const isCompleted = o.status === 'complete';
+                const isCancelled = o.status === 'cancelled';
+
+                let statusBadge = `<span class="inline-flex items-center gap-2 text-sm font-bold text-amber-400 mt-1"><i class="fa-solid fa-hourglass-half"></i> Pending Processing</span>`;
+                if (isCompleted) {
+                    statusBadge = `<span class="inline-flex items-center gap-2 text-sm font-bold text-emerald-400 mt-1"><i class="fa-solid fa-circle-check"></i> Delivered / Completed</span>`;
+                } else if (isCancelled) {
+                    statusBadge = `<span class="inline-flex items-center gap-2 text-sm font-bold text-rose-400 mt-1"><i class="fa-solid fa-circle-xmark"></i> Order Cancelled</span>`;
+                }
 
                 return `
                     <div class="glass p-6 md:p-8 rounded-3xl space-y-6 hover:border-yellow-400/30 transition shadow-xl">
@@ -199,19 +218,22 @@
                             <div>
                                 <h4 class="font-bold text-sm text-gray-300 mb-2">Ordered Items:</h4>
                                 <div class="space-y-1">${itemsList}</div>
+                                ${o.customer.address ? `
+                                    <div class="mt-4 pt-3 border-t border-white/5">
+                                        <span class="text-xs text-gray-400 block">Delivery Address:</span>
+                                        <p class="text-xs text-gray-300 mt-0.5 line-clamp-2">${o.customer.address}</p>
+                                    </div>
+                                ` : ''}
                             </div>
 
-                            <div class="space-y-3 bg-white/5 p-4 rounded-2xl border border-white/5">
+                            <div class="space-y-3 bg-white/5 p-4 rounded-2xl border border-white/5 flex flex-col justify-between">
                                 <div>
                                     <span class="text-xs text-gray-400 block">Order Status</span>
-                                    <span class="inline-flex items-center gap-2 text-sm font-bold mt-1 ${isCompleted ? 'text-emerald-400' : 'text-amber-400'}">
-                                        <i class="fa-solid ${isCompleted ? 'fa-circle-check' : 'fa-hourglass-half'}"></i>
-                                        ${isCompleted ? 'Delivered / Completed' : 'Pending Processing'}
-                                    </span>
+                                    ${statusBadge}
                                 </div>
 
                                 <div>
-                                    <span class="text-xs text-gray-400 block">Tracking Number</span>
+                                    <span class="text-xs text-gray-400 block">Tracking ID</span>
                                     ${
                                         o.tracking_id 
                                         ? `<button onclick="copyToClipboard('${o.tracking_id}')" class="text-cyan-400 font-mono font-bold text-sm hover:underline flex items-center gap-2 mt-1">
@@ -225,7 +247,7 @@
 
                         <div class="pt-4 border-t border-white/10 flex justify-between items-center text-xs text-gray-400">
                             <span>Need help with this order?</span>
-                            <a href="https://wa.me/923000000000" target="_blank" class="text-emerald-400 font-bold hover:underline flex items-center gap-1">
+                            <a href="https://wa.me/923000000000?text=${encodeURIComponent('Hi, I need assistance with Order #' + (userOrders.length - idx))}" target="_blank" class="text-emerald-400 font-bold hover:underline flex items-center gap-1">
                                 <i class="fa-brands fa-whatsapp"></i> Contact Support
                             </a>
                         </div>
@@ -236,7 +258,11 @@
 
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text);
-            alert("📋 Tracking ID copied to clipboard!");
+            if (typeof showToast === "function") {
+                showToast("Tracking ID copied to clipboard!", "success");
+            } else {
+                alert("📋 Tracking ID copied to clipboard!");
+            }
         }
 
         document.getElementById("phoneInput").addEventListener("keyup", function(e) {
@@ -247,7 +273,7 @@
             updateBadges();
 
             // Auto-fill logged in user's phone if available
-            if (currentUser && currentUser.phone) {
+            if (typeof currentUser !== "undefined" && currentUser && currentUser.phone) {
                 document.getElementById("phoneInput").value = currentUser.phone;
                 checkOrders();
             }
