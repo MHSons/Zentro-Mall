@@ -40,6 +40,11 @@
 
 <body class="text-white min-h-screen flex flex-col justify-between">
 
+    <!-- Top Banner (Optional dynamic announcements) -->
+    <div id="topBanner" class="hidden bg-yellow-400 text-black py-2 overflow-hidden whitespace-nowrap shadow-md">
+        <div id="bannerContainer" class="inline-block animate-marquee"></div>
+    </div>
+
     <!-- Navigation Bar -->
     <nav class="sticky top-0 z-50 glass">
         <div class="max-w-7xl mx-auto px-6 py-4">
@@ -57,16 +62,20 @@
                 <!-- Desktop Menu Nav -->
                 <div class="hidden lg:flex gap-6 items-center font-medium">
                     <a href="index.html" class="nav-link">Home</a>
-                    <a href="products.html" class="nav-link text-yellow-400">Products</a>
+                    <a href="products.html" class="nav-link text-yellow-400 font-bold">Products</a>
                     <a href="wishlist.html" class="nav-link">
-                        Wishlist (<span id="wishlist-count" class="wishlist-badge">0</span>)
+                        Wishlist (<span class="wishlist-badge">0</span>)
                     </a>
                     <a href="cart.html" class="nav-link">
-                        Cart (<span id="cart-count" class="cart-badge">0</span>)
+                        Cart (<span class="cart-badge">0</span>)
                     </a>
                     <a href="my-orders.html" class="nav-link">Orders</a>
-                    <a href="profile.html" class="nav-link">Profile</a>
-                    <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    
+                    <!-- Dynamic Auth Links Slot -->
+                    <div id="navAuthLinks" class="flex items-center gap-4">
+                        <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    </div>
+
                     <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold transition">Admin</a>
                 </div>
 
@@ -79,7 +88,7 @@
             <!-- Mobile Drawer Menu -->
             <div id="mobileMenu" class="hidden pt-4 pb-2 space-y-3 lg:hidden border-t border-white/10 mt-3">
                 <a href="index.html" class="block py-1 hover:text-yellow-400">Home</a>
-                <a href="products.html" class="block py-1 hover:text-yellow-400 text-yellow-400">Products</a>
+                <a href="products.html" class="block py-1 hover:text-yellow-400 text-yellow-400 font-bold">Products</a>
                 <a href="wishlist.html" class="block py-1 hover:text-yellow-400">Wishlist (<span class="wishlist-badge">0</span>)</a>
                 <a href="cart.html" class="block py-1 hover:text-yellow-400">Cart (<span class="cart-badge">0</span>)</a>
                 <a href="my-orders.html" class="block py-1 hover:text-yellow-400">My Orders</a>
@@ -110,24 +119,25 @@
             <!-- Filter Controls Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Category Select -->
-                <select id="category" class="py-3 px-4 rounded-xl bg-slate-900 border border-white/20 text-white focus:outline-none focus:border-yellow-400">
+                <select id="category" onchange="applyFilters()" class="py-3 px-4 rounded-xl bg-slate-900 border border-white/20 text-white focus:outline-none focus:border-yellow-400">
                     <option value="">All Categories</option>
                     <option value="Mobiles">Mobiles</option>
                     <option value="Laptops">Laptops</option>
+                    <option value="Electronics">Electronics</option>
                     <option value="Accessories">Accessories</option>
                     <option value="Watches">Watches</option>
                 </select>
 
                 <!-- Min Price -->
-                <input type="number" id="minprice" placeholder="Min Price (PKR)" 
+                <input type="number" id="minprice" placeholder="Min Price (PKR)" oninput="applyFilters()"
                        class="py-3 px-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400">
 
                 <!-- Max Price -->
-                <input type="number" id="maxprice" placeholder="Max Price (PKR)" 
+                <input type="number" id="maxprice" placeholder="Max Price (PKR)" oninput="applyFilters()"
                        class="py-3 px-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400">
 
                 <!-- Sort Options -->
-                <select id="sort" class="py-3 px-4 rounded-xl bg-slate-900 border border-white/20 text-white focus:outline-none focus:border-yellow-400">
+                <select id="sort" onchange="applyFilters()" class="py-3 px-4 rounded-xl bg-slate-900 border border-white/20 text-white focus:outline-none focus:border-yellow-400">
                     <option value="">Sort By</option>
                     <option value="low">Price: Low to High</option>
                     <option value="high">Price: High to Low</option>
@@ -135,8 +145,9 @@
                 </select>
             </div>
 
-            <div class="mt-6 text-right">
-                <button onclick="applyFilters()" class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white py-3 px-8 rounded-xl text-lg font-bold transition shadow-lg w-full sm:w-auto">
+            <div class="mt-6 flex justify-between items-center">
+                <button onclick="resetFilters()" class="text-xs text-gray-400 hover:text-white underline">Reset Filters</button>
+                <button onclick="applyFilters()" class="bg-gradient-to-r from-yellow-400 to-amber-500 hover:brightness-110 text-black py-3 px-8 rounded-xl text-base font-bold transition shadow-lg w-full sm:w-auto">
                     <i class="fa-solid fa-filter mr-2"></i> Apply Filters
                 </button>
             </div>
@@ -155,7 +166,7 @@
         </div>
     </footer>
 
-    <!-- Main Logic Script -->
+    <!-- Main Engine -->
     <script src="main.js"></script>
 
     <!-- Page Specific Script -->
@@ -165,9 +176,15 @@
             menu.classList.toggle('hidden');
         }
 
+        // Custom Render function override for Wishlist state synchronization
+        function renderWishlist() {
+            applyFilters();
+        }
+
         function renderProductsList(list = products) {
             const grid = document.getElementById("product-grid");
-            
+            if (!grid) return;
+
             if (!list || list.length === 0) {
                 grid.innerHTML = `
                     <div class="col-span-full text-center py-20 glass rounded-3xl">
@@ -183,31 +200,31 @@
 
                 return `
                     <div class="glass rounded-3xl overflow-hidden shadow-2xl hover:-translate-y-2 transition duration-300 flex flex-col justify-between group">
-                        <div class="relative">
+                        <div class="relative overflow-hidden">
                             ${
                                 isVideo
                                 ? `<video src="${p.image}" class="w-full h-60 object-cover" controls loop muted></video>`
                                 : `<img src="${p.image || 'https://via.placeholder.com/400'}" alt="${p.name}" class="w-full h-60 object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://via.placeholder.com/400/333/fff?text=No+Image'">`
                             }
-                            <button onclick="toggleWishlist(${p.id})" class="absolute top-3 right-3 p-2 bg-black/50 backdrop-blur-md rounded-full text-white hover:text-red-500 transition">
-                                <i class="fa-solid fa-heart ${isWishlisted ? 'text-red-500' : 'text-white'}"></i>
+                            <button onclick="toggleWishlist(${p.id})" class="absolute top-3 right-3 p-2.5 glass rounded-full shadow-lg hover:bg-white transition z-10">
+                                <i class="fa-solid fa-heart ${isWishlisted ? 'text-red-500' : 'text-gray-400'} text-lg"></i>
                             </button>
                         </div>
 
                         <div class="p-6 flex-1 flex flex-col justify-between">
                             <div>
-                                <span class="text-xs text-indigo-400 font-bold uppercase tracking-wider">${p.category || 'General'}</span>
-                                <h3 class="text-lg font-bold text-white mt-1 hover:text-yellow-400 cursor-pointer" onclick="window.location.href='product-detail.html?id=${p.id}'">${p.name}</h3>
-                                <p class="text-gray-400 text-sm mt-1 line-clamp-2">${p.desc || ""}</p>
+                                <span class="text-xs text-yellow-400 font-bold uppercase tracking-wider">${p.category || 'General'}</span>
+                                <h3 class="text-lg font-bold text-white mt-1 hover:text-yellow-300 cursor-pointer line-clamp-1" onclick="window.location.href='product-detail.html?id=${p.id}'">${p.name}</h3>
+                                <p class="text-gray-300 text-xs mt-1.5 line-clamp-2">${p.desc || ""}</p>
                             </div>
 
                             <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
                                 <div>
-                                    <p class="text-xs text-gray-400">Price</p>
-                                    <p class="text-xl font-black text-emerald-400">${formatPrice(p.price)}</p>
+                                    <p class="text-[10px] uppercase text-gray-400">Price</p>
+                                    <p class="text-lg font-black text-yellow-400">${formatPrice(p.price)}</p>
                                 </div>
-                                <button onclick="addToCart(${p.id})" class="bg-gradient-to-r from-yellow-400 to-amber-500 text-black px-4 py-2.5 rounded-xl font-bold hover:from-yellow-300 hover:to-amber-400 transition shadow-lg text-sm">
-                                    Add to Cart
+                                <button onclick="addToCart(${p.id})" class="bg-gradient-to-r from-yellow-400 to-amber-500 text-black px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 transition shadow-md flex items-center gap-1.5">
+                                    <i class="fa-solid fa-cart-plus"></i> Add
                                 </button>
                             </div>
                         </div>
@@ -216,12 +233,9 @@
             }).join("");
         }
 
-        // Live Search Input Handler
-        document.getElementById("search").addEventListener("input", function() {
-            applyFilters();
-        });
+        // Live Search Input
+        document.getElementById("search").addEventListener("input", applyFilters);
 
-        // Combined Filter Handler
         function applyFilters() {
             let filtered = [...products];
             const term = document.getElementById("search").value.toLowerCase().trim();
@@ -230,7 +244,6 @@
             const max = parseInt(document.getElementById("maxprice").value) || Infinity;
             const sort = document.getElementById("sort").value;
 
-            // Search Filter
             if (term) {
                 filtered = filtered.filter(p => 
                     p.name.toLowerCase().includes(term) || 
@@ -238,15 +251,12 @@
                 );
             }
 
-            // Category Filter
             if (category) {
-                filtered = filtered.filter(p => p.category === category);
+                filtered = filtered.filter(p => p.category.toLowerCase() === category.toLowerCase());
             }
 
-            // Price Range Filter
             filtered = filtered.filter(p => p.price >= min && p.price <= max);
 
-            // Sorting
             if (sort === "low") filtered.sort((a, b) => a.price - b.price);
             if (sort === "high") filtered.sort((a, b) => b.price - a.price);
             if (sort === "new") filtered.sort((a, b) => b.id - a.id);
@@ -254,10 +264,27 @@
             renderProductsList(filtered);
         }
 
-        // Initial render on page load
+        function resetFilters() {
+            document.getElementById("search").value = "";
+            document.getElementById("category").value = "";
+            document.getElementById("minprice").value = "";
+            document.getElementById("maxprice").value = "";
+            document.getElementById("sort").value = "";
+            applyFilters();
+        }
+
+        // Initial setup on DOM ready
         document.addEventListener("DOMContentLoaded", () => {
-            renderProductsList();
-            updateBadges();
+            // URL Category Param Check
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoryParam = urlParams.get('category');
+            
+            if (categoryParam) {
+                const categorySelect = document.getElementById("category");
+                if (categorySelect) categorySelect.value = categoryParam;
+            }
+
+            applyFilters();
         });
     </script>
 </body>
