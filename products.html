@@ -111,7 +111,7 @@
         <div class="glass rounded-3xl p-6 md:p-8 shadow-2xl mb-12">
             <!-- Search Input -->
             <div class="relative mb-6">
-                <input type="text" id="search" placeholder="Search by product name, details..." 
+                <input type="text" id="search" placeholder="Search by product name, details, SKU..." 
                        class="w-full py-4 pl-12 pr-4 rounded-2xl bg-white/10 border border-white/20 text-white placeholder-gray-400 text-lg focus:outline-none focus:border-yellow-400 transition">
                 <i class="fa-solid fa-magnifying-glass absolute left-4 top-5 text-gray-400 text-xl"></i>
             </div>
@@ -124,6 +124,7 @@
                     <option value="Mobiles">Mobiles</option>
                     <option value="Laptops">Laptops</option>
                     <option value="Electronics">Electronics</option>
+                    <option value="Fashion">Fashion</option>
                     <option value="Accessories">Accessories</option>
                     <option value="Watches">Watches</option>
                 </select>
@@ -176,8 +177,12 @@
             menu.classList.toggle('hidden');
         }
 
-        // Custom Render function override for Wishlist state synchronization
+        // Custom Wishlist sync triggers applyFilters to refresh red heart state
         function renderWishlist() {
+            applyFilters();
+        }
+
+        function renderProducts() {
             applyFilters();
         }
 
@@ -197,18 +202,21 @@
             grid.innerHTML = list.map(p => {
                 const isWishlisted = wishlist.includes(p.id);
                 const isVideo = p.image?.startsWith("data:video") || p.image?.endsWith(".mp4") || p.image?.endsWith(".webm");
+                const outOfStock = p.stock !== undefined && p.stock < 1;
 
                 return `
-                    <div class="glass rounded-3xl overflow-hidden shadow-2xl hover:-translate-y-2 transition duration-300 flex flex-col justify-between group">
+                    <div class="glass border border-white/10 rounded-3xl overflow-hidden shadow-2xl hover:-translate-y-2 transition duration-300 flex flex-col justify-between group">
                         <div class="relative overflow-hidden">
                             ${
                                 isVideo
                                 ? `<video src="${p.image}" class="w-full h-60 object-cover" controls loop muted></video>`
                                 : `<img src="${p.image || 'https://via.placeholder.com/400'}" alt="${p.name}" class="w-full h-60 object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://via.placeholder.com/400/333/fff?text=No+Image'">`
                             }
-                            <button onclick="toggleWishlist(${p.id})" class="absolute top-3 right-3 p-2.5 glass rounded-full shadow-lg hover:bg-white transition z-10">
-                                <i class="fa-solid fa-heart ${isWishlisted ? 'text-red-500' : 'text-gray-400'} text-lg"></i>
+                            <button onclick="toggleWishlist(${p.id})" class="absolute top-3 right-3 p-2.5 glass rounded-full shadow-lg hover:bg-white/20 transition z-10" aria-label="Wishlist">
+                                <i class="fa-solid fa-heart ${isWishlisted ? 'text-red-500' : 'text-gray-300'} text-lg"></i>
                             </button>
+                            ${outOfStock ? `<span class="absolute top-3 left-3 bg-rose-600 text-white text-[10px] font-bold px-2 py-1 rounded-lg">OUT OF STOCK</span>` : ""}
+                            ${p.sku ? `<span class="absolute bottom-3 left-3 bg-black/60 text-white text-[10px] font-mono px-2 py-0.5 rounded">${p.sku}</span>` : ""}
                         </div>
 
                         <div class="p-6 flex-1 flex flex-col justify-between">
@@ -216,6 +224,7 @@
                                 <span class="text-xs text-yellow-400 font-bold uppercase tracking-wider">${p.category || 'General'}</span>
                                 <h3 class="text-lg font-bold text-white mt-1 hover:text-yellow-300 cursor-pointer line-clamp-1" onclick="window.location.href='product-detail.html?id=${p.id}'">${p.name}</h3>
                                 <p class="text-gray-300 text-xs mt-1.5 line-clamp-2">${p.desc || ""}</p>
+                                ${p.rating ? `<div class="flex items-center gap-1 mt-2 text-yellow-400 text-xs"><i class="fa-solid fa-star"></i> ${p.rating}</div>` : ""}
                             </div>
 
                             <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
@@ -223,7 +232,7 @@
                                     <p class="text-[10px] uppercase text-gray-400">Price</p>
                                     <p class="text-lg font-black text-yellow-400">${formatPrice(p.price)}</p>
                                 </div>
-                                <button onclick="addToCart(${p.id})" class="bg-gradient-to-r from-yellow-400 to-amber-500 text-black px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 transition shadow-md flex items-center gap-1.5">
+                                <button onclick="addToCart(${p.id})" ${outOfStock ? 'disabled' : ''} class="bg-gradient-to-r from-yellow-400 to-amber-500 text-black px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 transition shadow-md flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed">
                                     <i class="fa-solid fa-cart-plus"></i> Add
                                 </button>
                             </div>
@@ -246,13 +255,14 @@
 
             if (term) {
                 filtered = filtered.filter(p => 
-                    p.name.toLowerCase().includes(term) || 
-                    (p.desc && p.desc.toLowerCase().includes(term))
+                    (p.name && p.name.toLowerCase().includes(term)) || 
+                    (p.desc && p.desc.toLowerCase().includes(term)) ||
+                    (p.sku && p.sku.toLowerCase().includes(term))
                 );
             }
 
             if (category) {
-                filtered = filtered.filter(p => p.category.toLowerCase() === category.toLowerCase());
+                filtered = filtered.filter(p => (p.category || "").toLowerCase() === category.toLowerCase());
             }
 
             filtered = filtered.filter(p => p.price >= min && p.price <= max);
@@ -281,7 +291,14 @@
             
             if (categoryParam) {
                 const categorySelect = document.getElementById("category");
-                if (categorySelect) categorySelect.value = categoryParam;
+                if (categorySelect) {
+                    const matchOption = Array.from(categorySelect.options).find(
+                        opt => opt.value.toLowerCase() === categoryParam.toLowerCase()
+                    );
+                    if (matchOption) {
+                        categorySelect.value = matchOption.value;
+                    }
+                }
             }
 
             applyFilters();
