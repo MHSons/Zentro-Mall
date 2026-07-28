@@ -64,9 +64,14 @@
                     <a href="cart.html" class="nav-link">
                         Cart (<span id="cart-count" class="cart-badge">0</span>)
                     </a>
-                    <a href="my-orders.html" class="nav-link text-yellow-400">Orders</a>
+                    <a href="my-orders.html" class="nav-link text-yellow-400 font-bold">Orders</a>
                     <a href="profile.html" class="nav-link">Profile</a>
-                    <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    
+                    <!-- Dynamic Auth Links Slot -->
+                    <div id="navAuthLinks" class="flex items-center gap-4">
+                        <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    </div>
+
                     <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold transition">Admin</a>
                 </div>
 
@@ -82,7 +87,7 @@
                 <a href="products.html" class="block py-1 hover:text-yellow-400">Products</a>
                 <a href="wishlist.html" class="block py-1 hover:text-yellow-400">Wishlist (<span class="wishlist-badge">0</span>)</a>
                 <a href="cart.html" class="block py-1 hover:text-yellow-400">Cart (<span class="cart-badge">0</span>)</a>
-                <a href="my-orders.html" class="block py-1 text-yellow-400">My Orders</a>
+                <a href="my-orders.html" class="block py-1 text-yellow-400 font-bold">My Orders</a>
                 <a href="profile.html" class="block py-1 hover:text-yellow-400">Profile</a>
                 <div class="flex gap-4 pt-2">
                     <a href="login.html" class="bg-yellow-400 text-black px-4 py-2 rounded-lg font-bold text-sm w-full text-center">Login</a>
@@ -166,7 +171,7 @@
             container.innerHTML = userOrders.map((o, idx) => {
                 const itemsList = (o.items || []).map(it => {
                     const product = products.find(p => p.id === it.id);
-                    const itemTotal = product ? product.price * it.qty : 0;
+                    const itemTotal = product ? product.price * it.qty : (it.price ? it.price * it.qty : 0);
                     return `
                         <div class="flex justify-between items-center text-sm py-1 border-b border-white/5">
                             <span class="text-gray-300">• ${it.name || "Product"} × ${it.qty}</span>
@@ -201,7 +206,7 @@
                                     <span class="text-xs text-gray-400 block">Order Status</span>
                                     <span class="inline-flex items-center gap-2 text-sm font-bold mt-1 ${isCompleted ? 'text-emerald-400' : 'text-amber-400'}">
                                         <i class="fa-solid ${isCompleted ? 'fa-circle-check' : 'fa-hourglass-half'}"></i>
-                                        ${isCompleted ? 'Delivered' : 'Pending Processing'}
+                                        ${isCompleted ? 'Delivered / Completed' : 'Pending Processing'}
                                     </span>
                                 </div>
 
@@ -220,7 +225,7 @@
 
                         <div class="pt-4 border-t border-white/10 flex justify-between items-center text-xs text-gray-400">
                             <span>Need help with this order?</span>
-                            <a href="https://wa.me/923001234567" target="_blank" class="text-emerald-400 font-bold hover:underline flex items-center gap-1">
+                            <a href="https://wa.me/923000000000" target="_blank" class="text-emerald-400 font-bold hover:underline flex items-center gap-1">
                                 <i class="fa-brands fa-whatsapp"></i> Contact Support
                             </a>
                         </div>
@@ -240,6 +245,12 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             updateBadges();
+
+            // Auto-fill logged in user's phone if available
+            if (currentUser && currentUser.phone) {
+                document.getElementById("phoneInput").value = currentUser.phone;
+                checkOrders();
+            }
         });
     </script>
 </body>
