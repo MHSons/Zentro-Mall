@@ -14,191 +14,205 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
-            background: linear-gradient(135deg, #14002c, #1b1464, #050505);
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: system-ui, -apple-system, sans-serif;
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(18px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .panel-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25);
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        .input-field {
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #ffffff;
+            transition: all 0.2s ease;
         }
 
-        .glow {
-            box-shadow: 0 0 35px rgba(99, 102, 241, 0.35);
+        .input-field:focus {
+            border-color: #6366f1;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
         }
 
-        .nav-link {
-            transition: .3s;
+        .tab-btn {
+            background: #1e293b;
+            color: #94a3b8;
+            border: 1px solid #334155;
+            transition: all 0.2s ease;
         }
 
-        .nav-link:hover {
-            color: #facc15;
+        .tab-btn:hover {
+            color: #ffffff;
+            background: #334155;
         }
 
         .tab-btn.active {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            background: #4f46e5;
             color: #ffffff;
-            border-color: rgba(250, 204, 21, 0.5);
+            border-color: #6366f1;
         }
     </style>
 </head>
 
-<body class="text-white min-h-screen flex flex-col justify-between">
+<body class="min-h-screen flex flex-col justify-between">
 
-    <!-- Navigation Bar -->
-    <nav class="sticky top-0 z-50 glass">
-        <div class="max-w-7xl mx-auto px-6 py-4">
-            <div class="flex justify-between items-center">
-                
-                <!-- Logo -->
-                <a href="index.html" class="flex items-center gap-4">
-                    <img src="logo.png" class="h-12 w-12 rounded-full shadow-2xl object-cover" onerror="this.src='https://via.placeholder.com/100/4f46e5/ffffff?text=ZM'">
-                    <div>
-                        <h1 class="text-2xl md:text-3xl font-black tracking-wide">ZentroMall</h1>
-                        <p class="text-xs text-yellow-400 font-bold hidden sm:block"><i class="fa-solid fa-shield-halved"></i> Admin Control Dashboard</p>
-                    </div>
-                </a>
-
-                <!-- Desktop Menu Nav -->
-                <div class="hidden lg:flex gap-6 items-center font-medium">
-                    <a href="index.html" class="nav-link">Home View</a>
-                    <a href="products.html" class="nav-link">Products View</a>
-                    <button onclick="logout()" class="bg-rose-600 hover:bg-rose-700 text-white px-5 py-2 rounded-xl font-bold transition flex items-center gap-2">
-                        <i class="fa-solid fa-right-from-bracket"></i> Admin Logout
-                    </button>
+    <!-- Top Navigation Bar -->
+    <nav class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 py-3.5 flex justify-between items-center">
+            
+            <!-- Logo -->
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="logo.png" class="h-10 w-10 rounded-lg shadow-sm object-cover" onerror="this.src='https://via.placeholder.com/80/4f46e5/ffffff?text=ZM'">
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white">ZentroMall</h1>
+                    <p class="text-[11px] text-indigo-400 font-semibold tracking-wide uppercase"><i class="fa-solid fa-shield-halved mr-1"></i> Admin Console</p>
                 </div>
+            </a>
 
-                <!-- Mobile Menu Toggle Button -->
-                <button id="mobileBtn" onclick="toggleMobileMenu()" class="lg:hidden text-3xl focus:outline-none">
-                    <i class="fa-solid fa-bars"></i>
+            <!-- Right Actions -->
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="text-xs font-semibold text-slate-300 hover:text-white transition hidden sm:inline-block">Store Front</a>
+                <button onclick="logout()" class="bg-rose-500/10 hover:bg-rose-600 text-rose-400 hover:text-white border border-rose-500/20 px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
                 </button>
-            </div>
-
-            <!-- Mobile Drawer Menu -->
-            <div id="mobileMenu" class="hidden pt-4 pb-2 space-y-3 lg:hidden border-t border-white/10 mt-3">
-                <a href="index.html" class="block py-1 hover:text-yellow-400">Home Store View</a>
-                <a href="products.html" class="block py-1 hover:text-yellow-400">Products View</a>
-                <button onclick="logout()" class="bg-rose-600 text-white px-4 py-2 rounded-lg font-bold text-sm w-full text-center">Admin Logout</button>
             </div>
         </div>
     </nav>
 
-    <!-- Main Admin Dashboard Container -->
-    <main class="max-w-7xl mx-auto px-6 py-10 flex-grow w-full">
+    <!-- Main Dashboard Body -->
+    <main class="max-w-7xl mx-auto px-6 py-8 flex-grow w-full">
 
-        <!-- Page Heading & Quick Logout -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <!-- Page Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
-                <h1 class="text-3xl md:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-amber-400 to-indigo-400">
-                    Store Dashboard
-                </h1>
-                <p class="text-xs text-gray-400 mt-1">Manage product catalog, order statuses, banners, and security settings</p>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Store Management</h1>
+                <p class="text-xs text-slate-400 mt-1">Control products, manage orders, and site settings</p>
             </div>
-            <button onclick="logout()" class="bg-rose-600/20 border border-rose-500/40 hover:bg-rose-600 text-rose-300 hover:text-white px-6 py-3 rounded-xl font-bold transition flex items-center gap-2">
-                <i class="fa-solid fa-power-off"></i> Exit Admin Session
-            </button>
-        </div>
-
-        <!-- Dashboard Navigation Tabs -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
-            <button onclick="showTab('productsTab', this)" class="tab-btn active glass border border-white/10 px-6 py-4 rounded-2xl font-bold text-sm md:text-base transition flex items-center justify-center gap-2">
-                <i class="fa-solid fa-box"></i> Products
-            </button>
-            <button onclick="showTab('ordersTab', this)" class="tab-btn glass border border-white/10 px-6 py-4 rounded-2xl font-bold text-sm md:text-base transition flex items-center justify-center gap-2">
-                <i class="fa-solid fa-receipt"></i> Orders
-            </button>
-            <button onclick="showTab('bannersTab', this)" class="tab-btn glass border border-white/10 px-6 py-4 rounded-2xl font-bold text-sm md:text-base transition flex items-center justify-center gap-2">
-                <i class="fa-solid fa-images"></i> Banners
-            </button>
-            <button onclick="showTab('settingsTab', this)" class="tab-btn glass border border-white/10 px-6 py-4 rounded-2xl font-bold text-sm md:text-base transition flex items-center justify-center gap-2">
-                <i class="fa-solid fa-sliders"></i> Security Settings
-            </button>
+            
+            <!-- Quick Navigation Tabs -->
+            <div class="flex flex-wrap gap-2">
+                <button onclick="showTab('productsTab', this)" class="tab-btn active px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-box text-xs"></i> Products
+                </button>
+                <button onclick="showTab('ordersTab', this)" class="tab-btn px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-receipt text-xs"></i> Orders
+                </button>
+                <button onclick="showTab('bannersTab', this)" class="tab-btn px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-images text-xs"></i> Banners
+                </button>
+                <button onclick="showTab('settingsTab', this)" class="tab-btn px-4 py-2 rounded-lg font-semibold text-xs sm:text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-gear text-xs"></i> Settings
+                </button>
+            </div>
         </div>
 
         <!-- ================= PRODUCTS TAB ================= -->
-        <div id="productsTab" class="tab-content space-y-8">
-            <div class="glass p-6 md:p-8 rounded-3xl space-y-6">
-                <h2 class="text-2xl font-bold text-yellow-400 flex items-center gap-2">
-                    <i class="fa-solid fa-plus"></i> Add New Product
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="newProductName" placeholder="Product Title" class="p-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm">
-                    <input type="number" id="newProductPrice" placeholder="Price (PKR)" class="p-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm">
-                    <input type="text" id="newProductDesc" placeholder="Description details" class="p-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm md:col-span-2">
-                    <div class="md:col-span-2 flex flex-col sm:flex-row gap-4 items-center">
-                        <label class="w-full sm:w-auto bg-white/10 border border-white/20 px-6 py-3.5 rounded-xl cursor-pointer hover:bg-white/20 transition text-sm text-center">
-                            <i class="fa-solid fa-upload"></i> Upload Image File
-                            <input type="file" id="newProductImage" accept="image/*" class="hidden">
-                        </label>
-                        <button onclick="addProduct()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-3.5 rounded-xl font-bold transition shadow-lg flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-plus-circle"></i> Save Product
+        <div id="productsTab" class="tab-content space-y-6">
+            
+            <!-- COMPACT ADD PRODUCT WIDGET -->
+            <div class="panel-card p-5 rounded-2xl">
+                <div class="flex items-center justify-between border-b border-slate-700/60 pb-3 mb-4">
+                    <h2 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-circle-plus text-indigo-400"></i> Quick Add New Product
+                    </h2>
+                    <span class="text-[11px] text-slate-400">Fill details to publish</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                    <!-- Title Input -->
+                    <div class="md:col-span-4">
+                        <label class="block text-[11px] font-bold text-slate-400 mb-1">Product Title *</label>
+                        <input type="text" id="newProductName" placeholder="e.g. Wireless Headphones" class="input-field w-full px-3 py-2 rounded-lg text-xs font-medium">
+                    </div>
+
+                    <!-- Price Input -->
+                    <div class="md:col-span-3">
+                        <label class="block text-[11px] font-bold text-slate-400 mb-1">Price (PKR) *</label>
+                        <input type="number" id="newProductPrice" placeholder="e.g. 2500" class="input-field w-full px-3 py-2 rounded-lg text-xs font-medium">
+                    </div>
+
+                    <!-- File Upload Input -->
+                    <div class="md:col-span-5">
+                        <label class="block text-[11px] font-bold text-slate-400 mb-1">Product Image File</label>
+                        <input type="file" id="newProductImage" accept="image/*" class="input-field w-full px-2 py-1.5 rounded-lg text-xs text-slate-400 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer">
+                    </div>
+
+                    <!-- Short Description Input -->
+                    <div class="md:col-span-9">
+                        <input type="text" id="newProductDesc" placeholder="Brief description or specs..." class="input-field w-full px-3 py-2 rounded-lg text-xs font-medium">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="md:col-span-3">
+                        <button onclick="addProduct()" class="w-full h-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg text-xs transition flex items-center justify-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-plus"></i> Add Product
                         </button>
                     </div>
                 </div>
             </div>
 
+            <!-- PRODUCT INVENTORY LIST -->
             <div>
-                <h3 class="text-xl font-bold text-gray-300 mb-4">Existing Product Inventory</h3>
-                <div id="productsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-sm font-bold text-slate-300">Current Inventory Items</h3>
+                </div>
+                <div id="productsList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
             </div>
         </div>
 
         <!-- ================= ORDERS TAB ================= -->
-        <div id="ordersTab" class="tab-content hidden space-y-6">
-            <h2 class="text-2xl font-bold text-yellow-400 flex items-center gap-2">
-                <i class="fa-solid fa-cart-shopping"></i> Customer Orders
+        <div id="ordersTab" class="tab-content hidden space-y-4">
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-boxes-packing text-amber-400"></i> Customer Orders List
             </h2>
-            <div id="ordersList" class="space-y-4"></div>
+            <div id="ordersList" class="space-y-3"></div>
         </div>
 
         <!-- ================= BANNERS TAB ================= -->
-        <div id="bannersTab" class="tab-content hidden space-y-8">
-            <div class="glass p-6 md:p-8 rounded-3xl space-y-6">
-                <h2 class="text-2xl font-bold text-yellow-400 flex items-center gap-2">
-                    <i class="fa-solid fa-images"></i> Add Promotional Banner
+        <div id="bannersTab" class="tab-content hidden space-y-6">
+            <div class="panel-card p-5 rounded-2xl max-w-2xl space-y-4">
+                <h2 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-image text-indigo-400"></i> Add Promotional Banner
                 </h2>
-                <div class="space-y-4">
-                    <input type="text" id="newBannerText" placeholder="Banner Headline / Promotion Tag" class="w-full p-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm">
-                    <div class="flex flex-col sm:flex-row gap-4 items-center">
-                        <label class="w-full sm:w-auto bg-white/10 border border-white/20 px-6 py-3.5 rounded-xl cursor-pointer hover:bg-white/20 transition text-sm text-center">
-                            <i class="fa-solid fa-image"></i> Select Banner Image
-                            <input type="file" id="newBannerMedia" accept="image/*" class="hidden">
-                        </label>
-                        <button onclick="addBanner()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-8 py-3.5 rounded-xl font-bold transition shadow-lg flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-cloud-arrow-up"></i> Publish Banner
+                <div class="space-y-3">
+                    <input type="text" id="newBannerText" placeholder="Banner Headline / Promotion Tag" class="input-field w-full p-2.5 rounded-lg text-xs font-medium">
+                    <div class="flex gap-3">
+                        <input type="file" id="newBannerMedia" accept="image/*" class="input-field w-full px-2 py-1.5 rounded-lg text-xs text-slate-400 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer">
+                        <button onclick="addBanner()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 rounded-lg text-xs font-bold transition whitespace-nowrap">
+                            Publish
                         </button>
                     </div>
                 </div>
             </div>
 
             <div>
-                <h3 class="text-xl font-bold text-gray-300 mb-4">Active Carousel Banners</h3>
-                <div id="bannersList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <h3 class="text-sm font-bold text-slate-300 mb-3">Active Banners</h3>
+                <div id="bannersList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
             </div>
         </div>
 
         <!-- ================= SETTINGS TAB ================= -->
-        <div id="settingsTab" class="tab-content hidden space-y-6">
-            <div class="glass p-6 md:p-8 rounded-3xl max-w-xl mx-auto space-y-6">
-                <h2 class="text-2xl font-bold text-yellow-400 flex items-center gap-2">
-                    <i class="fa-solid fa-key"></i> Update Admin Credentials
+        <div id="settingsTab" class="tab-content hidden">
+            <div class="panel-card p-6 rounded-2xl max-w-md space-y-4">
+                <h2 class="text-base font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-lock text-indigo-400"></i> Update Security Credentials
                 </h2>
-                <div class="space-y-4">
-                    <input type="password" id="oldPass" placeholder="Current Admin Password" class="w-full p-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm">
-                    <input type="password" id="newPass" placeholder="New Password" class="w-full p-4 rounded-xl bg-white/10 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm">
-                    <button onclick="changePassword()" class="w-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-black py-4 rounded-xl font-black text-lg transition shadow-xl flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-shield-check"></i> Save New Password
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-400 mb-1">Current Password</label>
+                        <input type="password" id="oldPass" placeholder="••••••••" class="input-field w-full p-2.5 rounded-lg text-xs font-medium">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-400 mb-1">New Password</label>
+                        <input type="password" id="newPass" placeholder="••••••••" class="input-field w-full p-2.5 rounded-lg text-xs font-medium">
+                    </div>
+                    <button onclick="changePassword()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded-lg font-bold text-xs transition">
+                        Update Password
                     </button>
                 </div>
             </div>
@@ -207,25 +221,17 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-black/60 border-t border-white/10 pt-10 pb-8 mt-16">
-        <div class="max-w-7xl mx-auto px-6 text-center text-xs text-gray-500">
-            &copy; 2026 ZentroMall Admin Portal. All rights reserved.
+    <footer class="bg-slate-900 border-t border-slate-800 py-4 mt-12">
+        <div class="max-w-7xl mx-auto px-6 text-center text-xs text-slate-500">
+            &copy; 2026 ZentroMall Management Panel.
         </div>
     </footer>
 
-    <!-- Main Store Logic Script -->
+    <!-- Scripts -->
     <script src="main.js"></script>
-
-    <!-- Admin Panel Logic -->
     <script>
-        // Security Check
         if (localStorage.getItem("zm_admin_logged") !== "true") {
             window.location.href = "admin.html";
-        }
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('hidden');
         }
 
         function logout() {
@@ -233,7 +239,6 @@
             window.location.href = "admin.html";
         }
 
-        // Tab Navigation
         function showTab(tabId, btn) {
             document.querySelectorAll(".tab-content").forEach(t => t.classList.add("hidden"));
             document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -242,35 +247,32 @@
             if (btn) btn.classList.add("active");
         }
 
-        // Helper for formatting prices if missing in main.js
         function safeFormatPrice(price) {
             if (typeof formatPrice === "function") return formatPrice(price);
             return "PKR " + Number(price || 0).toLocaleString();
         }
 
-        // ---------------- PRODUCTS MANAGEMENT ----------------
+        // --- PRODUCTS ---
         function renderProducts() {
             const list = document.getElementById("productsList");
             if (!products || products.length === 0) {
-                list.innerHTML = `<p class="text-gray-400 text-sm col-span-full">No products found in database.</p>`;
+                list.innerHTML = `<p class="text-slate-400 text-xs col-span-full py-4 text-center">No products found in inventory.</p>`;
                 return;
             }
 
             list.innerHTML = products.map(p => `
-                <div class="glass-card rounded-2xl p-5 flex flex-col justify-between space-y-4 border border-white/10">
-                    <div class="space-y-3">
-                        ${p.image ? `<img src="${p.image}" class="w-full h-44 object-cover rounded-xl border border-white/10">` : `<div class="w-full h-44 bg-white/5 rounded-xl flex items-center justify-center text-gray-500 text-xs">No Image</div>`}
-                        <h4 class="text-lg font-bold text-white">${p.name}</h4>
-                        <p class="text-xs text-gray-400 line-clamp-2">${p.desc || 'No description provided.'}</p>
-                        <p class="text-xl font-black text-emerald-400">${safeFormatPrice(p.price)}</p>
+                <div class="panel-card rounded-xl p-3 flex flex-col justify-between">
+                    <div>
+                        ${p.image ? `<img src="${p.image}" class="w-full h-32 object-cover rounded-lg mb-2 bg-slate-900 border border-slate-700/50">` : `<div class="w-full h-32 bg-slate-900/80 rounded-lg flex items-center justify-center text-slate-500 text-[11px] mb-2 border border-slate-800">No Image</div>`}
+                        <h4 class="text-xs font-bold text-white truncate">${p.name}</h4>
+                        <p class="text-[11px] text-slate-400 line-clamp-1 mb-2">${p.desc || 'No details'}</p>
                     </div>
-                    <div class="flex gap-2 pt-2 border-t border-white/10">
-                        <button onclick="editProduct(${p.id})" class="flex-1 bg-indigo-600/30 border border-indigo-500/50 hover:bg-indigo-600 text-indigo-200 hover:text-white py-2 rounded-xl text-xs font-bold transition">
-                            <i class="fa-solid fa-pen"></i> Edit
-                        </button>
-                        <button onclick="deleteProduct(${p.id})" class="flex-1 bg-rose-600/30 border border-rose-500/50 hover:bg-rose-600 text-rose-200 hover:text-white py-2 rounded-xl text-xs font-bold transition">
-                            <i class="fa-solid fa-trash"></i> Delete
-                        </button>
+                    <div>
+                        <p class="text-sm font-extrabold text-indigo-400 mb-2">${safeFormatPrice(p.price)}</p>
+                        <div class="flex gap-1.5 pt-2 border-t border-slate-700/60">
+                            <button onclick="editProduct(${p.id})" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-200 py-1 rounded text-[11px] font-semibold transition">Edit</button>
+                            <button onclick="deleteProduct(${p.id})" class="flex-1 bg-rose-500/10 hover:bg-rose-600 text-rose-400 hover:text-white py-1 rounded text-[11px] font-semibold transition">Delete</button>
+                        </div>
                     </div>
                 </div>
             `).join("");
@@ -283,7 +285,7 @@
             const file = document.getElementById("newProductImage").files[0];
 
             if (!name || isNaN(price)) {
-                alert("⚠️ Please enter a valid product name and price.");
+                alert("⚠️ Please enter valid Product Name and Price.");
                 return;
             }
 
@@ -308,7 +310,7 @@
         }
 
         function deleteProduct(id) {
-            if (confirm("Are you sure you want to delete this product?")) {
+            if (confirm("Delete this product?")) {
                 products = products.filter(p => p.id !== id);
                 saveData(); renderProducts();
             }
@@ -318,7 +320,7 @@
             const p = products.find(p => p.id === id);
             if (!p) return;
 
-            const newName = prompt("Edit Product Name:", p.name);
+            const newName = prompt("Edit Name:", p.name);
             const newDesc = prompt("Edit Description:", p.desc || "");
             const newPrice = prompt("Edit Price:", p.price);
 
@@ -329,39 +331,36 @@
             saveData(); renderProducts();
         }
 
-        // ---------------- ORDERS MANAGEMENT ----------------
+        // --- ORDERS ---
         function renderOrders() {
             const list = document.getElementById("ordersList");
             if (!orders || orders.length === 0) {
-                list.innerHTML = "<p class='text-gray-400 text-sm'>No orders recorded yet.</p>";
+                list.innerHTML = "<p class='text-slate-400 text-xs py-4'>No orders received yet.</p>";
                 return;
             }
 
             list.innerHTML = orders.map((o, idx) => `
-                <div class="glass-card p-6 rounded-2xl border border-white/10 space-y-4">
-                    <div class="flex flex-col sm:flex-row justify-between sm:items-center border-b border-white/10 pb-3 gap-2">
+                <div class="panel-card p-4 rounded-xl space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-700/60 pb-2">
                         <div>
-                            <span class="text-xs text-yellow-400 font-bold uppercase">Order #${o.id || (idx + 1)}</span>
-                            <p class="text-xs text-gray-400">${o.date || 'N/A'}</p>
+                            <span class="text-xs text-indigo-400 font-bold uppercase">Order #${o.id || (idx + 1)}</span>
+                            <span class="text-[11px] text-slate-400 ml-2">${o.date || ''}</span>
                         </div>
-                        <span class="px-3 py-1 rounded-full text-xs font-bold ${o.status === 'completed' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'}">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${o.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'}">
                             ${o.status || 'pending'}
                         </span>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-300">
-                        <p><strong class="text-white">Customer:</strong> ${o.customer?.name || 'N/A'}</p>
-                        <p><strong class="text-white">Phone:</strong> ${o.customer?.phone || 'N/A'}</p>
-                        <p class="md:col-span-2"><strong class="text-white">Shipping Address:</strong> ${o.customer?.address || 'N/A'}</p>
-                        <p class="text-emerald-400 font-bold"><strong class="text-white">Total Amount:</strong> ${safeFormatPrice(o.total || 0)}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-300">
+                        <p><strong class="text-slate-400">Customer:</strong> ${o.customer?.name || 'N/A'}</p>
+                        <p><strong class="text-slate-400">Phone:</strong> ${o.customer?.phone || 'N/A'}</p>
+                        <p class="sm:col-span-2"><strong class="text-slate-400">Address:</strong> ${o.customer?.address || 'N/A'}</p>
+                        <p class="text-emerald-400 font-bold"><strong class="text-slate-400">Total:</strong> ${safeFormatPrice(o.total || 0)}</p>
                     </div>
 
-                    <div class="flex flex-wrap gap-2 pt-2 border-t border-white/10">
-                        <button onclick="updateOrderStatus(${idx}, 'pending')" class="bg-amber-600/30 hover:bg-amber-600 text-amber-200 border border-amber-500/40 px-4 py-2 rounded-xl text-xs font-bold transition">Mark Pending</button>
-                        <button onclick="updateOrderStatus(${idx}, 'completed')" class="bg-emerald-600/30 hover:bg-emerald-600 text-emerald-200 border border-emerald-500/40 px-4 py-2 rounded-xl text-xs font-bold transition">Mark Completed</button>
-                        <button onclick="openWhatsAppOrder(${idx})" class="bg-emerald-500 text-black hover:bg-emerald-400 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1">
-                            <i class="fa-brands fa-whatsapp"></i> WhatsApp Dispatch
-                        </button>
+                    <div class="flex gap-2 pt-2 border-t border-slate-700/60">
+                        <button onclick="updateOrderStatus(${idx}, 'pending')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1 rounded text-[11px] font-semibold transition">Pending</button>
+                        <button onclick="updateOrderStatus(${idx}, 'completed')" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white px-3 py-1 rounded text-[11px] font-semibold transition">Completed</button>
                     </div>
                 </div>
             `).join("");
@@ -372,35 +371,19 @@
             saveData(); renderOrders();
         }
 
-        function openWhatsAppOrder(idx) {
-            const o = orders[idx];
-            let msg = `*Order Details – ZentroMall*\nName: ${o.customer?.name || 'N/A'}\nPhone: ${o.customer?.phone || 'N/A'}\nAddress: ${o.customer?.address || 'N/A'}\nItems:\n`;
-            if (o.items && o.items.length) {
-                o.items.forEach(i => msg += `• ${i.name} x ${i.qty}\n`);
-            }
-            msg += `Total: ${safeFormatPrice(o.total)}`;
-            if (typeof openWhatsApp === "function") {
-                openWhatsApp(msg);
-            } else {
-                window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-            }
-        }
-
-        // ---------------- BANNERS MANAGEMENT ----------------
+        // --- BANNERS ---
         function renderBanners() {
             const list = document.getElementById("bannersList");
             if (!banners || banners.length === 0) {
-                list.innerHTML = `<p class="text-gray-400 text-sm col-span-full">No active banners found.</p>`;
+                list.innerHTML = `<p class="text-slate-400 text-xs col-span-full py-4">No banners found.</p>`;
                 return;
             }
 
             list.innerHTML = banners.map((b, i) => `
-                <div class="glass-card p-5 rounded-2xl border border-white/10 space-y-3">
-                    ${b.media ? `<img src="${b.media}" class="w-full h-40 object-cover rounded-xl border border-white/10">` : `<div class="w-full h-40 bg-white/5 rounded-xl flex items-center justify-center text-gray-500 text-xs">No Image</div>`}
-                    <p class="text-sm font-bold text-white">${b.text || 'Untitled Banner'}</p>
-                    <button onclick="deleteBanner(${i})" class="w-full bg-rose-600/30 border border-rose-500/50 hover:bg-rose-600 text-rose-200 hover:text-white py-2 rounded-xl text-xs font-bold transition">
-                        <i class="fa-solid fa-trash"></i> Remove Banner
-                    </button>
+                <div class="panel-card p-3 rounded-xl space-y-2">
+                    ${b.media ? `<img src="${b.media}" class="w-full h-28 object-cover rounded-lg border border-slate-800">` : `<div class="w-full h-28 bg-slate-900 rounded-lg flex items-center justify-center text-slate-500 text-xs">No Image</div>`}
+                    <p class="text-xs font-bold text-white truncate">${b.text || 'Banner'}</p>
+                    <button onclick="deleteBanner(${i})" class="w-full bg-rose-500/10 hover:bg-rose-600 text-rose-400 hover:text-white py-1 rounded text-[11px] font-semibold transition">Remove Banner</button>
                 </div>
             `).join('');
         }
@@ -423,7 +406,7 @@
         }
 
         function deleteBanner(idx) {
-            if (confirm("Are you sure you want to remove this banner?")) {
+            if (confirm("Remove banner?")) {
                 banners.splice(idx, 1);
                 saveData(); renderBanners();
             }
@@ -434,27 +417,26 @@
             document.getElementById("newBannerMedia").value = "";
         }
 
-        // ---------------- SETTINGS ----------------
+        // --- SETTINGS ---
         function changePassword() {
             const oldP = document.getElementById("oldPass").value.trim();
             const newP = document.getElementById("newPass").value.trim();
 
             if (oldP !== localStorage.getItem("zm_admin_pass")) {
-                alert("❌ Incorrect current password!");
+                alert("❌ Current password incorrect!");
                 return;
             }
             if (!newP) {
-                alert("⚠️ Please enter a new password.");
+                alert("⚠️ Enter new password.");
                 return;
             }
 
             localStorage.setItem("zm_admin_pass", newP);
-            alert("✅ Admin password updated successfully!");
+            alert("✅ Password updated!");
             document.getElementById("oldPass").value = "";
             document.getElementById("newPass").value = "";
         }
 
-        // Initialization
         document.addEventListener("DOMContentLoaded", () => {
             renderProducts();
             renderOrders();
