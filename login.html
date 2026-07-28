@@ -1,44 +1,198 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en" class="scroll-smooth">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Login to your ZentroMall account." />
-  <title>Login – ZentroMall</title>
-  <link rel="icon" href="logo.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login to your ZentroMall account.">
+    <title>Login – ZentroMall</title>
+    <link rel="icon" href="logo.png">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #14002c, #1b1464, #050505);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glow {
+            box-shadow: 0 0 35px rgba(99, 102, 241, 0.35);
+        }
+
+        .nav-link {
+            transition: .3s;
+        }
+
+        .nav-link:hover {
+            color: #facc15;
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-purple-900 to-indigo-900 text-white min-h-screen flex items-center justify-center">
-  <div class="bg-white text-black p-10 rounded-3xl shadow-2xl max-w-md w-full">
-    <img src="logo.png" alt="ZentroMall Logo" class="h-20 mx-auto mb-6" />
-    <h1 class="text-4xl font-extrabold text-center mb-6 text-yellow-400">Login</h1>
-    <form id="loginForm" class="space-y-4">
-      <input type="email" id="email" placeholder="Email" class="w-full p-4 rounded-xl border-2 border-gray-300 focus:border-indigo-600 transition" required aria-required="true" />
-      <input type="password" id="password" placeholder="Password" class="w-full p-4 rounded-xl border-2 border-gray-300 focus:border-indigo-600 transition" required aria-required="true" />
-      <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-2xl text-xl font-bold hover:scale-105 transition shadow-lg">
-        Login
-      </button>
-    </form>
-    <p class="mt-4 text-center text-gray-700">New user? <a href="register.html" class="text-indigo-600 underline">Register</a></p>
-  </div>
 
-  <script src="main.js"></script>
-  <script>
-    document.getElementById("loginForm").addEventListener("submit", function(e){
-      e.preventDefault();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const users = JSON.parse(localStorage.getItem("zm_users") || "[]");
-      const user = users.find(u => u.email === email && u.password === password);
+<body class="text-white min-h-screen flex flex-col justify-between">
 
-      if(user){
-        localStorage.setItem("zm_user", JSON.stringify(user));
-        alert("Login successful!");
-        window.location.href = "index.html";
-      } else {
-        alert("Invalid credentials. Please check your email and password.");
-      }
-    });
-  </script>
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 glass">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-4">
+                    <img src="logo.png" class="h-12 w-12 rounded-full shadow-2xl object-cover" onerror="this.src='https://via.placeholder.com/100/4f46e5/ffffff?text=ZM'">
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-black tracking-wide">ZentroMall</h1>
+                        <p class="text-xs text-gray-300 hidden sm:block">Premium Shopping Experience</p>
+                    </div>
+                </a>
+
+                <!-- Desktop Menu Nav -->
+                <div class="hidden lg:flex gap-6 items-center font-medium">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="products.html" class="nav-link">Products</a>
+                    <a href="wishlist.html" class="nav-link">
+                        Wishlist (<span id="wishlist-count" class="wishlist-badge">0</span>)
+                    </a>
+                    <a href="cart.html" class="nav-link">
+                        Cart (<span id="cart-count" class="cart-badge">0</span>)
+                    </a>
+                    <a href="my-orders.html" class="nav-link">Orders</a>
+                    <a href="profile.html" class="nav-link">Profile</a>
+                    <a href="login.html" class="bg-yellow-400 hover:bg-yellow-300 text-black px-5 py-2 rounded-xl font-bold transition">Login</a>
+                    <a href="admin.html" class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2 rounded-xl font-bold transition">Admin</a>
+                </div>
+
+                <!-- Mobile Menu Toggle Button -->
+                <button id="mobileBtn" onclick="toggleMobileMenu()" class="lg:hidden text-3xl focus:outline-none">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Drawer Menu -->
+            <div id="mobileMenu" class="hidden pt-4 pb-2 space-y-3 lg:hidden border-t border-white/10 mt-3">
+                <a href="index.html" class="block py-1 hover:text-yellow-400">Home</a>
+                <a href="products.html" class="block py-1 hover:text-yellow-400">Products</a>
+                <a href="wishlist.html" class="block py-1 hover:text-yellow-400">Wishlist (<span class="wishlist-badge">0</span>)</a>
+                <a href="cart.html" class="block py-1 hover:text-yellow-400">Cart (<span class="cart-badge">0</span>)</a>
+                <a href="my-orders.html" class="block py-1 hover:text-yellow-400">My Orders</a>
+                <a href="profile.html" class="block py-1 hover:text-yellow-400">Profile</a>
+                <div class="flex gap-4 pt-2">
+                    <a href="login.html" class="bg-yellow-400 text-black px-4 py-2 rounded-lg font-bold text-sm w-full text-center">Login</a>
+                    <a href="admin.html" class="bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold text-sm w-full text-center">Admin</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Login Section -->
+    <main class="max-w-md mx-auto px-6 py-12 flex-grow w-full flex items-center justify-center">
+        <div class="glass p-8 md:p-10 rounded-3xl shadow-2xl w-full glow space-y-6">
+            
+            <div class="text-center space-y-2">
+                <img src="logo.png" alt="ZentroMall Logo" class="h-16 mx-auto mb-3 rounded-full object-cover shadow-xl" onerror="this.src='https://via.placeholder.com/100/4f46e5/ffffff?text=ZM'" />
+                <h2 class="text-3xl font-black text-white">Welcome Back</h2>
+                <p class="text-xs text-gray-400">Sign in to manage your orders & profile</p>
+            </div>
+
+            <!-- Form -->
+            <form id="loginForm" class="space-y-4 pt-2">
+                <div class="relative">
+                    <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="email" id="email" placeholder="Email Address" 
+                           class="w-full py-3.5 pl-12 pr-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm font-medium" 
+                           required aria-required="true" />
+                </div>
+
+                <div class="relative">
+                    <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="password" id="password" placeholder="Password" 
+                           class="w-full py-3.5 pl-12 pr-12 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 text-sm font-medium" 
+                           required aria-required="true" />
+                    <button type="button" onclick="togglePassVisibility()" class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
+                        <i id="eyeIcon" class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+
+                <button type="submit" id="submitBtn"
+                        class="w-full mt-2 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-black py-4 rounded-xl font-black text-lg transition shadow-xl flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login
+                </button>
+            </form>
+
+            <p class="text-center text-xs text-gray-400 pt-2 border-t border-white/10">
+                New user? <a href="register.html" class="text-yellow-400 font-bold hover:underline">Create an Account</a>
+            </p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black/60 border-t border-white/10 pt-10 pb-8 mt-16">
+        <div class="max-w-7xl mx-auto px-6 text-center text-xs text-gray-500">
+            &copy; 2026 ZentroMall. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Main Logic Script -->
+    <script src="main.js"></script>
+
+    <!-- Login Page Specific Script -->
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function togglePassVisibility() {
+            const passInput = document.getElementById("password");
+            const eyeIcon = document.getElementById("eyeIcon");
+            if (passInput.type === "password") {
+                passInput.type = "text";
+                eyeIcon.className = "fa-solid fa-eye-slash";
+            } else {
+                passInput.type = "password";
+                eyeIcon.className = "fa-solid fa-eye";
+            }
+        }
+
+        document.getElementById("loginForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const email = document.getElementById("email").value.trim().toLowerCase();
+            const password = document.getElementById("password").value.trim();
+
+            const users = JSON.parse(localStorage.getItem("zm_users") || "[]");
+            const user = users.find(u => u.email.toLowerCase() === email && u.password === password);
+
+            if (user) {
+                localStorage.setItem("zm_user", JSON.stringify(user));
+                const btn = document.getElementById("submitBtn");
+                btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> Login Successful!`;
+                btn.className = "w-full mt-2 bg-emerald-500 text-black py-4 rounded-xl font-black text-lg transition shadow-xl";
+                
+                setTimeout(() => {
+                    window.location.href = "index.html";
+                }, 800);
+            } else {
+                alert("❌ Invalid credentials! Please check your email and password.");
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            updateBadges();
+        });
+    </script>
 </body>
+
 </html>
